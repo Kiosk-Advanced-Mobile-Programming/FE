@@ -13,7 +13,20 @@ export default function HomeTab() {
       }}
     >
       <Text>홈</Text>
-      <Pressable onPress={() => router.push('/(flow)/start')}>
+      {/* <Pressable onPress={() => router.push('/(flow)/start')}>
+        <Text
+          style={{
+            padding: 12,
+            backgroundColor: '#6d4aff',
+            color: 'white',
+            borderRadius: 10,
+          }}
+        >
+          카오스크 학습 시작
+        </Text>
+      </Pressable> */}
+      /* mcDonalds dev */
+      <Pressable onPress={() => router.push('/(flow)/mcDonalds/mcdonalds-main')}>
         <Text
           style={{
             padding: 12,
