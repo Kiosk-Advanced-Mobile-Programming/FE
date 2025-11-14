@@ -30,12 +30,16 @@ export default function SelectBrand() {
               styles.btn,
               b === '이디야' ? styles.btnDark : styles.btnYellow,
             ]}
-            onPress={() =>
+            onPress={() =>{
+              if(b==='메가 커피'){  //여기부터 이거는 잘 작동하나 확인용임
+                router.push('/(flow)/megacoffee');
+              }else{            //여기까지 지우고 올리면 됨
               router.push({
                 pathname: '/(flow)/confirm',
                 params: { category, brand: b, mode },
-              })
+              });
             }
+            }}
           >
             <Text style={styles.btnText}>{b}</Text>
           </Pressable>
