@@ -26,7 +26,7 @@ export default function HomeTab() {
         </Text>
       </Pressable> */}
       /* mcDonalds dev */
-      <Pressable onPress={() => router.push('/(flow)/mcDonalds/mcdonalds-main')}>
+      <Pressable onPress={() => router.push('/(flow)/mcDonalds/start-mcDonalds')}>
         <Text
           style={{
             padding: 12,
@@ -35,7 +35,7 @@ export default function HomeTab() {
             borderRadius: 10,
           }}
         >
-          카오스크 학습 시작
+          mcDonalds
         </Text>
       </Pressable>
     </View>
