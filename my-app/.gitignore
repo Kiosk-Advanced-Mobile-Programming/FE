@@ -41,3 +41,7 @@ app-example
 # generated native folders
 /ios
 /android
+
+
+# firebase env (파이어베이스 환경변수 파일)
+.env
