@@ -5,36 +5,52 @@ import { StyleSheet } from 'react-native';
 const styles = StyleSheet.create({
     wrap: {
         flex: 1,
-        backgroundColor: '#FFFFFF', // 배경 흰색
-        paddingTop: 0, // 상단 노치바 등을 위한 기본 패딩
+        backgroundColor: '#FFFFFF', 
+        paddingTop: 0, 
     },
 
 
     topContainer: {
-        height: 100,
+        // 2개의 행 (50px * 2) + 간격 (10px * 1) + 상하 패딩 (10px) = 120px
+        height: 120, 
         width: '100%',
-        paddingHorizontal: 15,
-        paddingVertical: 5,
+        paddingHorizontal: 5, 
+        paddingVertical: 10,
         borderBottomWidth: 1,
         borderBottomColor: '#E0E0E0',
-
-        borderWidth: 1,
-        borderColor: 'black',
     },
 
+    // *** ScrollView Content Style (오류 해결용) ***
+    drinkTypeContent: {
+        alignItems: 'center', // 내부 아이템을 수직 중앙 정렬
+    },
+
+    // 1. Drink Type Row
     drinkType: {
-        height: 30, 
-        justifyContent: 'center',
+        height: 50, 
+        marginBottom: 10, // Side Options 행과의 간격
     },
     
+    // 2. Side Options Row
     drinkTypeSide: {
-        height: 30, 
+        height: 50, 
+    },
+
+    topOptionButton: {
+        // Style for the individual option buttons
+        paddingHorizontal: 15,
+        paddingVertical: 8,
+        marginHorizontal: 5,
+        borderRadius: 20,
+        backgroundColor: '#E6F3FF', 
         justifyContent: 'center',
+        alignItems: 'center',
     },
     
     topText: {
         fontSize: 16,
         fontWeight: 'bold',
+        color: '#1A73E8', 
     },
 
     bottomContainer: {
