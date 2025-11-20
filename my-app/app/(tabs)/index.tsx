@@ -1,24 +1,24 @@
 // app/(tabs)/index.tsx (일부만)
-import { View, Text, Pressable } from 'react-native';
-import { router } from 'expo-router';
+import { router } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 
 export default function HomeTab() {
   return (
     <View
       style={{
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
+        justifyContent: "center",
+        alignItems: "center",
         gap: 12,
       }}
     >
       <Text>홈</Text>
-      <Pressable onPress={() => router.push('/(flow)/start')}>
+      <Pressable onPress={() => router.push("/(flow)/loginPage/LoginPage")}>
         <Text
           style={{
             padding: 12,
-            backgroundColor: '#6d4aff',
-            color: 'white',
+            backgroundColor: "#6d4aff",
+            color: "white",
             borderRadius: 10,
           }}
         >
