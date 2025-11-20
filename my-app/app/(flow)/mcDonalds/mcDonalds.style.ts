@@ -25,17 +25,20 @@ export default StyleSheet.create({
   },
 
   // 3-1. 주문하기 버튼
+  leftPane: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    paddingRight: 5,
+    paddingLeft: 30,
+    gap: 10,
+  },
   orderButton: {
-    // 6:4 비율로 가정 (flex: 3 + flex: 2 = 5)
-    flex: 3, 
-    backgroundColor: 'white', // 이미지 참고
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    // 이미지처럼 살짝 회색 테두리
-    borderColor: '#eee',
     borderWidth: 1,
-    margin: 10, // 여백
-    borderRadius: 8,
+    paddingVertical: 40,
   },
   orderButtonText: {
     fontSize: 24,
@@ -43,14 +46,39 @@ export default StyleSheet.create({
     color: '#333',
   },
 
-    // 3-2. 포인트 적립 (QR)
-  qrContainer: {
-    flex: 2, 
-    backgroundColor: '#fdf8e2', // 이미지 참고 (노란빛)
+  selectButtonLayout: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  selectButton: {
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
-    margin: 10,
-    borderRadius: 8,
+    borderWidth: 1,
+    paddingVertical: 40,
+  },
+  selectButtonText: {
+    fontSize: 18,
+  },
+  smallSelectButtonText: {
+    fontSize: 18,
+  },
+  
+  
+    // 3-2. 포인트 적립 (QR)
+  rightPane: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'flex-end',    
+    paddingRight: 30,
+    paddingLeft: 5,
+    backgroundColor: '#ff9191ff',
+  },
+  qrButton: {
+    backgroundColor: '#e9ba4b',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 50,
   },
   qrText: {
     fontSize: 20,
