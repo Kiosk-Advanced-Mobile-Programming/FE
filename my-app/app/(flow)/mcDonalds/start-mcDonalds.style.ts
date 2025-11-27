@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '@components/mcDonalds/colors'
 
 // 이미지 원본 비율 (가로 750 / 세로 900)
 const BANNER_ASPECT_RATIO = 750 / 900;
@@ -7,7 +8,7 @@ export default StyleSheet.create({
   // 1. 전체 컨테이너
   container: {
     flex: 1,
-    backgroundColor: '#ffffff', // 이미지의 하단과 맞추기 위해 흰색으로 변경
+    backgroundColor: Colors.Background, // 이미지의 하단과 맞추기 위해 흰색으로 변경
   },
 
   // 상단 배너 이미지
@@ -16,6 +17,18 @@ export default StyleSheet.create({
     height: 'auto',
     aspectRatio: BANNER_ASPECT_RATIO,
     resizeMode: 'contain', 
+  },
+
+  // 중간 노란 안내 바
+  noticeBar: {
+    width: '100%',
+    height: 50,
+    paddingHorizontal: 10,
+    alignContent: 'center',
+    backgroundColor: Colors.Primary,
+  },
+  noticeText: {
+    fontSize: 10
   },
 
   // 3. 하단 인터랙션 영역 (content와 footer 대신 사용)
@@ -29,62 +42,56 @@ export default StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-end',
-    paddingRight: 5,
+    paddingRight: 10,
     paddingLeft: 30,
-    gap: 10,
   },
   orderButton: {
+    height: 70,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    paddingVertical: 40,
+    borderColor: Colors.GreyLine,
+    marginBottom: 80,
+    boxShadow: [
+      {
+        offsetX: 0,
+        offsetY: 3, 
+        blurRadius: 5,
+        color: 'rgba(0, 0, 0, 0.3)'
+      },
+    ],
   },
   orderButtonText: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.TextBlack,
   },
 
-  selectButtonLayout: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  selectButton: {
-    backgroundColor: 'white',
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    paddingVertical: 40,
-  },
-  selectButtonText: {
-    fontSize: 18,
-  },
-  smallSelectButtonText: {
-    fontSize: 18,
-  },
-  
-  
     // 3-2. 포인트 적립 (QR)
   rightPane: {
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'flex-end',    
     paddingRight: 30,
-    paddingLeft: 5,
-    backgroundColor: '#ff9191ff',
+    paddingLeft: 10,
   },
   qrButton: {
-    backgroundColor: '#e9ba4b',
+    height: 150,
+    backgroundColor: Colors.Primary,
+    borderWidth: 1,
+    borderColor: Colors.GreyLine,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: 50,
+    paddingTop: 30,
+    paddingHorizontal: 10,
+    paddingBottom: 100,
   },
   qrText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
-    // TODO: QR 이미지 위에 텍스트 배치
+    color: Colors.TextBlack,
+    // todo: QR 이미지 배치
   },
 
     // --- 기존 스타일 (사용하지 않는 것 정리) ---
