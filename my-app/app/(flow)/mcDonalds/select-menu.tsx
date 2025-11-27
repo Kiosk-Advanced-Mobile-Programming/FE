@@ -1,37 +1,35 @@
-// app/(flow)/order-menu.tsx
 import React, { useState } from 'react';
-import { View, Text, Pressable, ScrollView, Image } from 'react-native';
-import { Stack } from 'expo-router';
+import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
+import { Stack, router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import styles from './select-menu.style';
-import { CATEGORIES, MENU_ITEMS } from './menu.data'; // 데이터 import
 
-export default function OrderMenuScreen() {
-  // 1. 현재 선택된 카테고리 상태 (기본값: 'recommend')
+// 아까 만든 재사용 컴포넌트 Import
+import MenuItem from '@/components/mcDonalds/MenuItem'; 
+
+import { CATEGORIES, MENU_ITEMS } from './menu.data';
+
+export default function SelectMenuScreen() {
   const [activeCategoryId, setActiveCategoryId] = useState('recommend');
 
-  // 2. 현재 카테고리에 맞는 메뉴만 필터링
-  const displayedItems = MENU_ITEMS.filter(
-    (item) => item.category === activeCategoryId
-  );
-
-  // 3. 현재 카테고리 이름 찾기 (헤더 표시용)
+  // 선택된 카테고리의 메뉴만 필터링
+  const displayedItems = MENU_ITEMS.filter(item => item.category === activeCategoryId);
   const currentCategoryName = CATEGORIES.find(c => c.id === activeCategoryId)?.name;
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      
-      {/* 전체 컨테이너 (가로 배치) */}
+      <StatusBar style="dark" />
+
       <View style={styles.container}>
         
-        {/* === [좌측] 사이드바 (카테고리 목록) === */}
+        {/* === 1. 좌측 사이드바 (카테고리) === */}
         <View style={styles.sidebar}>
           <ScrollView showsVerticalScrollIndicator={false}>
             {CATEGORIES.map((category) => (
               <Pressable
                 key={category.id}
                 onPress={() => setActiveCategoryId(category.id)}
-                // 선택된 상태면 스타일을 다르게 적용 (배경색 변경 등)
                 style={[
                   styles.categoryItem,
                   activeCategoryId === category.id && styles.categoryItemActive
@@ -46,41 +44,42 @@ export default function OrderMenuScreen() {
                 </Text>
               </Pressable>
             ))}
+            
+            {/* 홈으로 가기 버튼 (맨 아래나 위에 배치) */}
+            <Pressable style={styles.homeButton} onPress={() => router.back()}>
+              <Text>🏠 홈</Text>
+            </Pressable>
           </ScrollView>
         </View>
 
-        {/* === [우측] 메인 콘텐츠 (메뉴 그리드) === */}
+        {/* === 2. 우측 메인 콘텐츠 (메뉴 그리드) === */}
         <View style={styles.contentArea}>
           
-          {/* 우측 상단 헤더 (맥도날드 로고 + 카테고리명) */}
+          {/* 헤더 */}
           <View style={styles.contentHeader}>
-            {/* 로고 이미지가 있다면 <Image ... /> 사용 */}
-            <Text style={styles.logoText}>M</Text> 
             <Text style={styles.headerTitle}>{currentCategoryName}</Text>
           </View>
 
-          {/* 메뉴 리스트 스크롤 */}
+          {/* 메뉴 리스트 */}
           <ScrollView contentContainerStyle={styles.menuGrid}>
-            {displayedItems.length > 0 ? (
-              displayedItems.map((item) => (
-                <Pressable key={item.id} style={styles.menuCard}>
-                  {/* 신제품 뱃지 */}
-                  {item.isNew && (
-                    <View style={styles.badge}><Text style={styles.badgeText}>신제품</Text></View>
-                  )}
-                  
-                  {/* 이미지 영역 (임시 회색 박스) */}
-                  <View style={styles.imagePlaceholder} />
-                  
-                  <Text style={styles.menuName}>{item.name}</Text>
-                  <Text style={styles.menuPrice}>₩{item.price.toLocaleString()}</Text>
-                  <Text style={styles.menuKcal}>{item.kcal} Kcal</Text>
-                </Pressable>
-              ))
-            ) : (
-              <Text style={styles.emptyText}>해당 카테고리에 메뉴가 없습니다.</Text>
-            )}
+            {displayedItems.map((item) => (
+              // ✨ 재사용 컴포넌트 사용! ✨
+              <MenuItem
+                key={item.id}
+                name={item.name}
+                price={item.price}
+                imageSource={item.image} 
+                onPress={() => Alert.alert('담기', `${item.name}을 장바구니에 담았습니다.`)}
+              />
+            ))}
           </ScrollView>
+
+          {/* === 3. 하단 장바구니 요약바 (Footer) === */}
+          {/* 나중에 구현할 부분입니다 */}
+          <View style={styles.footer}>
+            <Text style={styles.footerText}>주문 내역 / 결제하기</Text>
+          </View>
+
         </View>
 
       </View>

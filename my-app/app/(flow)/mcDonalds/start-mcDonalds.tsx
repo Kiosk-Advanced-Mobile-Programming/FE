@@ -7,17 +7,17 @@ import PrepareModal from '@/components/mcDonalds/PrepareModal';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 const BANNER_IMAGES = [
-  require('@assets/images/mcDonalds/banner_genz.jpg'),
-  require('@assets/images/mcDonalds/banner_gmShake.jpg'),
-  require('@assets/images/mcDonalds/banner_icedTea.jpg'),
-  require('@assets/images/mcDonalds/banner_mcCrispy.png'),
-  require('@assets/images/mcDonalds/banner_mcLunch.jpg'),
-  require('@assets/images/mcDonalds/banner_mcMorning.jpg'),
-  require('@assets/images/mcDonalds/banner_mcWing.jpg'),
-  require('@assets/images/mcDonalds/banner_milkAndBerry.jpg'),
-  require('@assets/images/mcDonalds/banner_treats.jpg'),
-  require('@assets/images/mcDonalds/banner_mcDrive.jpg'),
-  require('@assets/images/mcDonalds/banner_gmShake.jpg')
+  require('@assets/images/mcDonalds/banner/banner_genz.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_gmShake.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_icedTea.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_mcCrispy.png'),
+  require('@assets/images/mcDonalds/banner/banner_mcLunch.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_mcMorning.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_mcWing.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_milkAndBerry.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_treats.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_mcDrive.jpg'),
+  require('@assets/images/mcDonalds/banner/banner_gmShake.jpg')
 ];
 
 export default function McDonaldsStart() {
