@@ -83,9 +83,9 @@ export default StyleSheet.create({
     borderColor: Colors.GreyLine,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 30,
+    paddingTop: 0,
     paddingHorizontal: 10,
-    paddingBottom: 100,
+    paddingBottom: 0,
   },
   qrText: {
     fontSize: 20,
