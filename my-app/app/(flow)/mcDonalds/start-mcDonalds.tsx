@@ -85,7 +85,7 @@ export default function McDonaldsStart() {
           <PrepareModal
             visible = {modalVisible}
             onClose={() => setModalVisible(false)}  // 닫기 버튼 누르면 꺼짐
-            message="준비 중 입니다!"
+            message="실제 키오스크에서는 맥도날드 앱을 열어 QR코드를 인식시켜 포인트를 적립할 수 있어요."
           />
         </View>
       </View>
