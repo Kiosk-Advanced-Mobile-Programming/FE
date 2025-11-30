@@ -13,7 +13,7 @@ export default function HomeTab() {
       }}
     >
       <Text>홈</Text>
-      <Pressable onPress={() => router.push("/(flow)/loginPage/LoginPage")}>
+      <Pressable onPress={() => router.push("/(flow)/start")}>
         <Text
           style={{
             padding: 12,
