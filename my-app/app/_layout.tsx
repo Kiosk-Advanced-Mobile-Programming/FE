@@ -22,7 +22,10 @@ export default function RootLayout() {
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
 
         {/* 로그인 페이지: 최상위 레벨로 이동했으므로 여기서 헤더를 숨김 */}
-        <Stack.Screen name="LoginPage" options={{ headerShown: false }} />
+        <Stack.Screen
+          name="(loginPage)/LoginPage"
+          options={{ headerShown: false }}
+        />
 
         <Stack.Screen
           name="modal"

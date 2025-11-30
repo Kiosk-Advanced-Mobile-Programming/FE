@@ -1,8 +1,8 @@
-import { loginWithEmail, signupWithEmail } from "@/firebase/auth";
+import { loginWithEmail } from "@/firebase/auth";
 import { router } from "expo-router";
 import React, { useState } from "react";
 import { Modal, Pressable, Text, TextInput, View } from "react-native";
-import { styles } from "./LoginPage.styles"; // 스타일 import
+import { styles } from "./_LoginPage.styles";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -25,51 +25,27 @@ export default function LoginPage() {
     try {
       setLoading(true);
       await loginWithEmail(email, pw);
-      setDialog({
-        title: "로그인 성공",
-        message: "학습을 시작할 수 있습니다.",
-      });
-      router.push("/(flow)/start");
+      // 로그인 성공 시 바로 이동 (dialog 없이)
+      router.replace("/(tabs)/home");
     } catch (err: any) {
       setDialog({
         title: "로그인 실패",
-        message: err.message ?? "잠시 후 다시 시도해주세요.",
+        message: "이메일 또는 비밀번호를 확인해주세요.",
       });
     } finally {
       setLoading(false);
     }
   };
 
-  const handleSignup = async () => {
-    if (!email || !pw) {
-      setDialog({
-        title: "입력 오류",
-        message: "이메일과 비밀번호를 입력하세요.",
-      });
-      return;
-    }
-    try {
-      setLoading(true);
-      await signupWithEmail(email, pw);
-      setDialog({
-        title: "회원가입 성공",
-        message: "이제 로그인할 수 있습니다.",
-      });
-    } catch (err: any) {
-      setDialog({
-        title: "회원가입 실패",
-        message: err.message ?? "잠시 후 다시 시도해주세요.",
-      });
-    } finally {
-      setLoading(false);
-    }
+  const handleGoToSignup = () => {
+    // 회원가입 페이지로 이동
+    router.push("/(loginPage)/SignupPage");
   };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>KIOSK-APP</Text>
 
-      {/* 이메일 입력 */}
       <TextInput
         placeholder="이메일"
         value={email}
@@ -79,7 +55,6 @@ export default function LoginPage() {
         style={styles.input}
       />
 
-      {/* 비밀번호 입력 */}
       <TextInput
         placeholder="비밀번호"
         value={pw}
@@ -88,7 +63,6 @@ export default function LoginPage() {
         style={styles.input}
       />
 
-      {/* 로그인 버튼 */}
       <Pressable
         onPress={handleLogin}
         disabled={loading}
@@ -99,18 +73,15 @@ export default function LoginPage() {
         </Text>
       </Pressable>
 
-      {/* 회원가입 버튼 */}
+      {/* 회원가입 버튼: 이동 기능만 수행 */}
       <Pressable
-        onPress={handleSignup}
+        onPress={handleGoToSignup}
         disabled={loading}
         style={styles.secondaryButton}
       >
-        <Text style={styles.secondaryButtonText}>
-          {loading ? "가입 중..." : "회원가입"}
-        </Text>
+        <Text style={styles.secondaryButtonText}>회원가입 하러가기</Text>
       </Pressable>
 
-      {/* 커스텀 다이얼로그 */}
       <Modal
         visible={dialog !== null}
         transparent

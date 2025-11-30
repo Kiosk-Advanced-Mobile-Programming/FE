@@ -1,10 +1,7 @@
-// app/(tabs)/stats.tsx
-// 하단 탭에서 들어오는 "학습 통계(세션 목록)" 화면입니다.
-
 import { auth, db } from "@/firebase/app";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router"; // useFocusEffect 추가
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react"; // useCallback 추가
 import {
   ActivityIndicator,
   FlatList,
@@ -12,7 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { styles } from "./stats.style";
+import { styles } from "./_stats.style";
 
 interface SessionListItem {
   id: string;
@@ -26,59 +23,76 @@ export default function StatsListScreen() {
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<SessionListItem[]>([]);
 
-  // ---------- Firestore에서 현재 유저의 세션 목록 불러오기 ----------
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const uid = auth.currentUser?.uid;
-        console.log("현재 유저 UID: " + uid);
-        if (!uid) {
-          setLoading(false);
-          return;
-        }
+  // useEffect 대신 useFocusEffect 사용
+  // 화면이 포커스될 때마다 실행됨
+  useFocusEffect(
+    useCallback(() => {
+      let isActive = true; // 컴포넌트 언마운트 시 상태 업데이트 방지용 플래그
 
-        const sessionsRef = collection(db, "users", uid, "sessions");
-        const q = query(sessionsRef, orderBy("endedAt", "desc")); // 최신 순
+      const load = async () => {
+        try {
+          // 로딩 상태를 매번 보여줄지, 아니면 데이터만 조용히 갱신할지는 선택 사항입니다.
+          // 여기서는 갱신 느낌을 주기 위해 로딩을 true로 설정합니다.
+          setLoading(true);
 
-        const snap = await getDocs(q);
-        const items: SessionListItem[] = [];
+          const uid = auth.currentUser?.uid;
+          console.log("현재 유저 UID: " + uid);
+          if (!uid) {
+            if (isActive) setLoading(false);
+            return;
+          }
 
-        snap.forEach((doc) => {
-          const d = doc.data() as any;
-          const started = d.startedAt?.toDate?.() ?? new Date();
-          const totalTouches = d.totalTouches ?? 0;
-          const successTouches = d.successTouches ?? 0;
-          const successRate =
-            totalTouches > 0
-              ? Math.round((successTouches / totalTouches) * 100)
-              : 0;
+          const sessionsRef = collection(db, "users", uid, "sessions");
+          const q = query(sessionsRef, orderBy("endedAt", "desc")); // 최신 순
 
-          items.push({
-            id: doc.id,
-            category: d.category ?? "학습",
-            startedAtLabel: started.toLocaleDateString("ko-KR", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              weekday: "long",
-            }),
-            successRateLabel: `${successRate}% 성공`,
+          const snap = await getDocs(q);
+          const items: SessionListItem[] = [];
+
+          snap.forEach((doc) => {
+            const d = doc.data() as any;
+            const started = d.startedAt?.toDate?.() ?? new Date();
+            const totalTouches = d.totalTouches ?? 0;
+            const successTouches = d.successTouches ?? 0;
+            const successRate =
+              totalTouches > 0
+                ? Math.round((successTouches / totalTouches) * 100)
+                : 0;
+
+            items.push({
+              id: doc.id,
+              category: d.category ?? "학습",
+              startedAtLabel: started.toLocaleDateString("ko-KR", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+                weekday: "long",
+              }),
+              successRateLabel: `${successRate}% 성공`,
+            });
           });
-        });
 
-        setSessions(items);
-      } catch (e) {
-        console.log("세션 목록 불러오기 오류:", e);
-      } finally {
-        setLoading(false);
-      }
-    };
+          if (isActive) {
+            setSessions(items);
+          }
+        } catch (e) {
+          console.log("세션 목록 불러오기 오류:", e);
+        } finally {
+          if (isActive) {
+            setLoading(false);
+          }
+        }
+      };
 
-    load();
-  }, []);
+      load();
+
+      // cleanup 함수: 탭을 빠르게 이동할 때 비동기 로직 충돌 방지
+      return () => {
+        isActive = false;
+      };
+    }, []) // 의존성 배열은 비워둡니다.
+  );
 
   const handlePressItem = (item: SessionListItem) => {
-    // 세션 상세 화면으로 이동 (세션 ID 전달)
     router.push({
       pathname: "/(flow)/studySummary/StudyDetailScreen",
       params: { sessionId: item.id },

@@ -1,7 +1,7 @@
 // app/(flow)/confirm.tsx
-import { View, Text, Pressable } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
-import styles from './confirm.styles';
+import { router, useLocalSearchParams } from "expo-router";
+import { Pressable, Text, View } from "react-native";
+import styles from "./confirm.styles";
 
 export default function Confirm() {
   const { category, brand, mode } = useLocalSearchParams();
@@ -13,11 +13,11 @@ export default function Confirm() {
         선택: {category} / {brand}
       </Text>
 
-      <Text style={styles.modeText}>모드: {mode ?? '기본'}</Text>
+      <Text style={styles.modeText}>모드: {mode ?? "기본"}</Text>
 
       <Pressable
         style={styles.primary}
-        onPress={() => router.replace('/(tabs)')}
+        onPress={() => router.replace("/(tabs)/home")}
       >
         <Text style={styles.btnText}>완료하고 홈으로</Text>
       </Pressable>
