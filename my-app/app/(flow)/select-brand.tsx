@@ -28,11 +28,13 @@ export default function SelectBrand() {
             key={b}
             style={[
               styles.btn,
-              b === '이디야' ? styles.btnDark : styles.btnYellow,
+              b === '메가 커피' ? styles.btnDark : styles.btnYellow,
             ]}
             onPress={() =>
               router.push({
-                pathname: '/(flow)/confirm',
+                //pathname: '/(flow)/megacoffee/startPage',
+                pathname: '/(flow)/ediya/startPage',
+            
                 params: { category, brand: b, mode },
               })
             }
