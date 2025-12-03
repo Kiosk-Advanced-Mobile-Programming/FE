@@ -1,13 +1,15 @@
 // app/(flow)/mcDonalds/order-detail.tsx
 import React, { useState } from 'react';
-import { View, Text, Image, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, Image, Pressable, ScrollView, Alert, Modal } from 'react-native'; 
 import { useLocalSearchParams, router, Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import styles from './order-detail.style';
 import { MENU_ITEMS, SET_TYPES, SIDE_OPTIONS, DRINK_OPTIONS } from './menu.data';
+import { useCart } from './cart-context';
 
 export default function OrderDetailScreen() {
   const { id } = useLocalSearchParams();
+  const { addToCart } = useCart(); // Hook 사용
   const targetMenu = MENU_ITEMS.find((m) => m.id === Number(id));
 
   // 상태 관리: 단계(1~4), 선택한 옵션들
@@ -16,6 +18,7 @@ export default function OrderDetailScreen() {
   const [selectedSide, setSelectedSide] = useState(SIDE_OPTIONS[0]);
   const [selectedDrink, setSelectedDrink] = useState(DRINK_OPTIONS[0]);
   const [quantity, setQuantity] = useState(1);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   if (!targetMenu) return <View><Text>메뉴를 찾을 수 없습니다.</Text></View>;
 
@@ -29,6 +32,8 @@ export default function OrderDetailScreen() {
     }
     return price;
   };
+
+  const currentPrice = calculatePrice() * quantity;
 
   // === 현재 세트 상태에 맞는 이미지 가져오기 ===
   const getCurrentBurgerImage = (setTypeId: string) => {
@@ -53,8 +58,24 @@ export default function OrderDetailScreen() {
     else setStep(prev => prev - 1);
   };
 
-  const handleAddToCart = () => {
-    Alert.alert("주문 완료", "주문 내역에 메뉴가 추가되었습니다", [{ text: "확인", onPress: () => router.back() }]);
+  const handleAddToCart = () => {    
+    addToCart({
+      menu: targetMenu,
+      setType: selectedSetType,
+      side: selectedSide,
+      drink: selectedDrink,
+      quantity: quantity,
+      totalPrice: currentPrice,
+    });
+
+    // 2. 완료 모달 보여주기
+    setShowSuccessModal(true);
+
+    // 3. 2초 뒤에 메뉴판으로 자동 이동
+    setTimeout(() => {
+      setShowSuccessModal(false);
+      router.back(); 
+    }, 2000);
   };
 
   return (
@@ -214,6 +235,25 @@ export default function OrderDetailScreen() {
         </View>
 
       </View>
+      <Modal visible={showSuccessModal} transparent animationType="fade">
+        <View style={styles.successModalContainer}>
+          <View style={styles.successCard}>
+            {/* 맥도날드 종이봉투 아이콘 (텍스트로 대체하거나 이미지 사용 가능) */}
+            <Text style={{ fontSize: 60, marginBottom: 10 }}>🛍️</Text> 
+            <View style={styles.successCheckCircle}>
+               <Text style={{ color: 'white', fontSize: 20, fontWeight:'bold' }}>✓</Text>
+            </View>
+            
+            <Text style={styles.successTitle}>
+              주문 내역에 메뉴가 추가{'\n'}되었습니다
+            </Text>
+            
+            <Text style={styles.successPrice}>
+              ₩{currentPrice.toLocaleString()}
+            </Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 }

@@ -96,4 +96,41 @@ export default StyleSheet.create({
     alignItems: 'center', justifyContent: 'center', borderRadius: 4
   },
   confirmButtonText: { fontSize: 20, fontWeight: 'bold', color: '#000' },
+  successModalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.9)', // 살짝 불투명한 흰색 배경 (스크린샷 느낌)
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  successCard: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  successCheckCircle: {
+    position: 'absolute',
+    top: 0,
+    right: -10, // 아이콘 오른쪽 위에 체크 배치
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: '#FFBC0D', // 맥도날드 노랑
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 2,
+    borderColor: 'white',
+  },
+  successTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    textAlign: 'center',
+    marginTop: 20,
+    marginBottom: 20,
+    lineHeight: 34,
+  },
+  successPrice: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#000',
+  },
 });

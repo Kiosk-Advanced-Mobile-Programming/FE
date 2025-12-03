@@ -1,12 +1,17 @@
 // app/(flow)/_layout.tsx
 import { Stack } from 'expo-router';
+// 1. CartProvider 임포트 (경로가 mcDonalds 폴더 안에 있다고 가정)
+import { CartProvider } from './mcDonalds/cart-context'; 
 
 export default function FlowLayout() {
   return (
-    <Stack
-      screenOptions={{
-        headerTitleAlign: 'center',
-      }}
-    />
+    // 2. Provider로 감싸기
+    <CartProvider>
+      <Stack
+        screenOptions={{
+          headerTitleAlign: 'center',
+        }}
+      />
+    </CartProvider>
   );
 }

@@ -66,20 +66,49 @@ export default StyleSheet.create({
     paddingBottom: 100, // 하단 footer 가리지 않게 여백
   },
 
-  // === 하단 장바구니 바 (임시) ===
+  // === 하단 장바구니 바 ===
   footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 60,
-    backgroundColor: '#333',
-    justifyContent: 'center',
+    height: 80,
+    backgroundColor: '#292929', // 검은색 배경
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+  },
+  cartInfo: {
+    flexDirection: 'row',
     alignItems: 'center',
   },
-  footerText: {
+  countBadge: {
+    backgroundColor: Colors.Primary,
+    color: 'black',
+    fontWeight: 'bold',
+    width: 30,
+    height: 30,
+    textAlign: 'center',
+    textAlignVertical: 'center', // 안드로이드용
+    lineHeight: 30, // iOS용
+    borderRadius: 15,
+    marginRight: 10,
+  },
+  totalPrice: {
     color: 'white',
+    fontSize: 24,
+    fontWeight: 'bold',
+  },
+  payButton: {
+    backgroundColor: Colors.Primary,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 4,
+  },
+  payButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
+    color: '#292929',
   }
 });

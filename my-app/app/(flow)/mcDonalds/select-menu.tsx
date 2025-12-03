@@ -4,11 +4,12 @@ import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import styles from './select-menu.style';
 import MenuItem from '@/components/mcDonalds/MenuItem'; 
-
 import { CATEGORIES, MENU_ITEMS } from './menu.data';
+import { useCart } from './cart-context';
 
 export default function SelectMenuScreen() {
   const [activeCategoryId, setActiveCategoryId] = useState('recommend');
+  const { items, getTotalPrice } = useCart(); // 장바구니 정보 가져오기
 
   // 선택된 카테고리의 메뉴만 필터링
   const displayedItems = MENU_ITEMS.filter(item => item.category === activeCategoryId);
@@ -79,11 +80,20 @@ export default function SelectMenuScreen() {
           </ScrollView>
 
           {/* === 3. 하단 장바구니 요약바 (Footer) === */}
-          {/* 나중에 구현할 부분입니다 */}
-          <View style={styles.footer}>
-            <Text style={styles.footerText}>주문 내역 / 결제하기</Text>
-          </View>
-
+          {items.length > 0 && (
+            <View style={styles.footer}>
+              <View style={styles.cartInfo}>
+                <Text style={styles.countBadge}>{items.length}</Text>
+                <Text style={styles.totalPrice}>₩ {getTotalPrice().toLocaleString()}</Text>
+              </View>
+              <Pressable 
+                style={styles.payButton} 
+                onPress={() => router.push('/(flow)/mcDonalds/cart')}
+              >
+                <Text style={styles.payButtonText}>주문내역 확인</Text>
+              </Pressable>
+            </View>
+          )}
         </View>
 
       </View>
