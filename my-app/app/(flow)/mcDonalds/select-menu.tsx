@@ -3,8 +3,6 @@ import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import styles from './select-menu.style';
-
-// 아까 만든 재사용 컴포넌트 Import
 import MenuItem from '@/components/mcDonalds/MenuItem'; 
 
 import { CATEGORIES, MENU_ITEMS } from './menu.data';
