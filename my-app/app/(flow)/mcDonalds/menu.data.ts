@@ -16,7 +16,7 @@ export type Menu = {
   setImages?: {
     normal?: any;
     large?: any;
-  }
+  };
   isNew?: boolean; // 신제품 여부 (선택사항)
   kcal?: number; // 칼로리 (선택사항)
 };
@@ -42,19 +42,19 @@ export const SET_TYPES = [
 
 // 4. 사이드 데이터 (기존 유지)
 export const SIDE_OPTIONS = [
-  { id: 'fries', name: '후렌치 후라이 - 미디엄', price: 0, kcal: 324, image: require('@assets/images/sides/french_fries_m.png') },
-  { id: 'coleslaw', name: '코울슬로', price: 0, kcal: 150, image: require('@assets/images/sides/coleslaw.png') },
-  { id: 'cheese_stick', name: '치즈스틱 2조각', price: 500, kcal: 200, image: require('@assets/images/sides/cheese_stick.png') },
+  { id: 'fries', name: '후렌치 후라이 - 미디엄', price: 0, kcal: 324, image: require('@assets/images/mcDonalds/menu/sides/french_fries_m.png') },
+  { id: 'coleslaw', name: '코울슬로', price: 0, kcal: 150, image: require('@assets/images/mcDonalds/menu/sides/coleslaw.png') },
+  { id: 'cheese_stick', name: '치즈스틱 2조각', price: 500, kcal: 200, image: require('@assets/images/mcDonalds/menu/sides/g_moza_c_stick_2.png') },
 ];
 
 // 5. ✨ [추가] 음료 데이터 (임의 구성)
 export const DRINK_OPTIONS = [
-  { id: 'coke', name: '코카-콜라 - 미디엄', price: 0, kcal: 133, image: require('@assets/images/drinks/coke.png') },
-  { id: 'coke_zero', name: '코카-콜라 제로 - 미디엄', price: 0, kcal: 0, image: require('@assets/images/drinks/coke_zero.png') },
-  { id: 'sprite', name: '스프라이트 - 미디엄', price: 0, kcal: 140, image: require('@assets/images/drinks/sprite.png') },
-  { id: 'fanta', name: '환타 - 미디엄', price: 0, kcal: 62, image: require('@assets/images/drinks/fanta.png') },
-  { id: 'americano', name: '아이스 아메리카노 - 미디엄', price: 500, kcal: 10, image: require('@assets/images/drinks/americano.png') }, // 추가금 예시
-  { id: 'latte', name: '아이스 카페라떼 - 미디엄', price: 1000, kcal: 150, image: require('@assets/images/drinks/latte.png') },
+  // { id: 'coke', name: '코카-콜라 - 미디엄', price: 0, kcal: 133, image: require('@assets/images/drinks/coke.png') },
+  // { id: 'coke_zero', name: '코카-콜라 제로 - 미디엄', price: 0, kcal: 0, image: require('@assets/images/drinks/coke_zero.png') },
+  // { id: 'sprite', name: '스프라이트 - 미디엄', price: 0, kcal: 140, image: require('@assets/images/drinks/sprite.png') },
+  // { id: 'fanta', name: '환타 - 미디엄', price: 0, kcal: 62, image: require('@assets/images/drinks/fanta.png') },
+  { id: 'americano', name: '아이스 아메리카노 - 미디엄', price: 500, kcal: 10, image: require('@assets/images/mcDonalds/menu/mccafe/americano_m.png') }, // 추가금 예시
+  { id: 'latte', name: '아이스 카페라떼 - 미디엄', price: 1000, kcal: 150, image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_m.png') },
 ];
 
 // 6. 메뉴 데이터
@@ -73,7 +73,7 @@ export const MENU_ITEMS: Menu[] = [
     category: 'recommend',
     name: '맥윙 2조각',
     price: 3400,
-    image: require('@assets/images/mcDonalds/menu/side/mcwing_2.png'),
+    image: require('@assets/images/mcDonalds/menu/sides/mcwing_2.png'),
     kcal: 245
   },
   {

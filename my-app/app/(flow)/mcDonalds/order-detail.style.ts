@@ -11,6 +11,8 @@ export default StyleSheet.create({
     backgroundColor: '#f5f5f5',
     alignItems: 'center',
     paddingTop: 50,
+    borderRightWidth: 1,
+    borderColor: '#e0e0e0',
   },
   sidebarItem: { alignItems: 'center', marginBottom: 5 },
   stepCircle: {
@@ -31,6 +33,7 @@ export default StyleSheet.create({
   stepContainer: { flex: 1, padding: 20 },
   guideText: { fontSize: 22, fontWeight: 'bold', marginBottom: 20, color: '#333' },
   
+  // 그리드 (3열 배치)
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -38,10 +41,10 @@ export default StyleSheet.create({
     paddingBottom: 50,
   },
 
-  // === 선택 카드 ===
+  // === 카드 스타일 ===
   card: {
     width: '31%', // 3개씩 나열
-    aspectRatio: 0.75, // 세로로 약간 긴 형태
+    aspectRatio: 0.75,
     borderWidth: 1,
     borderColor: '#e0e0e0',
     borderRadius: 8,
@@ -52,8 +55,8 @@ export default StyleSheet.create({
   },
   cardSelected: {
     borderColor: Colors.Primary,
-    borderWidth: 3, // 선택 시 두꺼운 노란 테두리
-    backgroundColor: '#fff', // 배경은 흰색 유지 (사진 참고)
+    borderWidth: 3,
+    backgroundColor: '#fff', // 배경은 흰색 유지
   },
   cardImage: {
     width: '80%',
@@ -64,10 +67,10 @@ export default StyleSheet.create({
   cardSubName: { fontSize: 16, fontWeight: 'bold', textAlign: 'center', marginBottom: 4 },
   cardName: { fontSize: 14, fontWeight: '500', textAlign: 'center', marginBottom: 4, color: '#555' },
   cardPrice: { fontSize: 16, fontWeight: 'bold', color: '#333' },
-  optionPrice: { fontSize: 14, color: '#D52B1E', fontWeight: 'bold' }, // 추가금 빨간색
+  optionPrice: { fontSize: 14, color: '#D52B1E', fontWeight: 'bold' },
   cardKcal: { fontSize: 12, color: '#999', marginTop: 5 },
 
-  // === 최종 확인 ===
+  // === 최종 확인 화면 ===
   finalView: { flex: 1, alignItems: 'center', justifyContent: 'center' },
   summaryBox: { alignItems: 'center', marginBottom: 30 },
   summaryTitle: { fontSize: 22, fontWeight: 'bold', marginBottom: 10 },
@@ -81,7 +84,7 @@ export default StyleSheet.create({
   qtyText: { fontSize: 24, fontWeight: 'bold' },
   qtyNumber: { flex: 2, textAlign: 'center', fontSize: 20, fontWeight: 'bold' },
 
-  // === 푸터 버튼 ===
+  // === 하단 버튼 ===
   footer: { flexDirection: 'row', padding: 20, borderTopWidth: 1, borderTopColor: '#eee', gap: 15 },
   cancelButton: {
     flex: 1, height: 60, backgroundColor: '#fff', borderWidth: 1, borderColor: '#ccc',

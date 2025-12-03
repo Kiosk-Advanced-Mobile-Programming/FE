@@ -61,13 +61,19 @@ export default function SelectMenuScreen() {
           {/* 메뉴 리스트 */}
           <ScrollView contentContainerStyle={styles.menuGrid}>
             {displayedItems.map((item) => (
-              // ✨ 재사용 컴포넌트 사용! ✨
               <MenuItem
                 key={item.id}
                 name={item.name}
                 price={item.price}
                 imageSource={item.image} 
-                onPress={() => Alert.alert('담기', `${item.name}을 장바구니에 담았습니다.`)}
+                
+                // ✨ [핵심] 클릭 시 상세 페이지로 이동하며 ID 전달
+                onPress={() => {
+                  router.push({
+                    pathname: '/(flow)/mcDonalds/order-detail', // 이동할 파일 경로 (폴더명 주의!)
+                    params: { id: item.id } // 넘겨줄 데이터: 선택한 메뉴의 ID
+                  });
+                }}
               />
             ))}
           </ScrollView>

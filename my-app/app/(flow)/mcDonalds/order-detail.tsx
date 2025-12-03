@@ -10,38 +10,40 @@ export default function OrderDetailScreen() {
   const { id } = useLocalSearchParams();
   const targetMenu = MENU_ITEMS.find((m) => m.id === Number(id));
 
-  // 상태 관리
-  const [step, setStep] = useState(1); // 1:세트선택, 2:사이드, 3:음료, 4:확인
-  const [selectedSetType, setSelectedSetType] = useState(SET_TYPES[1]); // 기본: 일반 세트
+  // 상태 관리: 단계(1~4), 선택한 옵션들
+  const [step, setStep] = useState(1);
+  const [selectedSetType, setSelectedSetType] = useState(SET_TYPES[0]); // 기본: 세트
   const [selectedSide, setSelectedSide] = useState(SIDE_OPTIONS[0]);
   const [selectedDrink, setSelectedDrink] = useState(DRINK_OPTIONS[0]);
   const [quantity, setQuantity] = useState(1);
 
-  if (!targetMenu) return <View><Text>오류: 메뉴 없음</Text></View>;
+  if (!targetMenu) return <View><Text>메뉴를 찾을 수 없습니다.</Text></View>;
 
   // === 가격 계산 ===
   const calculatePrice = () => {
-    let price = targetMenu.price + selectedSetType.priceAdd;
+    // (selectedSetType.priceAdd ?? 0) -> priceAdd가 없으면 0을 더함
+    let price = targetMenu.price + (selectedSetType.priceAdd ?? 0); 
+    
     if (selectedSetType.id !== 'single') {
       price += selectedSide.price + selectedDrink.price;
     }
     return price;
   };
 
-  // === 이미지 가져오기 헬퍼 함수 ===
+  // === 현재 세트 상태에 맞는 이미지 가져오기 ===
   const getCurrentBurgerImage = (setTypeId: string) => {
     if (setTypeId === 'normal' && targetMenu.setImages?.normal) return targetMenu.setImages.normal;
     if (setTypeId === 'large' && targetMenu.setImages?.large) return targetMenu.setImages.large;
-    return targetMenu.image; // 기본(단품) 이미지
+    return targetMenu.image; // 기본(단품)
   };
 
-  // === 네비게이션 함수 ===
+  // === 세트 선택 시 로직 ===
   const handleSetSelect = (setType: typeof SET_TYPES[0]) => {
     setSelectedSetType(setType);
     if (setType.id === 'single') {
-      setStep(4); // 단품이면 사이드/음료 건너뛰고 바로 확인
+      setStep(4); // 단품 -> 바로 확인 화면(Step 4)으로 점프 🚀
     } else {
-      setStep(2); // 세트면 사이드 선택으로
+      setStep(2); // 세트 -> 사이드 선택(Step 2)으로 이동
     }
   };
 
@@ -60,19 +62,18 @@ export default function OrderDetailScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar style="dark" />
 
-      {/* === [좌측] 단계 표시 사이드바 === */}
+      {/* === [좌측] 사이드바 (단계 표시) === */}
       <View style={styles.sidebar}>
         {['세트 선택', '사이드', '음료', '주문 확인'].map((label, index) => {
           const stepNum = index + 1;
-          // 단품 선택 시 사이드(2), 음료(3) 단계는 흐리게 처리
-          const isSkipped = selectedSetType.id === 'single' && (stepNum === 2 || stepNum === 3);
           const isActive = step === stepNum;
+          // 단품 선택 시 2, 3단계는 흐리게 처리
+          const isSkipped = selectedSetType.id === 'single' && (stepNum === 2 || stepNum === 3);
           
           return (
             <View key={stepNum} style={[styles.sidebarItem, isSkipped && { opacity: 0.3 }]}>
-               {/* 체크 표시 아이콘 대신 원형 표시 */}
               <View style={[styles.stepCircle, isActive && styles.stepCircleActive]}>
-                {step > stepNum && <Text style={{color:'white', fontSize: 10}}>✓</Text>}
+                {step > stepNum && <Text style={{color:'white', fontSize: 10, fontWeight:'bold'}}>✓</Text>}
               </View>
               <Text style={[styles.stepText, isActive && styles.stepTextActive]}>{label}</Text>
               {index < 3 && <View style={styles.line} />}
@@ -84,7 +85,7 @@ export default function OrderDetailScreen() {
       {/* === [우측] 메인 콘텐츠 === */}
       <View style={styles.content}>
         
-        {/* 상단 헤더: 메뉴명 및 현재 가격 */}
+        {/* 헤더 */}
         <View style={styles.header}>
           <Text style={styles.menuTitle}>
             {targetMenu.name} {selectedSetType.id !== 'single' ? `- ${selectedSetType.label}` : ''}
@@ -94,7 +95,7 @@ export default function OrderDetailScreen() {
           </Text>
         </View>
 
-        {/* --- STEP 1: 세트/단품 선택 --- */}
+        {/* STEP 1: 세트 선택 */}
         {step === 1 && (
           <View style={styles.stepContainer}>
             <Text style={styles.guideText}>세트로 주문하시겠습니까?</Text>
@@ -105,14 +106,10 @@ export default function OrderDetailScreen() {
                   style={[styles.card, selectedSetType.id === type.id && styles.cardSelected]}
                   onPress={() => handleSetSelect(type)}
                 >
-                  {/* ✨ 타입에 맞는 이미지 표시 */}
-                  <Image 
-                    source={getCurrentBurgerImage(type.id)} 
-                    style={styles.cardImage} 
-                  />
+                  <Image source={getCurrentBurgerImage(type.id)} style={styles.cardImage} />
                   <Text style={styles.cardSubName}>{type.name}</Text>
                   <Text style={styles.cardPrice}>
-                    ₩{(targetMenu.price + type.priceAdd).toLocaleString()}
+                    ₩{(targetMenu.price + (type.priceAdd ?? 0)).toLocaleString()}
                   </Text>
                   <Text style={styles.cardKcal}>{targetMenu.kcal} Kcal</Text>
                 </Pressable>
@@ -121,7 +118,7 @@ export default function OrderDetailScreen() {
           </View>
         )}
 
-        {/* --- STEP 2: 사이드 선택 --- */}
+        {/* STEP 2: 사이드 선택 */}
         {step === 2 && (
           <View style={styles.stepContainer}>
             <Text style={styles.guideText}>세트메뉴 사이드를 선택하세요</Text>
@@ -132,7 +129,7 @@ export default function OrderDetailScreen() {
                   style={[styles.card, selectedSide.id === side.id && styles.cardSelected]}
                   onPress={() => {
                     setSelectedSide(side);
-                    setStep(3); // 음료 선택으로 이동
+                    setStep(3);
                   }}
                 >
                   <Image source={side.image} style={styles.cardImage} />
@@ -145,7 +142,7 @@ export default function OrderDetailScreen() {
           </View>
         )}
 
-        {/* --- STEP 3: 음료 선택 --- */}
+        {/* STEP 3: 음료 선택 */}
         {step === 3 && (
           <View style={styles.stepContainer}>
             <Text style={styles.guideText}>세트메뉴 음료를 선택하세요</Text>
@@ -156,7 +153,7 @@ export default function OrderDetailScreen() {
                   style={[styles.card, selectedDrink.id === drink.id && styles.cardSelected]}
                   onPress={() => {
                     setSelectedDrink(drink);
-                    setStep(4); // 확인 화면으로 이동
+                    setStep(4);
                   }}
                 >
                   <Image source={drink.image} style={styles.cardImage} />
@@ -169,17 +166,17 @@ export default function OrderDetailScreen() {
           </View>
         )}
 
-        {/* --- STEP 4: 최종 확인 --- */}
+        {/* STEP 4: 최종 확인 */}
         {step === 4 && (
           <View style={styles.stepContainer}>
             <View style={styles.finalView}>
-               {/* 선택한 세트 이미지 */}
+               {/* 선택한 세트 타입에 맞는 이미지 */}
                <Image 
                   source={getCurrentBurgerImage(selectedSetType.id)} 
-                  style={{ width: 250, height: 250, resizeMode: 'contain', marginBottom: 20 }} 
+                  style={{ width: 220, height: 220, resizeMode: 'contain', marginBottom: 20 }} 
                />
                
-               {/* 구성품 텍스트 나열 */}
+               {/* 구성품 리스트 */}
                <View style={styles.summaryBox}>
                  <Text style={styles.summaryTitle}>{targetMenu.name}</Text>
                  {selectedSetType.id !== 'single' && (
