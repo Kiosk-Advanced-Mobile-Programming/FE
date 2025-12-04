@@ -6,7 +6,7 @@ import styles from './start.styels';
 export default function StartScreen() {
   return (
     <View style={styles.wrap}>
-      <Text style={styles.title}>테스트 문구</Text>
+      <Text style={styles.title}>학습현황선택</Text>
 
       <Pressable
         style={styles.btnPrimary}
