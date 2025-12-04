@@ -13,23 +13,28 @@ export default function TestPage() {
   const [loading, setLoading] = useState(false);
 
   // 테스트용 세션 저장 함수
-  const handleTestSession = async (categoryName: string) => {
+  const handleTestSession = async (
+    categoryName: string,
+    sessionName: string
+  ) => {
     try {
       setLoading(true);
       console.log(`[Test] ${categoryName} 세션 시작 기록 생성 중...`);
 
-      // 1. 학습 시작 (DB 문서 생성)
-      const sessionId = await startStudySession({ categoryName });
+      // 실제 학습 ui 구성되었을시 참고하여 반영하면 됨
+      //----------------------------------------------------------------------//
+      // 1. 학습 시작 (DB 문서 생성) -- 카테고리와 학습이름
+      const sessionId = await startStudySession({ categoryName, sessionName });
 
       // 2. 가상의 학습 결과 데이터 생성 (테스트용)
       const dummyResult = {
-        totalSeconds: Math.floor(Math.random() * 180) + 30, // 30초 ~ 3분 랜덤
         totalTouches: Math.floor(Math.random() * 20) + 5, // 5 ~ 25회 터치
         successTouches: Math.floor(Math.random() * 5) + 5, // 최소 5회 성공 가정
       };
 
       // 3. 학습 종료 (DB 문서 업데이트)
       await finishStudySession(sessionId, dummyResult);
+      //----------------------------------------------------------------------//
 
       Alert.alert(
         "테스트 성공",
@@ -57,7 +62,7 @@ export default function TestPage() {
 
       <Pressable
         style={[styles.button, styles.mcdonalds]}
-        onPress={() => handleTestSession("맥도날드")}
+        onPress={() => handleTestSession("맥도날드", "치즈추가")}
         disabled={loading}
       >
         <Text style={styles.buttonText}>🍔 맥도날드 학습 기록하기</Text>
@@ -65,7 +70,7 @@ export default function TestPage() {
 
       <Pressable
         style={[styles.button, styles.megaCoffee]}
-        onPress={() => handleTestSession("메가커피")}
+        onPress={() => handleTestSession("메가커피", "아메리카노주문")}
         disabled={loading}
       >
         <Text style={styles.buttonText}>☕ 메가커피 학습 기록하기</Text>
@@ -73,7 +78,7 @@ export default function TestPage() {
 
       <Pressable
         style={[styles.button, styles.cgv]}
-        onPress={() => handleTestSession("CGV 영화관")}
+        onPress={() => handleTestSession("CGV 영화관", "예매")}
         disabled={loading}
       >
         <Text style={[styles.buttonText, styles.textWhite]}>

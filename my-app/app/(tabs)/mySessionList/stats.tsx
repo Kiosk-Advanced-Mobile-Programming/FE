@@ -1,7 +1,10 @@
+// app/(tabs)/stats.tsx
+// 하단 탭에서 들어오는 "학습 통계(세션 목록)" 화면입니다.
+
 import { auth, db } from "@/firebase/app";
-import { useFocusEffect, useRouter } from "expo-router"; // useFocusEffect 추가
+import { useFocusEffect, useRouter } from "expo-router";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
-import React, { useCallback, useState } from "react"; // useCallback 추가
+import React, { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   FlatList,
@@ -15,7 +18,8 @@ interface SessionListItem {
   id: string;
   category: string;
   startedAtLabel: string;
-  successRateLabel: string;
+  statusLabel: string; // 화면에 표시할 텍스트 ("완료" or "진행중")
+  status: string; // 실제 상태 코드 ("COMPLETED" or "IN_PROGRESS")
 }
 
 export default function StatsListScreen() {
@@ -23,16 +27,12 @@ export default function StatsListScreen() {
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<SessionListItem[]>([]);
 
-  // useEffect 대신 useFocusEffect 사용
-  // 화면이 포커스될 때마다 실행됨
   useFocusEffect(
     useCallback(() => {
-      let isActive = true; // 컴포넌트 언마운트 시 상태 업데이트 방지용 플래그
+      let isActive = true;
 
       const load = async () => {
         try {
-          // 로딩 상태를 매번 보여줄지, 아니면 데이터만 조용히 갱신할지는 선택 사항입니다.
-          // 여기서는 갱신 느낌을 주기 위해 로딩을 true로 설정합니다.
           setLoading(true);
 
           const uid = auth.currentUser?.uid;
@@ -51,12 +51,13 @@ export default function StatsListScreen() {
           snap.forEach((doc) => {
             const d = doc.data() as any;
             const started = d.startedAt?.toDate?.() ?? new Date();
-            const totalTouches = d.totalTouches ?? 0;
-            const successTouches = d.successTouches ?? 0;
-            const successRate =
-              totalTouches > 0
-                ? Math.round((successTouches / totalTouches) * 100)
-                : 0;
+            const status = d.status ?? "COMPLETED";
+
+            // 상태에 따른 라벨 설정
+            let statusLabel = "완료";
+            if (status === "IN_PROGRESS") {
+              statusLabel = "진행중";
+            }
 
             items.push({
               id: doc.id,
@@ -67,7 +68,8 @@ export default function StatsListScreen() {
                 day: "numeric",
                 weekday: "long",
               }),
-              successRateLabel: `${successRate}% 성공`,
+              statusLabel: statusLabel,
+              status: status,
             });
           });
 
@@ -85,14 +87,16 @@ export default function StatsListScreen() {
 
       load();
 
-      // cleanup 함수: 탭을 빠르게 이동할 때 비동기 로직 충돌 방지
       return () => {
         isActive = false;
       };
-    }, []) // 의존성 배열은 비워둡니다.
+    }, [])
   );
 
   const handlePressItem = (item: SessionListItem) => {
+    // 학습 중이면 상세 화면 이동 차단 (이중 안전장치)
+    if (item.status === "IN_PROGRESS") return;
+
     router.push({
       pathname: "/(flow)/studySummary/StudyDetailScreen",
       params: { sessionId: item.id },
@@ -127,11 +131,30 @@ export default function StatsListScreen() {
         renderItem={({ item }) => (
           <Pressable
             onPress={() => handlePressItem(item)}
-            style={styles.itemCard}
+            // '진행중' 상태면 클릭 비활성화
+            disabled={item.status === "IN_PROGRESS"}
+            style={[
+              styles.itemCard,
+              // 진행중이면 약간 흐리게 처리
+              item.status === "IN_PROGRESS" && {
+                opacity: 0.7,
+                backgroundColor: "#F5F5F5",
+              },
+            ]}
           >
             <Text style={styles.itemCategory}>{item.category}</Text>
             <Text style={styles.itemDate}>{item.startedAtLabel}</Text>
-            <Text style={styles.itemSuccess}>{item.successRateLabel}</Text>
+            <Text
+              style={[
+                styles.itemSuccess,
+                // 진행중일 때는 주황색, 완료일 때는 기존 초록색 유지
+                item.status === "IN_PROGRESS"
+                  ? { color: "#FF9800" }
+                  : undefined,
+              ]}
+            >
+              {item.statusLabel}
+            </Text>
           </Pressable>
         )}
       />

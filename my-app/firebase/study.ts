@@ -3,6 +3,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc, // 1. 데이터를 읽어오기 위해 getDoc 추가
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
@@ -10,12 +11,12 @@ import { auth, db } from "./app";
 
 // 학습 시작 시 필요한 데이터 (카테고리 등)
 export interface StudyStartData {
-  categoryName: string; // 예: "카페", "식당"
+  categoryName: string; // 맥도날드, 메가커피
+  sessionName: string; // 맥도날드 치즈추가
 }
 
 // 학습 종료 시 업데이트할 결과 데이터
 export interface StudyResultData {
-  totalSeconds: number; // 총 소요 시간
   totalTouches: number; // 전체 터치 수
   successTouches: number; // 성공 터치 수
 }
@@ -34,16 +35,12 @@ export async function startStudySession(data: StudyStartData): Promise<string> {
     // users/{uid}/sessions 경로 참조
     const sessionsRef = collection(db, "users", user.uid, "sessions");
 
-    // 초기 데이터 저장 (시작 시간, 상태, 카테고리 등)
-    // 결과 필드들은 아직 모르므로 0 또는 null로 초기화하거나 생략 가능합니다.
-    // 여기서는 빈 값(0)으로 필드를 미리 생성해 둡니다.
     const docRef = await addDoc(sessionsRef, {
-      category: data.categoryName, // stats.tsx 호환용 필드명
-      categoryName: data.categoryName, // StudyDetailScreen.tsx 호환용
-      status: "IN_PROGRESS", // 학습 중 상태
-      startedAt: serverTimestamp(), // 시작 시간
+      category: data.categoryName,
+      sessionName: data.sessionName,
+      status: "IN_PROGRESS",
+      startedAt: serverTimestamp(), // 서버 기준 시간 저장
 
-      // 나중에 업데이트될 필드들 (빈 값으로 초기화)
       endedAt: null,
       totalSeconds: 0,
       totalTouches: 0,
@@ -51,7 +48,7 @@ export async function startStudySession(data: StudyStartData): Promise<string> {
     });
 
     console.log("학습 시작! 세션 생성됨:", docRef.id);
-    return docRef.id; // 나중에 종료할 때 이 ID가 필요하므로 반환
+    return docRef.id;
   } catch (error) {
     console.error("학습 세션 생성 실패:", error);
     throw error;
@@ -78,16 +75,39 @@ export async function finishStudySession(
     // 업데이트할 문서 참조
     const sessionDocRef = doc(db, "users", user.uid, "sessions", sessionId);
 
-    // 결과 데이터 업데이트 (종료 시간, 상태 변경, 결과 수치)
+    // 1. 현재 저장된 문서 가져오기
+    const sessionSnap = await getDoc(sessionDocRef);
+
+    if (!sessionSnap.exists()) {
+      throw new Error("세션을 찾을 수 없습니다.");
+    }
+
+    const data = sessionSnap.data();
+
+    // 2. 시간 차이 계산 (현재 시간 - 시작 시간)
+    let calculatedSeconds = 0;
+    if (data.startedAt) {
+      const now = new Date();
+      // Firestore Timestamp는 .toDate() 메서드로 JS Date 객체 변환 가능
+      const startTime = data.startedAt.toDate();
+      const diffInMillis = now.getTime() - startTime.getTime(); // 밀리초 차이
+      calculatedSeconds = Math.floor(diffInMillis / 1000); // 초 단위로 변환 (내림)
+    }
+
+    // -----------------------------------------------------------
+
+    // 결과 데이터 업데이트
     await updateDoc(sessionDocRef, {
-      status: "COMPLETED", // 학습 완료 상태로 변경
-      endedAt: serverTimestamp(), // 종료 시간 기록
-      totalSeconds: result.totalSeconds,
+      status: "COMPLETED",
+      endedAt: serverTimestamp(),
+      totalSeconds: calculatedSeconds, // 계산된 시간 저장
       totalTouches: result.totalTouches,
       successTouches: result.successTouches,
     });
 
-    console.log("학습 종료! 결과 업데이트 완료:", sessionId);
+    console.log(
+      `학습 종료! 결과 업데이트 완료: ${sessionId}, 소요시간: ${calculatedSeconds}초`
+    );
   } catch (error) {
     console.error("학습 결과 업데이트 실패:", error);
     throw error;
