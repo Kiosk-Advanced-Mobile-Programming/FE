@@ -1,4 +1,5 @@
 // app/(tabs)/index.tsx (일부만)
+import LogoutButton from "@/components/logout/LogoutButton";
 import { router } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
@@ -13,7 +14,7 @@ export default function HomeTab() {
       }}
     >
       <Text>홈</Text>
-      <Pressable onPress={() => router.push("/(flow)/loginPage/LoginPage")}>
+      <Pressable onPress={() => router.push("/(flow)/testPage")}>
         <Text
           style={{
             padding: 12,
@@ -24,6 +25,7 @@ export default function HomeTab() {
         >
           카오스크 학습 시작
         </Text>
+        <LogoutButton />
       </Pressable>
     </View>
   );
