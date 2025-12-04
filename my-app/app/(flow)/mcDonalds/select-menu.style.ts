@@ -10,7 +10,7 @@ export default StyleSheet.create({
 
   // === 좌측 사이드바 ===
   sidebar: {
-    flex: 1.2, // 약 20~25% 너비
+    flex: 1, // 약 20~25% 너비
     backgroundColor: '#f8f8f8',
     borderRightWidth: 1,
     borderColor: '#e0e0e0',
@@ -28,7 +28,7 @@ export default StyleSheet.create({
     borderLeftColor: Colors.Primary, // 노란색 강조
   },
   categoryIcon: { fontSize: 24, marginBottom: 4 },
-  categoryText: { fontSize: 13, color: '#666', fontWeight: '600' },
+  categoryText: { fontSize: 18, color: '#666', fontWeight: '600' },
   categoryTextActive: { color: '#000', fontWeight: 'bold' },
   
   homeButton: {
@@ -41,7 +41,7 @@ export default StyleSheet.create({
 
   // === 우측 콘텐츠 영역 ===
   contentArea: {
-    flex: 3.8, // 약 75~80% 너비
+    flex: 4, // 약 75~80% 너비
     backgroundColor: '#fff',
   },
   contentHeader: {
