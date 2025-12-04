@@ -1,6 +1,5 @@
-// App.tsx
+// app/(flow)/general-restaurant/App.tsx
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { CartProvider } from './cart-context';
 
@@ -14,7 +13,7 @@ import OrderComplete from './order-complete';
 export type RootStackParamList = {
   StartGeneralRestaurant: undefined;
   SelectMenu: undefined;
-  OrderDetail: { itemId: string };
+  OrderDetail: { itemId: string | number };
   Cart: undefined;
   Payment: undefined;
   OrderComplete: undefined;
@@ -22,43 +21,46 @@ export type RootStackParamList = {
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function App() {
+export default function GeneralRestaurantNavigator() {
   return (
     <CartProvider>
-      <NavigationContainer>
-        <Stack.Navigator initialRouteName="StartGeneralRestaurant">
-          <Stack.Screen
-            name="StartGeneralRestaurant"
-            component={StartGeneralRestaurant}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="SelectMenu"
-            component={SelectMenu}
-            options={{ title: '메뉴 선택' }}
-          />
-          <Stack.Screen
-            name="OrderDetail"
-            component={OrderDetail}
-            options={{ title: '상세보기' }}
-          />
-          <Stack.Screen
-            name="Cart"
-            component={Cart}
-            options={{ title: '장바구니' }}
-          />
-          <Stack.Screen
-            name="Payment"
-            component={Payment}
-            options={{ title: '결제' }}
-          />
-          <Stack.Screen
-            name="OrderComplete"
-            component={OrderComplete}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <Stack.Navigator
+        initialRouteName="StartGeneralRestaurant"
+        screenOptions={{
+          headerTitleAlign: 'center',
+        }}
+      >
+        <Stack.Screen
+          name="StartGeneralRestaurant"
+          component={StartGeneralRestaurant}
+          options={{ title: '일반 음식점 키오스크' }}
+        />
+        <Stack.Screen
+          name="SelectMenu"
+          component={SelectMenu}
+          options={{ title: '메뉴 선택' }}
+        />
+        <Stack.Screen
+          name="OrderDetail"
+          component={OrderDetail}
+          options={{ title: '메뉴 상세' }}
+        />
+        <Stack.Screen
+          name="Cart"
+          component={Cart}
+          options={{ title: '장바구니' }}
+        />
+        <Stack.Screen
+          name="Payment"
+          component={Payment}
+          options={{ title: '결제' }}
+        />
+        <Stack.Screen
+          name="OrderComplete"
+          component={OrderComplete}
+          options={{ headerShown: false }}
+        />
+      </Stack.Navigator>
     </CartProvider>
   );
 }
