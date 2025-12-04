@@ -33,7 +33,7 @@ export default function SelectBrand() {
             onPress={() =>
               router.push({
                 //pathname: '/(flow)/megacoffee/startPage',
-                pathname: '/(flow)/ediya/startPage',
+                pathname: '/(flow)/megacoffee/startPage',
             
                 params: { category, brand: b, mode },
               })

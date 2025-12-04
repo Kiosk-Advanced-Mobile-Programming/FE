@@ -144,7 +144,7 @@ const MENU_DATA: CategoryItem[] = [
         ]
     },
     {
-        name: '쉐이크 & 에이드',
+        name: '쉐이크&에이드',
         menus: [
             createMenuItem(currentImageIdx++, '자몽 포멜로 에이드'),
             createMenuItem(currentImageIdx++, '머스캣 모히토 에이드'),

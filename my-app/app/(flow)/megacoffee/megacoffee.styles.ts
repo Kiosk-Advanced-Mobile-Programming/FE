@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
 
     topText: {
-        fontSize: 16,
+        fontSize: 13,
         fontWeight: 'normal',
         color: COLOR_BLACK,
     },
@@ -88,7 +88,8 @@ const styles = StyleSheet.create({
     },
 
     menuContainer: {
-        width: (width - 50) / 3, 
+        width: (width - 40) / 2,
+        height: 200,
         marginRight: 10,
         marginBottom: 10,
         backgroundColor: COLOR_WHITE,
