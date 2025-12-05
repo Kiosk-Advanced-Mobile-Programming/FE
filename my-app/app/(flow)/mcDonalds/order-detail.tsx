@@ -30,16 +30,17 @@ export default function OrderDetailScreen() {
     
     // 세트(단품 아님)일 때만 사이드/음료 가격 추가
     if (selectedSetType.id !== 'single') {
-      // 사이드에 추가금이 있는 경우 (예: 라지 세트가 아닐 때)
-      // 현재 로직상 라지세트면 0원, 일반세트면 추가금이 붙도록 데이터가 설정되어 있다고 가정
-      // 만약 데이터 파일에서 processedSideOptions 로직을 쓰고 싶다면 여기서도 필터링이 필요하지만,
-      // 현재 구조에서는 selectedSide.price 그대로 사용해도 무방합니다.
-      price += selectedSide.price + selectedDrink.price;
+      let sidePrice = selectedSide.price;
+
+      if (selectedSetType.id === 'large' && selectedSide.id === 'fries_large') {
+        sidePrice = 0;
+      }
+
+      price += sidePrice + selectedDrink.price;
     }
     return price;
   };
 
-  // ✨ [필수] 현재 총 가격 변수 선언
   const currentPrice = calculatePrice() * quantity;
 
   // === 이미지 선택 로직 ===

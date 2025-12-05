@@ -2,10 +2,10 @@ const fs = require('fs');
 const path = require('path');
 
 // ▼ 수정할 부분: 이미지가 들어있는 폴더의 경로를 입력하세요.
-const directoryPath = './burger_set'; 
+const directoryPath = './happymeal/1030am_to_4am'; 
 
 // ▼ 수정할 부분: 공통으로 들어갈 카테고리명
-const categoryName = 'burger';
+const categoryName = 'happymeal';
 
 try {
   // 1. 폴더 읽기
@@ -19,12 +19,13 @@ try {
     // 파일명에서 확장자를 제외한 이름을 'name' 필드에 임시로 넣습니다.
     const nameWithoutExt = path.parse(filename).name;
 
-    return `{
-    id: ${index + 32},
+    return `  {
+    id: ${index + 115},
     category: '${categoryName}',
     name: '${nameWithoutExt}', 
     price: 0,
-    image: require('@assets/images/mcDonalds/menu/${categoryName}/${filename}'),
+    image: require('@assets/images/mcDonalds/menu/${directoryPath}/${filename}'),
+    validTime: 'regular',
   },`;
   });
 

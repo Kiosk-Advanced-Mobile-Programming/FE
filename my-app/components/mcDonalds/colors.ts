@@ -2,6 +2,7 @@
 export const Colors = {
   // === 브랜드 컬러 ===
   Primary: '#f4bf3c', // 맥도날드 노란색 (활성화, 버튼 등)
+  PrimaryDisabled: '#ebd5a1ff',
   Secondary: '#c72d1d', // 맥도날드 빨간색 (가격, 강조 텍스트)
 
   // === 배경색 (Background) ===

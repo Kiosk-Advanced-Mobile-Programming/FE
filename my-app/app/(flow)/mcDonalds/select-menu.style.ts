@@ -62,29 +62,35 @@ export default StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: 10,
-    paddingBottom: 100,
+    paddingBottom: 200,
   },
 
-  // === 하단 장바구니 바 ===
+  // === 하단 장바구니 바 (2줄 레이아웃) ===
   footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: 80,
-    backgroundColor: Colors.FooterBackground, // #292929
-    flexDirection: 'row',
+    height: 140, 
+    backgroundColor: Colors.BackgroundGray,
+    flexDirection: 'column', 
+    justifyContent: 'center',
     alignItems: 'center',
-    justifyContent: 'space-between',
     paddingHorizontal: 20,
+    paddingVertical: 15, 
+    gap: 15, // 윗줄(가격)과 아랫줄(버튼) 사이 간격
   },
+
+  // 1. 윗줄: 수량 및 가격 정보
   cartInfo: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'space-between', 
+    width: '100%', 
   },
   countBadge: {
     backgroundColor: Colors.Primary,
-    color: Colors.Black,
+    color: Colors.TextMain,
     fontWeight: 'bold',
     width: 30,
     height: 30,
@@ -95,19 +101,29 @@ export default StyleSheet.create({
     marginRight: 10,
   },
   totalPrice: {
-    color: Colors.White,
+    color: Colors.TextMain,
     fontSize: 24,
     fontWeight: 'bold',
   },
+
+  // 2. 아랫줄: 결제 버튼
   payButton: {
     backgroundColor: Colors.Primary,
-    paddingVertical: 12,
-    paddingHorizontal: 24,
-    borderRadius: 4,
+    paddingVertical: 15, // 버튼 높이감 추가
+    borderRadius: 2, // 둥글기 조정
+    width: '100%', // 버튼을 가로로 꽉 채움
+    alignItems: 'center', // 텍스트 중앙 정렬
+    justifyContent: 'center',
   },
+  // 비활성 버튼 스타일  
+  payButtonDisabled: {
+    color: Colors.TextGray,
+    backgroundColor: Colors.PrimaryDisabled,
+  },
+
   payButtonText: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.FooterBackground, // #292929
+    color: Colors.TextMain,
   }
 });
