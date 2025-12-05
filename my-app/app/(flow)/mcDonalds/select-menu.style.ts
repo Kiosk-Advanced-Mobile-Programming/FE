@@ -1,69 +1,68 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '@/components/mcDonalds/colors'; // 경로 확인!
+import { Colors } from '@/components/mcDonalds/colors';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row', // 좌우 분할
-    backgroundColor: '#fff',
+    flexDirection: 'row',
+    backgroundColor: Colors.Background,
   },
 
   // === 좌측 사이드바 ===
   sidebar: {
-    flex: 1, // 약 20~25% 너비
-    backgroundColor: '#f8f8f8',
+    flex: 1,
+    backgroundColor: Colors.BackgroundGray, // #f8f8f8 -> 통일
     borderRightWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: Colors.Border, // #e0e0e0
   },
   categoryItem: {
     height: 80,
     justifyContent: 'center',
     alignItems: 'center',
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Colors.BorderLight, // #eee
   },
   categoryItemActive: {
-    backgroundColor: '#fff',
+    backgroundColor: Colors.White,
     borderLeftWidth: 5,
-    borderLeftColor: Colors.Primary, // 노란색 강조
+    borderLeftColor: Colors.Primary,
   },
   categoryIcon: { fontSize: 24, marginBottom: 4 },
-  categoryText: { fontSize: 18, color: '#666', fontWeight: '600' },
-  categoryTextActive: { color: '#000', fontWeight: 'bold' },
+  categoryText: { fontSize: 18, color: Colors.TextSub, fontWeight: '600' }, // #666 -> TextSub
+  categoryTextActive: { color: Colors.Black, fontWeight: 'bold' },
   
   homeButton: {
     height: 60,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#eee',
+    backgroundColor: Colors.BorderLight, // #eee
     marginTop: 20,
   },
 
   // === 우측 콘텐츠 영역 ===
   contentArea: {
-    flex: 4, // 약 75~80% 너비
-    backgroundColor: '#fff',
+    flex: 4,
+    backgroundColor: Colors.Background,
   },
   contentHeader: {
     height: 60,
     justifyContent: 'center',
     paddingHorizontal: 20,
     borderBottomWidth: 1,
-    borderBottomColor: '#eee',
+    borderBottomColor: Colors.BorderLight, // #eee
   },
   headerTitle: {
     fontSize: 22,
     fontWeight: 'bold',
-    color: '#333',
+    color: Colors.TextMain, // #333
   },
 
-  // 메뉴 그리드 (MenuItem들이 배치될 곳)
   menuGrid: {
-    padding: 15,
+    padding: 10,
     flexDirection: 'row',
-    flexWrap: 'wrap', // 줄바꿈 필수
-    gap: 12, // 아이템 사이 간격
-    paddingBottom: 100, // 하단 footer 가리지 않게 여백
+    flexWrap: 'wrap',
+    gap: 10,
+    paddingBottom: 100,
   },
 
   // === 하단 장바구니 바 ===
@@ -73,7 +72,7 @@ export default StyleSheet.create({
     left: 0,
     right: 0,
     height: 80,
-    backgroundColor: '#292929', // 검은색 배경
+    backgroundColor: Colors.FooterBackground, // #292929
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -85,18 +84,18 @@ export default StyleSheet.create({
   },
   countBadge: {
     backgroundColor: Colors.Primary,
-    color: 'black',
+    color: Colors.Black,
     fontWeight: 'bold',
     width: 30,
     height: 30,
     textAlign: 'center',
-    textAlignVertical: 'center', // 안드로이드용
-    lineHeight: 30, // iOS용
+    textAlignVertical: 'center',
+    lineHeight: 30,
     borderRadius: 15,
     marginRight: 10,
   },
   totalPrice: {
-    color: 'white',
+    color: Colors.White,
     fontSize: 24,
     fontWeight: 'bold',
   },
@@ -109,6 +108,6 @@ export default StyleSheet.create({
   payButtonText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#292929',
+    color: Colors.FooterBackground, // #292929
   }
 });
