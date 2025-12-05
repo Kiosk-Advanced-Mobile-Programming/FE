@@ -27,13 +27,11 @@ export default function TestPage() {
       const sessionId = await startStudySession({ categoryName, sessionName });
 
       // 2. 가상의 학습 결과 데이터 생성 (테스트용)
-      const dummyResult = {
-        totalTouches: Math.floor(Math.random() * 20) + 5, // 5 ~ 25회 터치
-        successTouches: Math.floor(Math.random() * 5) + 5, // 최소 5회 성공 가정
-      };
+      const totalTouches = Math.floor(Math.random() * 20) + 5; // 5 ~ 25회 터치
+      const successTouches = Math.floor(Math.random() * 5) + 5; // 최소 5회 성공 가정
 
       // 3. 학습 종료 (DB 문서 업데이트)
-      await finishStudySession(sessionId, dummyResult);
+      await finishStudySession(sessionId, totalTouches, successTouches);
       //----------------------------------------------------------------------//
 
       Alert.alert(

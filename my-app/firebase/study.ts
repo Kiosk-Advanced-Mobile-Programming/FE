@@ -60,7 +60,8 @@ export async function startStudySession(data: StudyStartData): Promise<string> {
  */
 export async function finishStudySession(
   sessionId: string,
-  result: StudyResultData
+  totalTouches: number,
+  successTouches: number
 ) {
   try {
     const user = auth.currentUser;
@@ -101,8 +102,8 @@ export async function finishStudySession(
       status: "COMPLETED",
       endedAt: serverTimestamp(),
       totalSeconds: calculatedSeconds, // 계산된 시간 저장
-      totalTouches: result.totalTouches,
-      successTouches: result.successTouches,
+      totalTouches: totalTouches,
+      successTouches: successTouches,
     });
 
     console.log(
