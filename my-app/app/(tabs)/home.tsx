@@ -1,6 +1,7 @@
 // app/(tabs)/index.tsx (일부만)
-import { View, Text, Pressable } from 'react-native';
+import LogoutButton from '@/components/logout/LogoutButton';
 import { router } from 'expo-router';
+import { Pressable, Text, View } from 'react-native';
 
 export default function HomeTab() {
   return (
@@ -24,6 +25,7 @@ export default function HomeTab() {
         >
           카오스크 학습 시작
         </Text>
+        <LogoutButton />
       </Pressable>
     </View>
   );
