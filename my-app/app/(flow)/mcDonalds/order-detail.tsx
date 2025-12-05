@@ -58,11 +58,11 @@ export default function OrderDetailScreen() {
 
     // 라지 세트 선택 시 기본 사이드를 라지 감튀로 변경하는 로직 (필요 시 추가)
     if (setType.id === 'large') {
-       const largeFries = SIDE_OPTIONS.find(s => s.id === 'fries_large');
-       if (largeFries) setSelectedSide(largeFries);
+      const largeFries = SIDE_OPTIONS.find(s => s.id === 'fries_large');
+      if (largeFries) setSelectedSide(largeFries);
     } else if (setType.id === 'normal') {
-       const mediumFries = SIDE_OPTIONS.find(s => s.id === 'fries');
-       if (mediumFries) setSelectedSide(mediumFries);
+      const mediumFries = SIDE_OPTIONS.find(s => s.id === 'fries');
+      if (mediumFries) setSelectedSide(mediumFries);
     }
 
     if (setType.id === 'single') {
@@ -132,7 +132,7 @@ export default function OrderDetailScreen() {
             {selectedSetType.id !== 'single' ? ` - ${selectedSetType.label}` : ''}
           </Text>
           <Text style={styles.menuPriceInfo}>
-             ₩{currentPrice.toLocaleString()}
+            ₩{currentPrice.toLocaleString()}
           </Text>
         </View>
 
@@ -165,13 +165,13 @@ export default function OrderDetailScreen() {
             <ScrollView contentContainerStyle={styles.grid}>
               {SIDE_OPTIONS.map((side) => {
                 // 라지 세트일 때 미디엄 감튀 숨기기 등의 로직이 필요하다면 여기에 추가
-                 if (selectedSetType.id === 'large' && side.id === 'fries') return null;
+                if (selectedSetType.id === 'large' && side.id === 'fries') return null;
 
                  // 라지 세트일 때 라지 감튀 가격 0원으로 표시
-                 let displayPrice = side.price;
-                 if (selectedSetType.id === 'large' && side.id === 'fries_large') displayPrice = 0;
+                let displayPrice = side.price;
+                if (selectedSetType.id === 'large' && side.id === 'fries_large') displayPrice = 0;
 
-                 return (
+                return (
                   <Pressable
                     key={side.id}
                     style={[styles.card, selectedSide.id === side.id && styles.cardSelected]}
@@ -211,28 +211,28 @@ export default function OrderDetailScreen() {
         {step === 4 && (
           <View style={styles.stepContainer}>
             <View style={styles.finalView}>
-               <Image 
+              <Image 
                   source={getCurrentBurgerImage(selectedSetType.id)} 
                   style={{ width: 220, height: 220, resizeMode: 'contain', marginBottom: 20 }} 
-               />
-               <View style={styles.summaryBox}>
-                 <Text style={styles.summaryTitle}>{targetMenu.name}</Text>
-                 {selectedSetType.id !== 'single' && (
-                   <>
-                     <Text style={styles.summaryText}>+ {selectedSide.name}</Text>
-                     <Text style={styles.summaryText}>+ {selectedDrink.name}</Text>
-                   </>
-                 )}
-               </View>
-               <View style={styles.quantityContainer}>
-                 <Pressable style={styles.qtyButton} onPress={() => setQuantity(Math.max(1, quantity - 1))}>
-                   <Text style={styles.qtyText}>-</Text>
-                 </Pressable>
-                 <Text style={styles.qtyNumber}>{quantity}</Text>
-                 <Pressable style={styles.qtyButton} onPress={() => setQuantity(quantity + 1)}>
-                   <Text style={styles.qtyText}>+</Text>
-                 </Pressable>
-               </View>
+              />
+              <View style={styles.summaryBox}>
+                <Text style={styles.summaryTitle}>{targetMenu.name}</Text>
+                {selectedSetType.id !== 'single' && (
+                  <>
+                    <Text style={styles.summaryText}>+ {selectedSide.name}</Text>
+                    <Text style={styles.summaryText}>+ {selectedDrink.name}</Text>
+                  </>
+                )}
+              </View>
+              <View style={styles.quantityContainer}>
+                <Pressable style={styles.qtyButton} onPress={() => setQuantity(Math.max(1, quantity - 1))}>
+                  <Text style={styles.qtyText}>-</Text>
+                </Pressable>
+                <Text style={styles.qtyNumber}>{quantity}</Text>
+                <Pressable style={styles.qtyButton} onPress={() => setQuantity(quantity + 1)}>
+                  <Text style={styles.qtyText}>+</Text>
+                </Pressable>
+              </View>
             </View>
           </View>
         )}
@@ -258,7 +258,7 @@ export default function OrderDetailScreen() {
           <View style={styles.successCard}>
             <Text style={{ fontSize: 60, marginBottom: 10 }}>🛍️</Text> 
             <View style={styles.successCheckCircle}>
-               <Text style={{ color: 'white', fontSize: 20, fontWeight:'bold' }}>✓</Text>
+              <Text style={{ color: 'white', fontSize: 20, fontWeight:'bold' }}>✓</Text>
             </View>
             
             <Text style={styles.successTitle}>
