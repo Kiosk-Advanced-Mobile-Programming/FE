@@ -25,13 +25,13 @@ const BUTTON_DATA = [
         label: '난이도 : 중 (미션)',
         route: '/(flow)/megacoffee/startPage', 
         params: { missionLevel: 'medium' },
-        requirement: '준비 중...' 
+        requirement: '고구마라뗴 (HOT) 텀블러에 담아가기' 
     },
     { 
         id: 4,
         label: '버튼 4 (난이도: 상)',
         route: '/(flow)/megacoffee/startPage', 
-        requirement: '준비 중...' 
+        requirement: '할메가커피 (ICE) 연하게 + 초코토핑 추가하기' 
     },
 ];
 

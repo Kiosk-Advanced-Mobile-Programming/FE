@@ -55,7 +55,7 @@ const CardPaymentTerminal: React.FC = () => {
         // 2. 결과 페이지(result.tsx)로 이동
         // 💡 경로 주의: 파일 구조에 맞춰 '/(flow)/ediya/result' 로 설정했습니다.
         router.push({
-            pathname: '/(flow)/ediya/result',
+            pathname: '/(flow)/megacoffee/result',
             params: {
                 isSuccess: String(finalSuccess), // boolean -> string 변환
                 missionId: finalMissionId
