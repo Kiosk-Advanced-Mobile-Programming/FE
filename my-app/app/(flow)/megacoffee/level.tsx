@@ -10,14 +10,14 @@ const BUTTON_DATA = [
     { 
         id: 1, 
         label: '살펴보기', 
-        route: '/(flow)/ediya/startPage', 
+        route: '/(flow)/megacoffee/startPage', 
         requirement: '자유롭게 메뉴판을 탐색합니다.',
         missionConfig: null 
     }, 
     { 
         id: 2, 
         label: '난이도: 하 (미션)', 
-        route: '/(flow)/ediya/startPage', 
+        route: '/(flow)/megacoffee/startPage', 
         // 💡 하 난이도 설정
         missionConfig: { 
             level: 'easy', 
@@ -32,7 +32,7 @@ const BUTTON_DATA = [
     { 
         id: 3, 
         label: '난이도 : 중 (미션)',
-        route : '/(flow)/ediya/startPage',
+        route : '/(flow)/megacoffee/startPage',
         // 💡 중 난이도 설정 (시럽, 샷 추가)
         missionConfig: { 
             level: 'medium',
@@ -47,7 +47,7 @@ const BUTTON_DATA = [
     { 
         id: 4, 
         label: '버튼 4 (난이도: 상)',
-        route : '/(flow)/ediya/startPage',
+        route : '/(flow)/megacoffee/startPage',
         requirement: '요구사항 : 디카페인 에스프레소(HOT), 사이즈(L), 시럽추가 후 주문 담기',
         
         

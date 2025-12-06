@@ -22,8 +22,8 @@ interface MenuParams {
 }
 
 const TUMBLER_OPTIONS = [
-    { name: 'HOT', price: 0, key: 'tumbler-hot' },
-    { name: 'ICE', price: 0, key: 'tumbler-ice' },
+    { name: 'HOT', price: 0, key: 'hot' },
+    { name: 'ICE', price: 0, key: 'ice' },
 ];
 
 const SHOT_OPTIONS = [
@@ -36,7 +36,7 @@ const SYRUP_OPTIONS = [
 ];
 
 const TOPPING_OPTIONS = [
-    { name: '추가', price: 700, key: 'whipping' },
+    { name: '추가', price: 700, key: 'topping' },
 ];
 
 // 옵션 버튼 컴포넌트
@@ -140,10 +140,27 @@ const handleOrder = () => {
     let isMissionSuccess = false;
 
     // level.tsx의 버튼 2 미션: '아메리카노(HOT), 샷(L) 선택 후 주문 담기'
-    const requiredShotKey = 'light';
+    //난이도 하 조건
+
+    //
+    const requiredShotKey2 = 'hot';
+    const requiredShotKey3 = 'ice';
+
+    //샷 / 농도
+    const requiredShotKey0 = 'add1shot';
+    const requiredShotKey1 = 'light';
+
+    //시럽추가
+    const requiredShotKey4 = 'vanilla'
+
+    //난이도 상 조건
     const MISSION_ID = 'mission-easy';
 
-    if (menuName === '아메리카노' && selectedOptions.shot === requiredShotKey) {
+    if ((menuName === '아메리카노' && selectedOptions.shot === requiredShotKey1 && selectedOptions.tumbler == requiredShotKey2) ||
+        (menuName === '버블 크림 밀크티' && selectedOptions.shot === requiredShotKey0&& selectedOptions.tumbler == requiredShotKey3) ||
+        (menuName === '디카페인 에스프레소' && selectedOptions.shot == requiredShotKey1 && selectedOptions.tumbler == requiredShotKey2 && selectedOptions.syrup === requiredShotKey4)
+        )
+    {
         // 미션 요구사항(샷(L) 선택)을 충족했을 경우
         isMissionSuccess = true;
     }

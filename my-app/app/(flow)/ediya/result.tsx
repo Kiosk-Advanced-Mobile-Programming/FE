@@ -158,18 +158,7 @@ export default function ResultPage() {
                 <Text style={isSuccess ? styles.titleSuccess : styles.titleFailure}>
                     {isSuccess ? '미션 성공!' : '미션 실패'}
                 </Text>
-
-                <View style={styles.separator} />
-                
-                {/* 미션 내용 */}
-                <Text style={styles.missionTitle}>
-                    {missionTitle}
-                </Text>
-                
-                {/* 미션 성공 여부 */}
-                <Text style={styles.missionRequirement}>
-                    {missionRequirement}
-                </Text>
+               
 
                 {/* 첫 페이지로 돌아가기 버튼 */}
                 <Pressable onPress={handleGoHome} style={styles.backButton}>
