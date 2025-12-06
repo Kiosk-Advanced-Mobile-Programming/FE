@@ -47,13 +47,13 @@ export const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
-    borderWidth: 1,
-    borderColor: "#EAEAEA",
+    // borderWidth, borderColor는 컴포넌트에서 동적으로 제어하므로 여기서는 제거
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.03,
     shadowRadius: 4,
     elevation: 2,
+    overflow: "hidden", // 테두리 둥글게 깎기 위해 필수
   },
   cardHeader: {
     flexDirection: "row",
@@ -89,6 +89,7 @@ export const styles = StyleSheet.create({
     paddingVertical: 12,
     borderRadius: 10,
     alignItems: "center",
+    marginTop: 8,
   },
   buttonText: {
     color: "#fff",
