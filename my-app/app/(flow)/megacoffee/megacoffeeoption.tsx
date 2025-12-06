@@ -1,6 +1,8 @@
 import { View, Text, Pressable, ScrollView, StyleSheet, Alert, Dimensions } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState, useMemo } from 'react';
+
+import { setMissionSuccess } from './globalState';
 // [수정] megacoffee.tsx에서 CART_STORAGE, notifyCartUpdate, CartItem 타입을 정확히 Named Import
 import { 
     CART_STORAGE, 
@@ -12,7 +14,7 @@ import optionStyles from './megacoffeeoption.styles'; // 옵션 스타일 임포
 
 // --- [타입 및 데이터 정의] ---
 interface MenuParams {
-    id?: string; // id는 현재 사용되지 않지만 타입 정의에 포함
+    id?: string; 
     name: string;
     price: string;
     category: string;
@@ -101,7 +103,6 @@ export default function MegacoffeeOptionScreen() {
 
     }, [basePrice, selectedOptions]);
 
-
     const handleOptionSelect = (group: keyof typeof selectedOptions, key: string) => {
         setSelectedOptions(prev => ({
             ...prev,
@@ -114,10 +115,50 @@ export default function MegacoffeeOptionScreen() {
         router.back();
     };
 
-    // 주문 담기 핸들러
+    // 💡 [수정됨] 주문 담기 버튼을 눌렀을 때만 실행되도록 함수 안으로 이동
     const handleOrder = () => {
-        // 1. 선택된 옵션 디테일 추출
-        const optionDetails: OptionDetail[] = []; // OptionDetail 타입 사용
+        
+        // ----------------------------------------------------
+        // 1. 미션 성공 여부 확인 (함수 내부로 이동됨)
+        // ----------------------------------------------------
+        let isMissionSuccess = false;
+
+        // 키값 상수 정의
+        const requiredShotKey0 = 'tumbler';
+        const requiredShotKey1 = 'light';
+        const requiredShotKey2 = 'add1shot';
+        const requiredShotKey3 = 'add2shot';
+        const requiredShotKey4 = 'vanilla';
+        const requiredShotKey5 = 'hazelnut';
+        const requiredShotKey6 = 'caramel';
+        const requiredShotKey7 = 'noSyrup';
+        const requiredShotKey8 = 'whipping';
+        const requiredShotKey9 = 'chocoTop';
+        const requiredShotKey10 = 'cheeseFoam';
+
+        const MISSION_ID = 'mission-easy';
+
+        // 조건 검사
+        // 괄호를 사용하여 논리 연산 순서를 명확히 했습니다.
+        if (
+            (menuName === '아메리카노 (H)') ||
+            (menuName === '고구마라떼 (H)' && selectedOptions.tumbler === requiredShotKey0) ||
+            (menuName === '할메가커피 (I)' && selectedOptions.shot === requiredShotKey1 && selectedOptions.topping === requiredShotKey9)
+        ) {
+            isMissionSuccess = true;
+        }
+
+        // 결과 저장 및 로그 출력
+        setMissionSuccess(MISSION_ID, isMissionSuccess);
+        console.log(`[미션 결과] 체크 완료: ${isMissionSuccess}`);
+        
+        // 사용자 알림 (디버깅용이면 나중에 주석 처리 가능)
+        // Alert.alert("주문 담기 완료", `미션 성공 여부: ${isMissionSuccess ? '성공 (true)' : '실패 (false)'}로 저장되었습니다.`);
+
+        // ----------------------------------------------------
+        // 2. 기존 장바구니 로직
+        // ----------------------------------------------------
+        const optionDetails: OptionDetail[] = [];
         const optionsMap = {
             tumbler: TUMBLER_OPTIONS,
             shot: SHOT_OPTIONS,
@@ -138,7 +179,6 @@ export default function MegacoffeeOptionScreen() {
             }
         });
         
-        // 2. 장바구니에 추가할 아이템 객체 생성 (CartItem 타입 사용)
         const newItem: CartItem = {
             name: `${menuName} (${option === 'hot' ? 'H' : 'I'})`,
             quantity: 1,
@@ -146,15 +186,12 @@ export default function MegacoffeeOptionScreen() {
             optionDetails: optionDetails,
         };
 
-        // 3. 임시 전역 장바구니에 아이템 추가
         CART_STORAGE.push(newItem);
-        
-        // 4. megacoffee 화면에 업데이트 알림
         notifyCartUpdate();
 
-        Alert.alert("주문 담기 완료", `${newItem.name}이 장바구니에 추가되었습니다.`);
+        // 사용자에게 주문 완료 알림 (미션 성공 여부와 함께 보여주거나 따로 보여줌)
+        Alert.alert("주문 완료", `${newItem.name}이(가) 장바구니에 담겼습니다.\n(미션성공: ${isMissionSuccess})`);
 
-        // 5. 옵션 화면 닫기
         router.back();
     };
 

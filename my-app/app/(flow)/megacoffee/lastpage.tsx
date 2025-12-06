@@ -1,12 +1,18 @@
 import React, { useMemo } from 'react';
 import { View, Text, Pressable, Alert } from 'react-native';
 import { router } from 'expo-router';
+// 💡 스타일 파일 임포트 (파일명이 lastpage.styles.ts라고 가정)
 import styles from './lastpage.styles'; 
 
+// 💡 전역 장바구니 데이터
 import { 
     CART_STORAGE,
 } from './megacoffee'; 
 
+// 💡 [핵심 추가] 미션 성공 여부 확인 함수 임포트
+import { getMissionSuccess } from './globalState';
+
+// 총 가격 계산 함수
 const calculateCartTotalPrice = () => {
     return CART_STORAGE.reduce((total, item) => {
         const optionCost = item.optionDetails.reduce((optTotal, opt) => optTotal + opt.price, 0);
@@ -21,18 +27,40 @@ const CardPaymentTerminal: React.FC = () => {
         router.back(); 
     };
 
+    // 💡 [핵심 로직] 결제 승인(승인요청) 버튼 클릭 시 실행
     const handleApprovePayment = () => {
-        Alert.alert(
-            "결제 승인 완료", 
-            `총 ${cartTotalPrice.toLocaleString()}원의 카드 결제가 승인되었습니다.`,
-            [{
-                text: "확인", 
-                onPress: () => {
-                    CART_STORAGE.length = 0; 
-                    router.replace('/megacoffee/megacoffee'); 
-                }
-            }]
-        );
+        
+        // 1. 어떤 미션을 성공했는지 확인 (눈속임 전략 대응)
+        // Easy, Medium, Hard 중 하나라도 true면 성공으로 처리
+        const isEasySuccess = getMissionSuccess('mission-easy');
+        const isMediumSuccess = getMissionSuccess('mission-medium');
+        const isHardSuccess = getMissionSuccess('mission-hard');
+
+        let finalSuccess = false;
+        let finalMissionId = 'mission-easy'; // 기본값
+
+        if (isEasySuccess) {
+            finalSuccess = true;
+            finalMissionId = 'mission-easy';
+        } else if (isMediumSuccess) {
+            finalSuccess = true;
+            finalMissionId = 'mission-medium';
+        } else if (isHardSuccess) {
+            finalSuccess = true;
+            finalMissionId = 'mission-hard';
+        }
+
+        console.log(`[LastPage] 결제 시도 -> 성공여부: ${finalSuccess}, ID: ${finalMissionId}`);
+
+        // 2. 결과 페이지(result.tsx)로 이동
+        // 💡 경로 주의: 파일 구조에 맞춰 '/(flow)/ediya/result' 로 설정했습니다.
+        router.push({
+            pathname: '/(flow)/ediya/result',
+            params: {
+                isSuccess: String(finalSuccess), // boolean -> string 변환
+                missionId: finalMissionId
+            }
+        });
     };
 
     return (
@@ -53,7 +81,7 @@ const CardPaymentTerminal: React.FC = () => {
                 {/* 총 주문 금액 및 할부 정보 컨테이너 */}
                 <View style={styles.summaryContainer}>
                     
-                    {/* [1] 총 주문 금액 ROW: Key(좌상단) - Value(우상단) */}
+                    {/* [1] 총 주문 금액 ROW */}
                     <View style={styles.summaryRow}>
                         <Text style={styles.summaryKeyText}>총 주문 금액</Text>
                         <Text style={styles.summaryValueText}>
@@ -61,10 +89,9 @@ const CardPaymentTerminal: React.FC = () => {
                         </Text>
                     </View>
 
-                    {/* [2] 할부일수 ROW: Key(좌) - Value(우) */}
+                    {/* [2] 할부일수 ROW */}
                     <View style={[styles.summaryRow, styles.summaryRowLast]}>
                         <Text style={styles.summaryKeyText}>할부일수</Text>
-                        {/* 일시불은 일반 텍스트 스타일 적용 */}
                         <Text style={styles.summaryValueNormalText}>
                             일시불
                         </Text>
@@ -88,6 +115,7 @@ const CardPaymentTerminal: React.FC = () => {
                     <Text style={styles.buttonText}>취소</Text>
                 </Pressable>
 
+                {/* 💡 승인요청 버튼에 로직 연결 */}
                 <Pressable 
                     style={[styles.actionButton, styles.approveButton]} 
                     onPress={handleApprovePayment}
