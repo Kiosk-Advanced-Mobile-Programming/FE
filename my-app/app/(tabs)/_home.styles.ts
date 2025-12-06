@@ -1,5 +1,12 @@
 import { Colors } from "@/constants/theme";
-import { Platform, StyleSheet } from "react-native";
+import { Dimensions, Platform, StyleSheet } from "react-native";
+
+const { width } = Dimensions.get("window");
+
+// 모달의 실제 너비 계산 (화면의 95%)
+const MODAL_WIDTH = width * 0.95;
+// 영상의 높이 계산 (16:9 비율)
+const VIDEO_HEIGHT = MODAL_WIDTH * (9 / 16);
 
 export const styles = StyleSheet.create({
   container: {
@@ -11,9 +18,9 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingVertical: 15,
     backgroundColor: Colors.light.background,
-    flexDirection: "row", // 가로 배치
-    justifyContent: "space-between", // 양쪽 끝 정렬
-    alignItems: "center", // 세로 중앙 정렬
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     borderBottomWidth: 1,
     borderBottomColor: "#f0f0f0",
   },
@@ -22,7 +29,6 @@ export const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.light.text,
   },
-  // 마이페이지 버튼 스타일 (추가됨)
   myPageButton: {
     flexDirection: "row",
     alignItems: "center",
@@ -84,5 +90,53 @@ export const styles = StyleSheet.create({
     fontSize: 14,
     color: "#888",
     lineHeight: 20,
+  },
+
+  // 모달 오버레이 스타일 (중앙 정렬)
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0, 0, 0, 0.9)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  // 닫기 버튼 (화면 우측 상단 플로팅)
+  floatingCloseButton: {
+    position: "absolute",
+    top: 60, // 상태바 등에 가려지지 않도록 여유 있게 설정
+    right: 20,
+    zIndex: 100, // 최상위 표시
+    padding: 10,
+  },
+
+  // 비디오 모달 컨테이너
+  videoModalContainer: {
+    width: MODAL_WIDTH, // 계산된 너비 적용
+    backgroundColor: "#fff",
+    borderRadius: 10,
+    overflow: "hidden",
+  },
+  modalHeader: {
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
+    paddingVertical: 12,
+    backgroundColor: "#fff",
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "#333",
+  },
+  // 비디오 플레이어 영역 (16:9 비율 유지)
+  videoModalPlayerContainer: {
+    width: MODAL_WIDTH,
+    height: VIDEO_HEIGHT, // 16:9 비율 높이 강제 지정
+    backgroundColor: "#000",
+  },
+  videoPlayerModal: {
+    width: "100%",
+    height: "100%",
+    // 만약 영상 원본 비율이 16:9가 아니라면 아래 값을 조정하세요.
+    // borderRadius를 줘서 모서리가 튀어나가지 않게 할 수도 있습니다.
   },
 });
