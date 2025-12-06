@@ -44,7 +44,7 @@ export async function startStudySession(data: StudyStartData): Promise<string> {
     const docRef = await addDoc(sessionsRef, {
       category: data.categoryName,
       sessionName: data.sessionName,
-      status: "IN_PROGRESS",
+      sessionStatus: "IN_PROGRESS",
       startedAt: serverTimestamp(), // 서버 기준 시간 저장
 
       endedAt: null,
@@ -68,7 +68,7 @@ export async function finishStudySession(
   sessionId: string,
   totalTouches: number,
   successTouches: number,
-  status: StudyStatus
+  sessionStatus: StudyStatus
 ) {
   try {
     const user = auth.currentUser;
@@ -106,14 +106,16 @@ export async function finishStudySession(
 
     // 1. 결과 데이터 업데이트 (status 포함)
     await updateDoc(sessionDocRef, {
-      status: status, // 받아온 상태 저장 (SUCCESS or FAIL)
+      status: sessionStatus, // 받아온 상태 저장 (SUCCESS or FAIL)
       endedAt: serverTimestamp(),
       totalSeconds: calculatedSeconds,
       totalTouches: totalTouches,
       successTouches: successTouches,
     });
 
-    console.log(`학습 종료! 결과 업데이트 완료: ${sessionId}, 상태: ${status}`);
+    console.log(
+      `학습 종료! 결과 업데이트 완료: ${sessionId}, 상태: ${sessionStatus}`
+    );
 
     // 2. 레벨업 로직 (성공 횟수 카운트)
     // users/{uid}/sessions 컬렉션에서 status가 SUCCESS인 문서의 개수를 셉니다.

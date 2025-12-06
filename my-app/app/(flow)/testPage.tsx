@@ -29,32 +29,28 @@ export default function TestPage() {
       const totalTouches = Math.floor(Math.random() * 20) + 5; // 5 ~ 25회 터치
       const successTouches = Math.floor(Math.random() * 5) + 5; // 최소 5회 성공 가정
 
-      // [추가] 랜덤 상태 결정 로직 (SUCCESS, FAIL, IN_PROGRESS 중 하나)
+      // [추가] 랜덤 상태 결정 로직 (SUCCESS, FAIL 중 하나)
       const randomValue = Math.random();
-      let randomStatus: "SUCCESS" | "FAIL" | "IN_PROGRESS";
+      let sessionStatus: "SUCCESS" | "FAIL";
 
-      if (randomValue < 0.33) {
-        randomStatus = "SUCCESS";
-      } else if (randomValue < 0.66) {
-        randomStatus = "FAIL";
+      if (randomValue < 0.8) {
+        sessionStatus = "SUCCESS";
       } else {
-        randomStatus = "IN_PROGRESS";
+        sessionStatus = "FAIL";
       }
-
-      console.log(`[Test] 랜덤 결정된 상태: ${randomStatus}`);
 
       // 3. 학습 종료 (DB 문서 업데이트 - status 포함)
       await finishStudySession(
         sessionId,
         totalTouches,
         successTouches,
-        randomStatus
+        sessionStatus
       );
       //----------------------------------------------------------------------//
 
       Alert.alert(
         "테스트 성공",
-        `[${categoryName}] 기록 저장 완료\nID: ${sessionId}\n상태: ${randomStatus}`
+        `[${categoryName}] 기록 저장 완료\nID: ${sessionId}\n상태: ${sessionStatus}`
       );
     } catch (e: any) {
       console.error(e);
