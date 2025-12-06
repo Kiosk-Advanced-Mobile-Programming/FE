@@ -47,6 +47,7 @@ export const SIDE_OPTIONS = [
   { id: 'cheese_stick', name: '치즈스틱 2조각', price: 500, image: require('@assets/images/mcDonalds/menu/sides/g_moza_c_stick_2.png') },
 ];
 
+// todo 음료 데이터->메뉴 데이터 활용
 // 5. ✨ [추가] 음료 데이터 (임의 구성)
 export const DRINK_OPTIONS = [
   { id: 'coke', name: '코카-콜라 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/coke_m.png') },
@@ -79,7 +80,7 @@ export const MENU_ITEMS: Menu[] = [
     id: 3,
     category: 'recommend',
     name: '치킨 모짜렐라 스낵랩',
-    price: 0, // todo
+    price: 3000,
     image: require('@assets/images/mcDonalds/menu/happy_snack/c_m_snack_wrap.png'),
   },
   {

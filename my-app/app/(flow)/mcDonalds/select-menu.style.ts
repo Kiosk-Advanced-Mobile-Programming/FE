@@ -8,6 +8,68 @@ export default StyleSheet.create({
     backgroundColor: Colors.Background,
   },
 
+  homeContainer: {
+    flex: 1,
+    padding: 10,
+    backgroundColor: '#fff',
+  },
+  homeTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+  },
+  homeGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 10,
+    marginBottom: 20,
+  },
+  homeCard: {
+    width: '48%', // 2열 배치
+    height: 120,
+    backgroundColor: '#f9f9f9',
+    borderRadius: 3,
+    borderWidth: 1,
+    borderColor: '#eee',
+    padding: 15,
+    justifyContent: 'space-between',
+  },
+  homeCardTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: '#333',
+  },
+  homeCardIcon: {
+    fontSize: 30,
+    textAlign: 'right', // 아이콘을 우측 하단으로
+    marginTop: 5,
+  },
+  
+// 배너 영역
+  bannerArea: {
+    gap: 15,
+    marginBottom: 30,
+  },
+  bannerImage: {
+    width: '100%',
+    height: 120, // 이미지 높이 설정 (적절히 조절 가능)
+    borderRadius: 3,
+    // 기존의 justifyContent, padding 등은 이미지에는 불필요하므로 제거
+  },
+
+  // 인기 메뉴 섹션
+  sectionTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    color: '#333',
+  },
+  horizontalScroll: {
+    flexDirection: 'row',
+    paddingBottom: 20,
+  },
+
   // === 좌측 사이드바 ===
   sidebar: {
     flex: 1,
@@ -97,7 +159,7 @@ export default StyleSheet.create({
     textAlign: 'center',
     textAlignVertical: 'center',
     lineHeight: 30,
-    borderRadius: 15,
+    borderRadius: 3,
     marginRight: 10,
   },
   totalPrice: {
@@ -110,7 +172,7 @@ export default StyleSheet.create({
   payButton: {
     backgroundColor: Colors.Primary,
     paddingVertical: 15, // 버튼 높이감 추가
-    borderRadius: 2, // 둥글기 조정
+    borderRadius: 3, // 둥글기 조정
     width: '100%', // 버튼을 가로로 꽉 채움
     alignItems: 'center', // 텍스트 중앙 정렬
     justifyContent: 'center',
