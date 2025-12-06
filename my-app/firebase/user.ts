@@ -1,9 +1,9 @@
-import { doc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "./app";
 
 export interface UserProfile {
   email: string;
-  nickname: string; // [추가] 닉네임 필드
+  nickname: string;
   age: string;
   gender: "남성" | "여성";
   kioskLevel: "초급" | "중급" | "고급";
@@ -31,5 +31,25 @@ export async function saveUserProfile(
   } catch (error) {
     console.error("사용자 정보 저장 실패:", error);
     throw error;
+  }
+}
+
+/**
+ * [추가] Firestore에서 사용자 정보를 가져오는 함수
+ */
+export async function getUserProfile(uid: string): Promise<UserProfile | null> {
+  try {
+    const userRef = doc(db, "users", uid);
+    const docSnap = await getDoc(userRef);
+
+    if (docSnap.exists()) {
+      return docSnap.data() as UserProfile;
+    } else {
+      console.log("해당 유저의 프로필 정보가 없습니다.");
+      return null;
+    }
+  } catch (error) {
+    console.error("사용자 정보 가져오기 실패:", error);
+    return null;
   }
 }
