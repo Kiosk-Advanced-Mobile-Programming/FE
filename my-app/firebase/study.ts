@@ -3,17 +3,23 @@ import {
   addDoc,
   collection,
   doc,
+  getCountFromServer,
   getDoc, // 1. 데이터를 읽어오기 위해 getDoc 추가
+  query,
   serverTimestamp,
   updateDoc,
+  where,
 } from "firebase/firestore";
 import { auth, db } from "./app";
+import { updateUserLevel } from "./user"; // user.ts에서 함수 임포트
 
 // 학습 시작 시 필요한 데이터 (카테고리 등)
 export interface StudyStartData {
   categoryName: string; // 맥도날드, 메가커피
   sessionName: string; // 맥도날드 치즈추가
 }
+
+export type StudyStatus = "SUCCESS" | "FAIL" | "IN_PROGRESS";
 
 // 학습 종료 시 업데이트할 결과 데이터
 export interface StudyResultData {
@@ -38,7 +44,7 @@ export async function startStudySession(data: StudyStartData): Promise<string> {
     const docRef = await addDoc(sessionsRef, {
       category: data.categoryName,
       sessionName: data.sessionName,
-      status: "IN_PROGRESS",
+      sessionStatus: "IN_PROGRESS",
       startedAt: serverTimestamp(), // 서버 기준 시간 저장
 
       endedAt: null,
@@ -61,7 +67,8 @@ export async function startStudySession(data: StudyStartData): Promise<string> {
 export async function finishStudySession(
   sessionId: string,
   totalTouches: number,
-  successTouches: number
+  successTouches: number,
+  sessionStatus: StudyStatus
 ) {
   try {
     const user = auth.currentUser;
@@ -97,18 +104,39 @@ export async function finishStudySession(
 
     // -----------------------------------------------------------
 
-    // 결과 데이터 업데이트
+    // 1. 결과 데이터 업데이트 (status 포함)
     await updateDoc(sessionDocRef, {
-      status: "COMPLETED",
+      status: sessionStatus, // 받아온 상태 저장 (SUCCESS or FAIL)
       endedAt: serverTimestamp(),
-      totalSeconds: calculatedSeconds, // 계산된 시간 저장
+      totalSeconds: calculatedSeconds,
       totalTouches: totalTouches,
       successTouches: successTouches,
     });
 
     console.log(
-      `학습 종료! 결과 업데이트 완료: ${sessionId}, 소요시간: ${calculatedSeconds}초`
+      `학습 종료! 결과 업데이트 완료: ${sessionId}, 상태: ${sessionStatus}`
     );
+
+    // 2. 레벨업 로직 (성공 횟수 카운트)
+    // users/{uid}/sessions 컬렉션에서 status가 SUCCESS인 문서의 개수를 셉니다.
+    const sessionsRef = collection(db, "users", user.uid, "sessions");
+    const q = query(sessionsRef, where("status", "==", "SUCCESS"));
+
+    // 서버 사이드 카운팅 (비용 효율적)
+    const snapshot = await getCountFromServer(q);
+    const successCount = snapshot.data().count;
+
+    console.log(`현재까지 성공한 학습 수: ${successCount}`);
+
+    // 레벨 판단 로직
+    // 20개 이상 -> 고급
+    // 10개 이상 -> 중급
+    // 그 외 -> 변경 없음 (또는 초급 유지)
+    if (successCount >= 20) {
+      await updateUserLevel(user.uid, "고급");
+    } else if (successCount >= 10) {
+      await updateUserLevel(user.uid, "중급");
+    }
   } catch (error) {
     console.error("학습 결과 업데이트 실패:", error);
     throw error;

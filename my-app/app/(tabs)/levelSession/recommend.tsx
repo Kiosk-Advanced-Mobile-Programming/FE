@@ -34,7 +34,7 @@ const COURSES: Course[] = [
     title: "일반 식당",
     description: "음식점에서 메뉴를 고르고 결제하는 기본적인 방법을 배웁니다.",
     level: "초급",
-    route: "/(flow)/general-restaurant/start-general-restaurant",
+    route: "/(flow)/general-restaurant",
   },
   {
     id: "ediya",

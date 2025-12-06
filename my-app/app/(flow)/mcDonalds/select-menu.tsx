@@ -1,102 +1,126 @@
+// app/(flow)/mcDonalds/select-menu.tsx
 import React, { useState } from 'react';
 import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import styles from './select-menu.style';
-import MenuItem from '@/components/mcDonalds/MenuItem'; 
-import { CATEGORIES, MENU_ITEMS } from './menu.data';
+import { Colors } from '@/components/mcDonalds/colors';
 import { useCart } from './cart-context';
+import { CATEGORIES, MENU_ITEMS } from './menu.data';
+
+// 분리한 컴포넌트 import
+import SelectMenuHome from '@/components/mcDonalds/SelectMenuHome'; 
+import MenuItem from '@/components/mcDonalds/MenuItem';
 
 export default function SelectMenuScreen() {
-  const [activeCategoryId, setActiveCategoryId] = useState('recommend');
-  const { items, getTotalPrice } = useCart(); // 장바구니 정보 가져오기
+  const [activeCategoryId, setActiveCategoryId] = useState('home');
+  const { items, getTotalPrice } = useCart();
 
-  // 선택된 카테고리의 메뉴만 필터링
+  // 현재 카테고리 데이터 필터링
   const displayedItems = MENU_ITEMS.filter(item => item.category === activeCategoryId);
   const currentCategoryName = CATEGORIES.find(c => c.id === activeCategoryId)?.name;
 
+  // 버거류인지 판단하는 간단한 함수 (카테고리 ID 확인)
+  const checkIsSetMenu = (category: string) => {
+    return category === 'burger' || category === 'mclunch' || category === 'recommend'; 
+    // todo 'recommend' 안에서도 버거인 것만 거르는 로직 추가 가능
+  };
+
   return (
-    <>
+    <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar style="dark" />
 
-      <View style={styles.container}>
-        
-        {/* === 1. 좌측 사이드바 (카테고리) === */}
-        <View style={styles.sidebar}>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {CATEGORIES.map((category) => (
-              <Pressable
-                key={category.id}
-                onPress={() => setActiveCategoryId(category.id)}
-                style={[
-                  styles.categoryItem,
-                  activeCategoryId === category.id && styles.categoryItemActive
-                ]}
-              >
-                <Text style={styles.categoryIcon}>{category.icon}</Text>
-                <Text style={[
-                  styles.categoryText,
-                  activeCategoryId === category.id && styles.categoryTextActive
-                ]}>
-                  {category.name}
-                </Text>
-              </Pressable>
-            ))}
-            
-            {/* 홈으로 가기 버튼 (맨 아래나 위에 배치) */}
-            <Pressable style={styles.homeButton} onPress={() => router.back()}>
-              <Text>🏠 홈</Text>
+      {/* 좌측 사이드바 (카테고리 탭) */}
+      <View style={styles.sidebar}>
+        <ScrollView showsVerticalScrollIndicator={false}>
+          {CATEGORIES.map((category) => (
+            <Pressable
+              key={category.id}
+              onPress={() => setActiveCategoryId(category.id)}
+              style={[
+                styles.categoryItem,
+                activeCategoryId === category.id && styles.categoryItemActive
+              ]}
+            >
+              <Text style={styles.categoryIcon}>{category.icon}</Text>
+              <Text style={[
+                styles.categoryText,
+                activeCategoryId === category.id && styles.categoryTextActive
+              ]}>
+                {category.name}
+              </Text>
             </Pressable>
-          </ScrollView>
-        </View>
+          ))}
+          <Pressable style={styles.homeButton} onPress={() => router.dismissAll()}>
+             <Text>🏠 처음으로</Text>
+          </Pressable>
+        </ScrollView>
+      </View>
 
-        {/* === 2. 우측 메인 콘텐츠 (메뉴 그리드) === */}
-        <View style={styles.contentArea}>
-          
-          {/* 헤더 */}
-          <View style={styles.contentHeader}>
-            <Text style={styles.headerTitle}>{currentCategoryName}</Text>
-          </View>
-
-          {/* 메뉴 리스트 */}
-          <ScrollView contentContainerStyle={styles.menuGrid}>
-            {displayedItems.map((item) => (
-              <MenuItem
-                key={item.id}
-                name={item.name}
-                price={item.price}
-                imageSource={item.image} 
-                
-                // ✨ [핵심] 클릭 시 상세 페이지로 이동하며 ID 전달
-                onPress={() => {
-                  router.push({
-                    pathname: '/(flow)/mcDonalds/order-detail', // 이동할 파일 경로 (폴더명 주의!)
-                    params: { id: item.id } // 넘겨줄 데이터: 선택한 메뉴의 ID
-                  });
-                }}
-              />
-            ))}
-          </ScrollView>
-
-          {/* === 3. 하단 장바구니 요약바 (Footer) === */}
-          {items.length > 0 && (
-            <View style={styles.footer}>
-              <View style={styles.cartInfo}>
-                <Text style={styles.countBadge}>{items.length}</Text>
-                <Text style={styles.totalPrice}>₩ {getTotalPrice().toLocaleString()}</Text>
-              </View>
-              <Pressable 
-                style={styles.payButton} 
-                onPress={() => router.push('/(flow)/mcDonalds/cart')}
-              >
-                <Text style={styles.payButtonText}>주문내역 확인</Text>
-              </Pressable>
+      {/* 우측 메인 콘텐츠 */} 
+      <View style={styles.contentArea}>
+        
+        {/* activeCategoryId에 따라 컴포넌트 교체 */}
+        {activeCategoryId === 'home' ? (
+          // 분리한 홈 화면 컴포넌트 사용
+          <SelectMenuHome onCategorySelect={setActiveCategoryId} />
+        ) : (
+          // 일반 메뉴 리스트
+          <>
+            <View style={styles.contentHeader}>
+              <Text style={styles.headerTitle}>{currentCategoryName}</Text>
             </View>
-          )}
+
+            <ScrollView contentContainerStyle={styles.menuGrid}>
+              {displayedItems.length > 0 ? (
+                displayedItems.map((item) => (
+                  <MenuItem
+                    key={item.id}
+                    name={item.name}
+                    price={item.price}
+                    imageSource={item.image} 
+                    onPress={() => {
+                      // 클릭 시, 해당 메뉴가 세트 선택이 필요한지 확인
+                      const isSet = checkIsSetMenu(item.category);
+
+                      router.push({
+                        pathname: '/(flow)/mcDonalds/order-detail',
+                        params: { 
+                          id: item.id,
+                          // "true" 또는 "false" 문자열로 전달
+                          isSetMenu: isSet ? "true" : "false"
+                        }
+                      });
+                    }}
+                  />
+                ))
+              ) : (
+                <View style={{ padding: 20 }}>
+                  <Text style={{ color: '#999' }}>이 카테고리에는 아직 메뉴가 없어요.</Text>
+                </View>
+              )}
+            </ScrollView>
+          </>
+        )}
+
+        {/* 하단 장바구니 바 */}
+        <View style={styles.footer}>
+            <View style={styles.cartInfo}>
+              <Text style={styles.countBadge}>{items.length}</Text>
+              <Text style={styles.totalPrice}>₩ {getTotalPrice().toLocaleString()}</Text>
+            </View>
+            
+            <Pressable 
+              style={[styles.payButton, items.length === 0 && styles.payButtonDisabled]} 
+              disabled={items.length === 0}
+              onPress={() => router.push('/(flow)/mcDonalds/cart')}
+            >
+              <Text style={styles.payButtonText}>주문내역 확인</Text>
+            </Pressable>
         </View>
 
       </View>
-    </>
+    </View>
   );
 }
