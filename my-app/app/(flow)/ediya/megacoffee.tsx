@@ -4,7 +4,7 @@ import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styles from './megacoffee.styles'; // 스타일 파일 경로 확인
 
 // ====================================================================
-// ✅ 로컬 이미지 파일 require (정적 경로로 1:1 매핑)
+// ✅ 로컬 이미지 파일 require (정적 경로로 1:1 매핑) - 생략 없이 유지
 // ====================================================================
 const IMG_MEGA_1 = require('../../../assets/ediyaimages/ediya1.png');
 const IMG_MEGA_2 = require('../../../assets/ediyaimages/ediya2.png');
@@ -83,7 +83,7 @@ interface CategoryItem {
     menus: MenuItem[]; 
 }
 
-// 이미지 배열
+// 이미지 배열 - 생략 없이 유지
 const ALL_MEGA_IMAGES = [
     IMG_MEGA_1, IMG_MEGA_2, IMG_MEGA_3, IMG_MEGA_4, IMG_MEGA_5, IMG_MEGA_6, IMG_MEGA_7, IMG_MEGA_8,
     IMG_MEGA_9, IMG_MEGA_10, IMG_MEGA_11, IMG_MEGA_12, IMG_MEGA_13, IMG_MEGA_14, IMG_MEGA_15, IMG_MEGA_16,
@@ -93,7 +93,7 @@ const ALL_MEGA_IMAGES = [
 const BASE_PRICE = 3000; 
 
 // ====================================================================
-// 8개의 카테고리 데이터 (요청에 따라 직접 정의)
+// 8개의 카테고리 데이터 (요청에 따라 직접 정의) - 생략 없이 유지
 // ====================================================================
 
 // helper function: 메뉴 객체 생성
@@ -106,7 +106,7 @@ const createMenuItem = (globalIdx: number, name: string): MenuItem => ({
 
 let currentImageIdx = 0;
 
-const MENU_DATA: CategoryItem[] = [
+export const MENU_DATA: CategoryItem[] = [
     {
         name: '커피',
         menus: [
@@ -232,6 +232,31 @@ export default function Megacoffee() {
         }
     };
 
+    // 💡 [추가] 장바구니 초기화 핸들러
+    const handleClearCart = () => {
+        Alert.alert(
+            "장바구니 초기화",
+            "장바구니의 모든 메뉴를 삭제하시겠습니까?",
+            [
+                {
+                    text: "취소",
+                    style: "cancel"
+                },
+                { 
+                    text: "삭제", 
+                    onPress: () => {
+                        // 1. 전역 장바구니 데이터 초기화
+                        CART_STORAGE.length = 0;
+                        // 2. 상태 업데이트를 알림
+                        notifyCartUpdate();
+                        Alert.alert("완료", "장바구니가 초기화되었습니다.");
+                    },
+                    style: "destructive"
+                }
+            ]
+        );
+    };
+
 
     return (
         <View style={styles.wrap}>
@@ -300,22 +325,40 @@ export default function Megacoffee() {
             
             {/* 4. 장바구니 하단 컨테이너 */}
             {cartItemCount > 0 && (
-                <View style={styles.cartFooter}> 
+                <View style={[styles.cartFooter, { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center' }]}> 
                     
-                    {/* === 왼쪽 영역: 상품 개수 및 가격 === */}
-                    <View style={styles.cartInfoLeft}>
-                        <View style={styles.cartBadge}>
-                            <Text style={styles.cartBadgeText}>{cartItemCount}</Text>
+                    {/* === 왼쪽 영역: 상품 개수 및 가격 + 초기화 버튼 === */}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={styles.cartInfoLeft}>
+                            <View style={styles.cartBadge}>
+                                <Text style={styles.cartBadgeText}>{cartItemCount}</Text>
+                            </View>
+                            <View>
+                                <Text style={styles.cartCountText}>상품 {cartItemCount}개</Text>
+                                <Text style={styles.cartPriceText}>{cartTotalPrice.toLocaleString()}원</Text>
+                            </View>
                         </View>
-                        <View>
-                            <Text style={styles.cartCountText}>상품 {cartItemCount}개</Text>
-                            <Text style={styles.cartPriceText}>{cartTotalPrice.toLocaleString()}원</Text>
-                        </View>
+                        
+                        {/* 💡 [추가된 부분] 장바구니 초기화 버튼 */}
+                        <Pressable 
+                            style={[{ 
+                                paddingHorizontal: 10, 
+                                paddingVertical: 8, 
+                                backgroundColor: '#f0f0f0', // 연한 회색 배경
+                                borderRadius: 5,
+                                marginLeft: 10, // 기존 정보와 간격
+                                height: 40, // 높이 조정
+                                justifyContent: 'center',
+                            }]} 
+                            onPress={handleClearCart}
+                        >
+                            <Text style={{ fontSize: 14, fontWeight: 'bold', color: '#666' }}>초기화</Text>
+                        </Pressable>
                     </View>
                     
                     {/* === 오른쪽 영역: 결제하기 버튼 === */}
                     <Pressable 
-                        style={styles.checkoutButton} 
+                        style={[styles.checkoutButton, { flex: 0, paddingHorizontal: 30 }]} 
                         onPress={navigateToCartDetailPage} 
                     >
                         <Text style={styles.checkoutButtonText}>결제하기</Text>

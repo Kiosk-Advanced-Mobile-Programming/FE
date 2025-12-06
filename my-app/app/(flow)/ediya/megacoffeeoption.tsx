@@ -2,13 +2,15 @@ import { View, Text, Pressable, ScrollView, StyleSheet, Alert, Dimensions } from
 import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState, useMemo } from 'react';
 // [수정] megacoffee.tsx에서 CART_STORAGE, notifyCartUpdate, CartItem 타입을 정확히 Named Import
-import { 
-    CART_STORAGE, 
-    notifyCartUpdate, 
+import {
+    CART_STORAGE,
+    notifyCartUpdate,
     CartItem,
-    OptionDetail 
-} from './megacoffee'; 
+    OptionDetail
+} from './megacoffee';
 import optionStyles from './megacoffeeoption.styles'; // 옵션 스타일 임포트
+// 💡 [추가] 글로벌 상태 업데이트 함수 임포트
+import { setMissionSuccess } from './globalState';
 
 // --- [타입 및 데이터 정의] ---
 interface MenuParams {
@@ -63,9 +65,9 @@ const OptionButton = ({ option, isSelected, onPress }: { option: { name: string,
 export default function MegacoffeeOptionScreen() {
     const params = useLocalSearchParams() as unknown as MenuParams;
     const { name: menuName, price: basePriceStr, category, option } = params;
-    
+
     const basePrice = parseInt(basePriceStr || '0', 10);
-    
+
     const [selectedOptions, setSelectedOptions] = useState<Record<string, string>>({
         tumbler: '',
         shot: '',
@@ -104,59 +106,77 @@ export default function MegacoffeeOptionScreen() {
             [group]: prev[group] === key ? '' : key,
         }));
     };
-    
+
     const handleClose = () => {
         router.back();
     };
 
     // 주문 담기 핸들러
-    const handleOrder = () => {
-        // 1. 선택된 옵션 디테일 추출
-        const optionDetails: OptionDetail[] = []; // OptionDetail 타입 사용
-        const optionsMap = {
-            tumbler: TUMBLER_OPTIONS,
-            shot: SHOT_OPTIONS,
-            syrup: SYRUP_OPTIONS,
-            topping: TOPPING_OPTIONS,
-        };
-
-        (Object.keys(optionsMap) as Array<keyof typeof optionsMap>).forEach(group => {
-            const selectedKey = selectedOptions[group];
-            if (selectedKey) {
-                const opt = optionsMap[group].find(o => o.key === selectedKey);
-                if (opt) {
-                    optionDetails.push({
-                        name: opt.name,
-                        price: opt.price
-                    });
-                }
-            }
-        });
-        
-        // 2. 장바구니에 추가할 아이템 객체 생성 (CartItem 타입 사용)
-        const newItem: CartItem = {
-            name: `${menuName} (${option === 'hot' ? 'H' : 'I'})`,
-            quantity: 1,
-            basePrice: basePrice,
-            optionDetails: optionDetails,
-        };
-
-        // 3. 임시 전역 장바구니에 아이템 추가
-        CART_STORAGE.push(newItem);
-        
-        // 4. megacoffee 화면에 업데이트 알림
-        notifyCartUpdate();
-
-        Alert.alert("주문 담기 완료", `${newItem.name}이 장바구니에 추가되었습니다.`);
-
-        // 5. 옵션 화면 닫기
-        router.back();
+const handleOrder = () => {
+    // 1. 선택된 옵션 디테일 추출
+    // ... (기존 옵션 디테일 추출 로직 유지) ...
+    const optionDetails: OptionDetail[] = []; // OptionDetail 타입 사용
+    const optionsMap = {
+        tumbler: TUMBLER_OPTIONS,
+        shot: SHOT_OPTIONS,
+        syrup: SYRUP_OPTIONS,
+        topping: TOPPING_OPTIONS,
     };
+
+    (Object.keys(optionsMap) as Array<keyof typeof optionsMap>).forEach(group => {
+        const selectedKey = selectedOptions[group];
+        if (selectedKey) {
+            const opt = optionsMap[group].find(o => o.key === selectedKey);
+            if (opt) {
+                optionDetails.push({
+                    name: opt.name,
+                    price: opt.price
+                });
+            }
+        }
+    });
+
+    // 💡 미션 성공 여부 확인
+    let isMissionSuccess = false;
+
+    // level.tsx의 버튼 2 미션: '아메리카노(HOT), 샷(L) 선택 후 주문 담기'
+    const requiredShotKey = 'light';
+    const MISSION_ID = 'mission-easy';
+
+    if (menuName === '아메리카노' && selectedOptions.shot === requiredShotKey) {
+        // 미션 요구사항(샷(L) 선택)을 충족했을 경우
+        isMissionSuccess = true;
+    }
+
+    // 🎯 [핵심 추가] 미션 성공 여부를 글로벌 상태에 저장
+    setMissionSuccess(MISSION_ID, isMissionSuccess);
+    console.log(`[미션 결과] 난이도 하 (샷:L 선택): ${isMissionSuccess}`);
+    Alert.alert("주문 담기 완료", `미션 성공 여부: ${isMissionSuccess ? '성공 (true)' : '실패 (false)'}로 저장되었습니다.`);
+
+    // ... (기존 장바구니 추가 로직 유지) ...
+    // 2. 장바구니에 추가할 아이템 객체 생성 (CartItem 타입 사용)
+    const newItem: CartItem = {
+        name: `${menuName} (${option === 'hot' ? 'H' : 'I'})`,
+        quantity: 1,
+        basePrice: basePrice,
+
+        optionDetails: optionDetails,
+    };
+
+    // 3. 임시 전역 장바구니에 아이템 추가
+    CART_STORAGE.push(newItem);
+
+    // 4. megacoffee 화면에 업데이트 알림
+    notifyCartUpdate();
+
+    // 5. 옵션 화면 닫기
+    router.back();
+};
 
     return (
         <View style={optionStyles.wrap}>
             <ScrollView style={{ flex: 1 }} contentContainerStyle={optionStyles.scrollContent}>
-                
+
                 {/* 1. 닫기 버튼 및 타이틀 */}
                 <View style={[optionStyles.rowContainer, optionStyles.headerRow]}>
                     <Text style={optionStyles.titleText}>{`${category} > ${option === 'hot' ? 'HOT' : 'ICE'}`}</Text>
@@ -176,8 +196,8 @@ export default function MegacoffeeOptionScreen() {
                         <Text style={optionStyles.priceText}>{finalPrice.toLocaleString()}원</Text>
                     </View>
                 </View>
-                
-                
+
+
                 {/* 3. 텀블러 옵션 */}
                 <View style={[optionStyles.rowContainer, optionStyles.optionSectionRow]}>
                     <Text style={optionStyles.optionSectionTitle}>선택옵션: 텀블러(개인컵사용)</Text>
@@ -207,7 +227,7 @@ export default function MegacoffeeOptionScreen() {
                         ))}
                     </View>
                 </View>
-                
+
                 {/* 5. 시럽 옵션 */}
                 <View style={[optionStyles.rowContainer, optionStyles.optionSectionRow]}>
                     <Text style={optionStyles.optionSectionTitle}>선택옵션: 시럽 추가</Text>
@@ -237,7 +257,7 @@ export default function MegacoffeeOptionScreen() {
                         ))}
                     </View>
                 </View>
-                
+
                 <View style={optionStyles.spacer} />
 
             </ScrollView>

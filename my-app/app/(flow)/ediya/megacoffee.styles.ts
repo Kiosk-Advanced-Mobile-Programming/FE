@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     },
 
     topText: {
-        fontSize: 14, // 기존 수치 유지
+        fontSize: 12, // 기존 수치 유지
         fontWeight: 'normal',
         color: BORDER_COLOR, // 검정으로
         textAlign: 'center',
@@ -99,7 +99,8 @@ const styles = StyleSheet.create({
     },
 
     menuContainer: {
-        width: (width - 50) / 3, // 기존 수치 유지
+        width: (width - 40) / 2, // 기존 수치 유지
+        height: 220,
         marginRight: 10, // 기존 수치 유지
         marginBottom: 10, // 기존 수치 유지
         backgroundColor: PRIMARY_WHITE,
@@ -117,7 +118,7 @@ const styles = StyleSheet.create({
 
     menuImagePlaceholder: {
         // 💡 깨짐 방지를 위해 width, height, aspectRatio 속성 유지
-        width: '100%',
+        width: '80%',
         height: '70%', // height: '70%' 대신 aspectRatio와 함께 사용
         aspectRatio: 1, 
         backgroundColor: PRIMARY_BLUE, // 파란색으로 변경
