@@ -49,7 +49,7 @@ export default function CartScreen() {
         </View>
         <View style={styles.buttonRow}>
           <Pressable style={styles.addMoreButton} onPress={() => router.back()}>
-            <Text style={styles.addMoreText}>+ 메뉴 추가</Text>
+            <Text style={styles.addMoreText}>추가 주문</Text>
           </Pressable>
           <Pressable 
             style={styles.orderButton} 

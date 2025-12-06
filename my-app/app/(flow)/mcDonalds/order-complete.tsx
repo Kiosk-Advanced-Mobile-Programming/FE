@@ -14,8 +14,7 @@ export default function OrderCompleteScreen() {
 
     // 2. 3초 뒤 홈으로 이동
     const timer = setTimeout(() => {
-      router.dismissAll(); // 모든 스택을 없애고 처음으로
-      // 또는 router.replace('/(flow)/mcDonalds/start-mcDonalds');
+      router.replace('/(flow)/mcDonalds/start-mcDonalds');
     }, 4000);
 
     return () => clearTimeout(timer);

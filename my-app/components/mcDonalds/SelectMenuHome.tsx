@@ -10,6 +10,12 @@ type SelectMenuHomeProps = {
   onCategorySelect: (categoryId: string) => void;
 };
 
+// 버거류인지 판단하는 간단한 함수 (카테고리 ID 확인)
+const checkIsSetMenu = (category: string) => {
+  return category === 'burger' || category === 'mclunch' || category === 'recommend'; 
+  // todo 'recommend' 안에서도 버거인 것만 거르는 로직 추가 가능
+};
+
 const SelectMenuHome = ({ onCategorySelect }: SelectMenuHomeProps) => {
   return (
     <ScrollView style={styles.homeContainer} showsVerticalScrollIndicator={false}>
@@ -64,28 +70,32 @@ const SelectMenuHome = ({ onCategorySelect }: SelectMenuHomeProps) => {
         </Pressable>
       </View>
 
-      {/* 3. 인기 메뉴 (수정된 부분: 그리드 형식) */}
+      {/* 3. 인기 메뉴 */}
       <Text style={styles.sectionTitle}>인기 메뉴</Text>
       
-      {/* 가로 스크롤(ScrollView horizontal)을 제거하고,
-         Grid 스타일이 적용된 View로 변경했습니다.
-      */}
+
       <View style={localStyles.popularGrid}>
-        {MENU_ITEMS.slice(0, 4).map((item) => (
-          /* MenuItem 내부에서 width: '48%'를 쓰고 있으므로 
-             별도의 width를 가진 View로 감싸지 않고 바로 렌더링합니다.
-          */
-          <MenuItem
-            key={item.id}
-            name={item.name}
-            price={item.price}
-            imageSource={item.image}
-            onPress={() => router.push({
-              pathname: '/(flow)/mcDonalds/order-detail',
-              params: { id: item.id }
-            })}
-          />
-        ))}
+        {MENU_ITEMS.slice(0, 4).map((item) => {
+          // ★ 여기서 버거 여부 판단
+          const isSetMenu = checkIsSetMenu(item.category); 
+
+          return (
+            <MenuItem
+              key={item.id}
+              name={item.name}
+              price={item.price}
+              imageSource={item.image}
+              onPress={() => router.push({
+                pathname: '/(flow)/mcDonalds/order-detail',
+                params: { 
+                  id: item.id,
+                  // ★ 핵심: 세트 메뉴 여부를 '문자열'로 전달 ("true" or "false")
+                  isSetMenu: isSetMenu ? "true" : "false" 
+                }
+              })}
+            />
+          );
+        })}
       </View>
       
       {/* 하단 여백 */}

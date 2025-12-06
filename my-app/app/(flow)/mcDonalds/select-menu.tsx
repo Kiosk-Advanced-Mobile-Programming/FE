@@ -20,6 +20,12 @@ export default function SelectMenuScreen() {
   const displayedItems = MENU_ITEMS.filter(item => item.category === activeCategoryId);
   const currentCategoryName = CATEGORIES.find(c => c.id === activeCategoryId)?.name;
 
+  // 버거류인지 판단하는 간단한 함수 (카테고리 ID 확인)
+  const checkIsSetMenu = (category: string) => {
+    return category === 'burger' || category === 'mclunch' || category === 'recommend'; 
+    // todo 'recommend' 안에서도 버거인 것만 거르는 로직 추가 가능
+  };
+
   return (
     <View style={styles.container}>
       <Stack.Screen options={{ headerShown: false }} />
@@ -52,16 +58,15 @@ export default function SelectMenuScreen() {
         </ScrollView>
       </View>
 
-      {/* 우측 메인 콘텐츠 */}
+      {/* 우측 메인 콘텐츠 */} 
       <View style={styles.contentArea}>
         
-        {/* ✨ 핵심: activeCategoryId에 따라 컴포넌트 교체 */}
+        {/* activeCategoryId에 따라 컴포넌트 교체 */}
         {activeCategoryId === 'home' ? (
           // 분리한 홈 화면 컴포넌트 사용
-          // onCategorySelect prop을 통해 상태 변경 함수를 전달
           <SelectMenuHome onCategorySelect={setActiveCategoryId} />
         ) : (
-          // 일반 메뉴 리스트 (나중에는 이것도 별도 컴포넌트로 빼면 더 좋음)
+          // 일반 메뉴 리스트
           <>
             <View style={styles.contentHeader}>
               <Text style={styles.headerTitle}>{currentCategoryName}</Text>
@@ -75,10 +80,19 @@ export default function SelectMenuScreen() {
                     name={item.name}
                     price={item.price}
                     imageSource={item.image} 
-                    onPress={() => router.push({
-                      pathname: '/(flow)/mcDonalds/order-detail',
-                      params: { id: item.id }
-                    })}
+                    onPress={() => {
+                      // 클릭 시, 해당 메뉴가 세트 선택이 필요한지 확인
+                      const isSet = checkIsSetMenu(item.category);
+
+                      router.push({
+                        pathname: '/(flow)/mcDonalds/order-detail',
+                        params: { 
+                          id: item.id,
+                          // "true" 또는 "false" 문자열로 전달
+                          isSetMenu: isSet ? "true" : "false"
+                        }
+                      });
+                    }}
                   />
                 ))
               ) : (

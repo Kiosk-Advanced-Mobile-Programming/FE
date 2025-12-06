@@ -47,15 +47,32 @@ export const SIDE_OPTIONS = [
   { id: 'cheese_stick', name: '치즈스틱 2조각', price: 500, image: require('@assets/images/mcDonalds/menu/sides/g_moza_c_stick_2.png') },
 ];
 
-// todo 음료 데이터->메뉴 데이터 활용
-// 5. ✨ [추가] 음료 데이터 (임의 구성)
+// 5. 음료 데이터 (임의 구성)
 export const DRINK_OPTIONS = [
-  { id: 'coke', name: '코카-콜라 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/coke_m.png') },
-  { id: 'coke_zero', name: '코카-콜라 제로 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/coke_zero_m.png') },
-  { id: 'sprite', name: '스프라이트 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/sprite_m.png') },
-  { id: 'fanta', name: '환타 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/fanta_m.png') },
-  { id: 'iced_americano', name: '아이스 아메리카노 - 미디엄', price: 500, image: require('@assets/images/mcDonalds/menu/mccafe/americano_m.png') }, // 추가금 예시
-  { id: 'iced_latte', name: '아이스 카페라떼 - 미디엄', price: 1000, image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_m.png') },
+  { id: 'coke_m', name: '코카-콜라 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/coke_m.png') },
+  { id: 'sprite_m', name: '스프라이트 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/sprite_m.png') },
+  { id: 'coke_zero_m', name: '코카-콜라 제로 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/coke_zero_m.png') },
+  { id: 'fanta_m', name: '환타 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/fanta_m.png') },
+  { id: 'i_drip_coffee_m', name: '아이스 드립 커피 - 미디엄', price: 100, image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_m.png')},
+  { id: 'i_americano_m', name: '아이스 아메리카노 - 미디엄', price: 700, image: require('@assets/images/mcDonalds/menu/mccafe/i_americano_m.png')},
+  { id: 'i_cafe_latte_m', name: '아이스 카페 라떼 - 미디엄', price: 1300, image: require('@assets/images/mcDonalds/menu/mccafe/i_cafe_latte_m.png')},
+  { id: 'i_vanilla_latte_m', name: '아이스 바닐라 라떼 - 미디엄', price: 1300, image: require('@assets/images/mcDonalds/menu/mccafe/i_vanilla_latte_m.png')},
+  { id: 'drip_coffee_m', name: '드립 커피 - 미디엄', price: 100, image: require('@assets/images/mcDonalds/menu/mccafe/drip_coffee_m.png')},
+  { id: 'americano_m', name: '아메리카노 - 미디엄', price: 500, image: require('@assets/images/mcDonalds/menu/mccafe/americano_m.png') },
+  { id: 'cafe_latte_m', name: '카페라떼 - 미디엄', price: 1000, image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_m.png') },
+
+  { id: 'coke_l', name: '코카-콜라 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/coke_l.png') },
+  { id: 'sprite_l', name: '스프라이트 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/sprite_l.png') },
+  { id: 'coke_zero_l', name: '코카-콜라 제로 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/coke_zero_l.png') },
+  { id: 'fanta_l', name: '환타 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/fanta_l.png') },
+  { id: 'i_drip_coffee_l', name: '아이스 드립 커피 - 라지', price: 600, image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_l.png')},
+  { id: 'i_americano_l', name: '아이스 아메리카노 - 라지', price: 1200, image: require('@assets/images/mcDonalds/menu/mccafe/i_americano_l.png')},
+  { id: 'i_cafe_latte_l', name: '아이스 카페 라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/i_cafe_latte_l.png')},
+  { id: 'i_vanilla_latte_l', name: '아이스 바닐라 라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/i_vanilla_latte_l.png')},
+  { id: 'drip_coffee_l', name: '드립 커피 - 라지', price: 600, image: require('@assets/images/mcDonalds/menu/mccafe/drip_coffee_l.png')},
+  { id: 'americano_l', name: '아메리카노 - 라지', price: 800, image: require('@assets/images/mcDonalds/menu/mccafe/americano_l.png') },
+  { id: 'cafe_latte_l', name: '카페라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_l.png') },
+  { id: 'vanilla_latte_l', name: '바닐라 라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/vanilla_latte_l.png')},
 ];
 
 // 6. 메뉴 데이터
@@ -502,7 +519,7 @@ export const MENU_ITEMS: Menu[] = [
     category: 'mccafe',
     name: '아이스 아메리카노 Large',
     price: 3100,
-    image: require('@assets/images/mcDonalds/menu/mccafe/i_amricano_l.png'),
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_americano_l.png'),
   },
   {
     id: 69,
@@ -644,20 +661,20 @@ export const MENU_ITEMS: Menu[] = [
     price: 2500,
     image: require('@assets/images/mcDonalds/menu/mccafe/drip_coffee_l.png'),
   },
-  // {
-  //   id: 79,
-  //   category: 'mccafe',
-  //   name: '아이스 드립 커피 Medium',
-  //   price: 1000,
-  //   image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_m.png'),
-  // },
-  // {
-  //   id: 78,
-  //   category: 'mccafe',
-  //   name: '아이스 드립 커피 Large',
-  //   price: 1500,
-  //   image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_l.png'),
-  // },
+  {
+    id: 79,
+    category: 'mccafe',
+    name: '아이스 드립 커피 Medium',
+    price: 1000,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_m.png'),
+  },
+  {
+    id: 78,
+    category: 'mccafe',
+    name: '아이스 드립 커피 Large',
+    price: 1500,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_l.png'),
+  },
 
 
   // ====== dessert ======

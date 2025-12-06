@@ -1,3 +1,4 @@
+// app/(flow)/mcDonalds/order-detail.tsx
 import React, { useState } from 'react';
 import { View, Text, Image, Pressable, ScrollView, Alert, Modal } from 'react-native';
 import { useLocalSearchParams, router, Stack } from 'expo-router';
@@ -7,35 +8,49 @@ import { MENU_ITEMS, SET_TYPES, SIDE_OPTIONS, DRINK_OPTIONS } from './menu.data'
 import { useCart } from './cart-context';
 
 export default function OrderDetailScreen() {
-  const { id } = useLocalSearchParams();
+  const { id, isSetMenu } = useLocalSearchParams();
   const targetMenu = MENU_ITEMS.find((m) => m.id === Number(id));
   const { addToCart } = useCart();
 
-  // 상태 관리
-  const [step, setStep] = useState(1); // 1:세트선택, 2:사이드, 3:음료, 4:확인
-  const [selectedSetType, setSelectedSetType] = useState(SET_TYPES[1]); // 기본: 세트
+  // ✨ [수정 1] 세트 메뉴 흐름인지 판단 (문자열 "true" 체크)
+  const isSetFlow = isSetMenu === 'true';
+
+  // ✨ [수정 2] 상태 초기값 설정
+  // 세트 흐름이면 1단계(세트선택) 시작, 아니면 4단계(확인) 바로 시작
+  const [step, setStep] = useState(isSetFlow ? 1 : 4); 
+
+  // 세트 기본 선택 등
+  const [selectedSetType, setSelectedSetType] = useState(() => {
+    // 1) 세트 흐름이 아예 아닌 경우 (디저트 등) -> 무조건 단품
+    if (!isSetFlow) {
+        return SET_TYPES.find(t => t.id === 'single') || SET_TYPES[0];
+    }
+
+    // 2) 카테고리가 '맥런치(mclunch)'인 경우 -> '세트(normal)' 기본 선택
+    if (targetMenu?.category === 'mclunch') {
+        return SET_TYPES.find(t => t.id === 'normal') || SET_TYPES[1];
+    }
+
+    // 3) 그 외 버거(일반 버거, 추천 메뉴 등) -> '단품(single)' 기본 선택
+    return SET_TYPES.find(t => t.id === 'single') || SET_TYPES[0];
+  });
+
   const [selectedSide, setSelectedSide] = useState(SIDE_OPTIONS[0]);
   const [selectedDrink, setSelectedDrink] = useState(DRINK_OPTIONS[0]);
   const [quantity, setQuantity] = useState(1);
-  
-  // 주문 완료 모달 상태
   const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   if (!targetMenu) return <View><Text>메뉴를 찾을 수 없습니다.</Text></View>;
 
   // === 가격 계산 함수 ===
   const calculatePrice = () => {
-    // priceAdd가 undefined일 경우 0으로 처리 (?? 0)
     let price = targetMenu.price + (selectedSetType.priceAdd ?? 0);
     
-    // 세트(단품 아님)일 때만 사이드/음료 가격 추가
     if (selectedSetType.id !== 'single') {
       let sidePrice = selectedSide.price;
-
       if (selectedSetType.id === 'large' && selectedSide.id === 'fries_large') {
         sidePrice = 0;
       }
-
       price += sidePrice + selectedDrink.price;
     }
     return price;
@@ -45,11 +60,9 @@ export default function OrderDetailScreen() {
 
   // === 이미지 선택 로직 ===
   const getCurrentBurgerImage = (setTypeId: string) => {
-    // 세트이면서 세트 이미지가 따로 있는 경우
     if (setTypeId !== 'single' && targetMenu.setImage) {
       return targetMenu.setImage;
     }
-    // 그 외 (단품이거나 세트 이미지가 없는 경우)
     return targetMenu.image;
   };
 
@@ -57,7 +70,6 @@ export default function OrderDetailScreen() {
   const handleSetSelect = (setType: typeof SET_TYPES[0]) => {
     setSelectedSetType(setType);
 
-    // 라지 세트 선택 시 기본 사이드를 라지 감튀로 변경하는 로직 (필요 시 추가)
     if (setType.id === 'large') {
       const largeFries = SIDE_OPTIONS.find(s => s.id === 'fries_large');
       if (largeFries) setSelectedSide(largeFries);
@@ -67,14 +79,20 @@ export default function OrderDetailScreen() {
     }
 
     if (setType.id === 'single') {
-      setStep(4); // 단품 -> 바로 확인 화면
+      setStep(4);
     } else {
-      setStep(2); // 세트 -> 사이드 선택
+      setStep(2);
     }
   };
 
   // === 뒤로 가기 ===
   const goBack = () => {
+    // ✨ [수정 3] 단품 흐름이면 바로 뒤로가기
+    if (!isSetFlow) {
+      router.back();
+      return;
+    }
+
     if (step === 1) router.back();
     else if (step === 4 && selectedSetType.id === 'single') setStep(1);
     else setStep((prev) => prev - 1);
@@ -91,7 +109,6 @@ export default function OrderDetailScreen() {
       totalPrice: currentPrice,
     });
 
-    // 완료 모달 표시 후 2초 뒤 복귀
     setShowSuccessModal(true);
     setTimeout(() => {
       setShowSuccessModal(false);
@@ -104,24 +121,26 @@ export default function OrderDetailScreen() {
       <Stack.Screen options={{ headerShown: false }} />
       <StatusBar style="dark" />
 
-      {/* === 좌측 사이드바 === */}
-      <View style={styles.sidebar}>
-        {['세트 선택', '사이드', '음료', '주문 확인'].map((label, index) => {
-          const stepNum = index + 1;
-          const isActive = step === stepNum;
-          const isSkipped = selectedSetType.id === 'single' && (stepNum === 2 || stepNum === 3);
-          
-          return (
-            <View key={stepNum} style={[styles.sidebarItem, isSkipped && { opacity: 0.3 }]}>
-              <View style={[styles.stepCircle, isActive && styles.stepCircleActive]}>
-                {step > stepNum && !isSkipped && <Text style={styles.checkMark}>✓</Text>}
+      {/* ✨ [수정 4] 좌측 사이드바: isSetFlow가 true일 때만 렌더링 */}
+      {isSetFlow && (
+        <View style={styles.sidebar}>
+          {['세트 선택', '사이드', '음료', '주문 확인'].map((label, index) => {
+            const stepNum = index + 1;
+            const isActive = step === stepNum;
+            const isSkipped = selectedSetType.id === 'single' && (stepNum === 2 || stepNum === 3);
+            
+            return (
+              <View key={stepNum} style={[styles.sidebarItem, isSkipped && { opacity: 0.3 }]}>
+                <View style={[styles.stepCircle, isActive && styles.stepCircleActive]}>
+                  {step > stepNum && !isSkipped && <Text style={styles.checkMark}>✓</Text>}
+                </View>
+                <Text style={[styles.stepText, isActive && styles.stepTextActive]}>{label}</Text>
+                {index < 3 && <View style={styles.line} />}
               </View>
-              <Text style={[styles.stepText, isActive && styles.stepTextActive]}>{label}</Text>
-              {index < 3 && <View style={styles.line} />}
-            </View>
-          );
-        })}
-      </View>
+            );
+          })}
+        </View>
+      )}
 
       {/* === 우측 콘텐츠 === */}
       <View style={styles.content}>
@@ -130,6 +149,7 @@ export default function OrderDetailScreen() {
         <View style={styles.header}>
           <Text style={styles.menuTitle}>
             {targetMenu.name}
+            {/* 단품 흐름이거나 단품 선택 시 라벨 숨기기 */}
             {selectedSetType.id !== 'single' ? ` - ${selectedSetType.label}` : ''}
           </Text>
           <Text style={styles.menuPriceInfo}>
@@ -137,7 +157,7 @@ export default function OrderDetailScreen() {
           </Text>
         </View>
 
-        {/* STEP 1: 세트/단품 선택 */}
+        {/* STEP 1: 세트/단품 선택 (세트 흐름일 때만 표시) */}
         {step === 1 && (
           <View style={styles.stepContainer}>
             <Text style={styles.guideText}>세트로 주문하시겠습니까?</Text>
@@ -165,10 +185,7 @@ export default function OrderDetailScreen() {
             <Text style={styles.guideText}>세트메뉴 사이드를 선택하세요</Text>
             <ScrollView contentContainerStyle={styles.grid}>
               {SIDE_OPTIONS.map((side) => {
-                // 라지 세트일 때 미디엄 감튀 숨기기 등의 로직이 필요하다면 여기에 추가
                 if (selectedSetType.id === 'large' && side.id === 'fries') return null;
-
-                 // 라지 세트일 때 라지 감튀 가격 0원으로 표시
                 let displayPrice = side.price;
                 if (selectedSetType.id === 'large' && side.id === 'fries_large') displayPrice = 0;
 
@@ -208,7 +225,7 @@ export default function OrderDetailScreen() {
           </View>
         )}
 
-        {/* STEP 4: 최종 확인 */}
+        {/* STEP 4: 최종 확인 (모든 흐름에서 사용) */}
         {step === 4 && (
           <View style={styles.stepContainer}>
             <View style={styles.finalView}>
@@ -218,6 +235,7 @@ export default function OrderDetailScreen() {
               />
               <View style={styles.summaryBox}>
                 <Text style={styles.summaryTitle}>{targetMenu.name}</Text>
+                {/* 단품이 아닐 때만 사이드/음료 표시 */}
                 {selectedSetType.id !== 'single' && (
                   <>
                     <Text style={styles.summaryText}>+ {selectedSide.name}</Text>
@@ -242,7 +260,8 @@ export default function OrderDetailScreen() {
         <View style={styles.footer}>
           <Pressable style={styles.cancelButton} onPress={goBack}>
             <Text style={styles.cancelButtonText}>
-              {step === 1 || (step === 4 && selectedSetType.id === 'single') ? '취소' : '이전단계'}
+              {/* 단품 흐름일 때는 무조건 '취소' 표시 */}
+              {!isSetFlow || step === 1 || (step === 4 && selectedSetType.id === 'single') ? '취소' : '이전단계'}
             </Text>
           </Pressable>
           {step === 4 && (
