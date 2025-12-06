@@ -110,7 +110,7 @@ export const styles = StyleSheet.create({
 
   // 비디오 모달 컨테이너
   videoModalContainer: {
-    width: MODAL_WIDTH, // 계산된 너비 적용
+    width: 370, // 계산된 너비 적용
     backgroundColor: "#fff",
     borderRadius: 10,
     overflow: "hidden",
