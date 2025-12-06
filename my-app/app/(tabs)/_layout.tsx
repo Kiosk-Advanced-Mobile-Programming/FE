@@ -27,11 +27,12 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="levelSession/recommend"
         options={{
-          title: "Explore",
+          title: "맞춤 추천",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            // 적절한 아이콘 선택 (star, list.bullet, etc.)
+            <IconSymbol size={28} name="star.fill" color={color} />
           ),
         }}
       />

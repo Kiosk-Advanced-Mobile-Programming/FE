@@ -3,6 +3,7 @@ import { db } from "./app";
 
 export interface UserProfile {
   email: string;
+  nickname: string; // [추가] 닉네임 필드
   age: string;
   gender: "남성" | "여성";
   kioskLevel: "초급" | "중급" | "고급";
