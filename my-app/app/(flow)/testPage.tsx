@@ -1,4 +1,4 @@
-import { finishStudySession, startStudySession } from "@/firebase/study";
+import { finishStudySession, startStudySession } from "@/firebase/study"; // StudyStatus 타입 임포트 (선택사항)
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -21,22 +21,40 @@ export default function TestPage() {
       setLoading(true);
       console.log(`[Test] ${categoryName} 세션 시작 기록 생성 중...`);
 
-      // 실제 학습 ui 구성되었을시 참고하여 반영하면 됨
       //----------------------------------------------------------------------//
-      // 1. 학습 시작 (DB 문서 생성) -- 카테고리와 학습이름
+      // 1. 학습 시작 (DB 문서 생성)
       const sessionId = await startStudySession({ categoryName, sessionName });
 
       // 2. 가상의 학습 결과 데이터 생성 (테스트용)
       const totalTouches = Math.floor(Math.random() * 20) + 5; // 5 ~ 25회 터치
       const successTouches = Math.floor(Math.random() * 5) + 5; // 최소 5회 성공 가정
 
-      // 3. 학습 종료 (DB 문서 업데이트)
-      await finishStudySession(sessionId, totalTouches, successTouches);
+      // [추가] 랜덤 상태 결정 로직 (SUCCESS, FAIL, IN_PROGRESS 중 하나)
+      const randomValue = Math.random();
+      let randomStatus: "SUCCESS" | "FAIL" | "IN_PROGRESS";
+
+      if (randomValue < 0.33) {
+        randomStatus = "SUCCESS";
+      } else if (randomValue < 0.66) {
+        randomStatus = "FAIL";
+      } else {
+        randomStatus = "IN_PROGRESS";
+      }
+
+      console.log(`[Test] 랜덤 결정된 상태: ${randomStatus}`);
+
+      // 3. 학습 종료 (DB 문서 업데이트 - status 포함)
+      await finishStudySession(
+        sessionId,
+        totalTouches,
+        successTouches,
+        randomStatus
+      );
       //----------------------------------------------------------------------//
 
       Alert.alert(
         "테스트 성공",
-        `[${categoryName}] 학습 기록이 DB에 저장되었습니다.\n(ID: ${sessionId})`
+        `[${categoryName}] 기록 저장 완료\nID: ${sessionId}\n상태: ${randomStatus}`
       );
     } catch (e: any) {
       console.error(e);
@@ -112,7 +130,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFBC0D", // 맥도날드 노란색
   },
   megaCoffee: {
-    backgroundColor: "#FFD700", // 메가커피 노란색 (유사하지만 예시)
+    backgroundColor: "#FFD700", // 메가커피 노란색
     borderWidth: 1,
     borderColor: "#333",
   },

@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "./app";
 
 export interface UserProfile {
@@ -34,9 +34,6 @@ export async function saveUserProfile(
   }
 }
 
-/**
- * [추가] Firestore에서 사용자 정보를 가져오는 함수
- */
 export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   try {
     const userRef = doc(db, "users", uid);
@@ -51,5 +48,20 @@ export async function getUserProfile(uid: string): Promise<UserProfile | null> {
   } catch (error) {
     console.error("사용자 정보 가져오기 실패:", error);
     return null;
+  }
+}
+
+export async function updateUserLevel(
+  uid: string,
+  newLevel: "초급" | "중급" | "고급"
+) {
+  try {
+    const userRef = doc(db, "users", uid);
+    await updateDoc(userRef, {
+      kioskLevel: newLevel,
+    });
+    console.log(`사용자 레벨 업데이트 완료: ${newLevel}`);
+  } catch (error) {
+    console.error("사용자 레벨 업데이트 실패:", error);
   }
 }

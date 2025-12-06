@@ -42,7 +42,8 @@ export default function HomeScreen() {
 
   // 5. 마이페이지 이동
   const handleMyPage = () => {
-    router.push("/(tabs)/userInfo/infoLogout");
+    router.push("/(flow)/testPage");
+    //router.push("/(tabs)/userInfo/infoLogout");
   };
 
   return (
