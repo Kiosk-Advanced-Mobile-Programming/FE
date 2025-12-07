@@ -1,9 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, StyleSheet, Dimensions } from 'react-native';
 import { router, useLocalSearchParams } from 'expo-router';
-// 💡 미션 상세 정보를 가져오는 함수 임포트
-// [수정] 현재 파일(app/(flow)/ediya/result.tsx)에서 globalState를 가져오는 경로를 명확히 가정합니다.
-import { getMissionDetails } from './globalState'; 
 
 // 💡 [추가] 장바구니 초기화 로직을 megacoffee.tsx 또는 cart.module.ts에서 가져옴
 // **[필수] 아래 경로를 실제 CART_STORAGE와 notifyCartUpdate가 정의된 파일 경로로 수정하세요.**
@@ -113,6 +110,9 @@ const styles = StyleSheet.create({
 interface ResultParams {
     isSuccess: string; // 'true' 또는 'false' 문자열로 전달
     missionId: string; // 미션 식별자 (예: 'mission-easy')
+    totalTouches: string;
+    missionTitle: string;
+    requirement: string;
 }
 
 // ====================================================================
@@ -126,12 +126,9 @@ export default function ResultPage() {
     // 문자열 'true'/'false'를 boolean 값으로 변환
     const isSuccess = params.isSuccess === 'true';
     const missionId = params.missionId || 'mission-easy'; // 기본값 설정
-
-    // 전역 상태에서 미션 상세 정보를 가져옵니다.
-    const missionDetails = getMissionDetails(missionId); 
-    
-    const missionTitle = missionDetails?.title || '미션 결과';
-    const missionRequirement = missionDetails?.requirement || '미션 내용 정보를 찾을 수 없습니다.';
+    const totalTouches = params.totalTouches || '0';
+    const missionTitle = params.missionTitle || '미션 결과';
+    const requirement = params.requirement || '미션 내용 정보를 찾을 수 없습니다.';
     
     // 첫 페이지 (./level)로 돌아가는 핸들러
     const handleGoHome = () => {
@@ -158,6 +155,17 @@ export default function ResultPage() {
                 <Text style={isSuccess ? styles.titleSuccess : styles.titleFailure}>
                     {isSuccess ? '미션 성공!' : '미션 실패'}
                 </Text>
+
+                <Text style={styles.missionTitle}>{missionTitle}</Text>
+                <Text style={styles.missionRequirement}>
+                    {requirement}
+                </Text>
+
+                <View style={styles.separator} />
+                <View>
+                    <Text>총 터치 횟수: {totalTouches}회</Text>
+                </View>
+                <View style={styles.separator} />
                
 
                 {/* 첫 페이지로 돌아가기 버튼 */}

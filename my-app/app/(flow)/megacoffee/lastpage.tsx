@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { View, Text, Pressable, Alert } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 // 💡 스타일 파일 임포트 (파일명이 lastpage.styles.ts라고 가정)
 import styles from './lastpage.styles'; 
 
@@ -10,7 +10,7 @@ import {
 } from './megacoffee'; 
 
 // 💡 [핵심 추가] 미션 성공 여부 확인 함수 임포트
-import { getMissionSuccess } from './globalState';
+import { endSessionAndGetResult } from './globalState';
 
 // 총 가격 계산 함수
 const calculateCartTotalPrice = () => {
@@ -20,7 +20,48 @@ const calculateCartTotalPrice = () => {
     }, 0);
 };
 
+/**
+ * ***************백엔드 가져가시오************************************
+ * 최종 미션 결과를 백엔드 서버로 전송합니다.
+ * @param resultData - 백엔드로 보낼 데이터 객체
+ */
+const sendMissionResultToBackend = async (resultData: {
+    categoryName: string;
+    sessionName: string;
+    totalTouches: number;
+    successTouches: number;
+    sessionStatus: '성공' | '실패';
+}) => {
+    // ❗️ 실제 백엔드 API 엔드포인트로 교체해야 합니다.
+    const API_ENDPOINT = 'https://your-backend-api.com/mission-results';
+
+    console.log("--- 백엔드로 전송할 데이터 ---");
+    console.log(JSON.stringify(resultData, null, 2));
+    console.log("------------------------------------");
+
+    try {
+        const response = await fetch(API_ENDPOINT, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(resultData),
+        });
+
+        if (!response.ok) {
+            throw new Error(`서버 응답 오류: ${response.status}`);
+        }
+
+        console.log('✅ 백엔드 전송 성공');
+
+    } catch (error) {
+        console.error('🔥 백엔드 전송 실패:', error);
+    }
+};
+
 const CardPaymentTerminal: React.FC = () => {
+    const params = useLocalSearchParams<{ requirement: string; label: string; missionId: string }>();
+
     const cartTotalPrice = useMemo(calculateCartTotalPrice, []) || 5000;
 
     const handleCancelPayment = () => {
@@ -28,37 +69,32 @@ const CardPaymentTerminal: React.FC = () => {
     };
 
     // 💡 [핵심 로직] 결제 승인(승인요청) 버튼 클릭 시 실행
-    const handleApprovePayment = () => {
+    const handleApprovePayment = async () => {
         
-        // 1. 어떤 미션을 성공했는지 확인 (눈속임 전략 대응)
-        // Easy, Medium, Hard 중 하나라도 true면 성공으로 처리
-        const isEasySuccess = getMissionSuccess('mission-easy');
-        const isMediumSuccess = getMissionSuccess('mission-medium');
-        const isHardSuccess = getMissionSuccess('mission-hard');
+        // 1. 💡 세션 종료 및 최종 데이터 결과 가져오기
+        const finalResult = endSessionAndGetResult();
 
-        let finalSuccess = false;
-        let finalMissionId = 'mission-easy'; // 기본값
+        // 2. 💡 백엔드로 보낼 데이터 객체 생성
+        const backendData = {
+            categoryName: finalResult.categoryName,
+            sessionName: finalResult.sessionName,
+            totalTouches: finalResult.totalTouches,
+            successTouches: finalResult.successTouches,
+            sessionStatus: (finalResult.isSuccess ? '성공' : '실패') as '성공' | '실패',
+        };
 
-        if (isEasySuccess) {
-            finalSuccess = true;
-            finalMissionId = 'mission-easy';
-        } else if (isMediumSuccess) {
-            finalSuccess = true;
-            finalMissionId = 'mission-medium';
-        } else if (isHardSuccess) {
-            finalSuccess = true;
-            finalMissionId = 'mission-hard';
-        }
+        // 3. 💡 생성된 함수를 호출하여 백엔드로 데이터 전송 (비동기)
+        await sendMissionResultToBackend(backendData);
 
-        console.log(`[LastPage] 결제 시도 -> 성공여부: ${finalSuccess}, ID: ${finalMissionId}`);
-
-        // 2. 결과 페이지(result.tsx)로 이동
-        // 💡 경로 주의: 파일 구조에 맞춰 '/(flow)/ediya/result' 로 설정했습니다.
+        // 4. 결과 페이지(result.tsx)로 이동
         router.push({
             pathname: '/(flow)/megacoffee/result',
             params: {
-                isSuccess: String(finalSuccess), // boolean -> string 변환
-                missionId: finalMissionId
+                isSuccess: String(finalResult.isSuccess),
+                totalTouches: String(finalResult.totalTouches),
+                missionId: params.missionId || '',
+                missionTitle: params.label || '',
+                requirement: params.requirement || '',
             }
         });
     };

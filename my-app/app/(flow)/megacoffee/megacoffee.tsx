@@ -1,5 +1,5 @@
 import { View, Text, Pressable, ScrollView, Alert, Image } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styles from './megacoffee.styles'; // 스타일 파일 경로 확인
 
@@ -234,6 +234,9 @@ export default function Megacoffee() {
         return cartItems.length;
     }, [cartItems]);
     
+    // level 페이지에서 전달된 파라미터를 받습니다.
+    const params = useLocalSearchParams();
+
     // 현재 선택된 카테고리/메뉴 계산 로직 (유지)
     const currentCategory = useMemo(() => {
         const found = MENU_DATA.find(cat => cat.name === selectedCategoryName);
@@ -269,7 +272,7 @@ export default function Megacoffee() {
     // 장바구니 상세 페이지로 이동하는 함수
     const navigateToCartDetailPage = () => {
         if (cartItemCount > 0) {
-            router.push('/(flow)/megacoffee/firstpopup');
+            router.push({ pathname: '/(flow)/megacoffee/firstpopup', params: params });
         }
     };
 
@@ -317,10 +320,14 @@ export default function Megacoffee() {
                                 router.push({
                                     pathname: '/(flow)/megacoffee/megacoffeeoption', 
                                     params: { 
+                                        // 💡 기존 파라미터(missionId 등)를 유지하며 전달
+                                        ...params,
+                                        id: String(item.id), // 💡 메뉴의 고유 ID를 전달
                                         name: item.name, 
                                         price: item.price.toString(), 
                                         category: selectedCategoryName, 
-                                        option: selectedOptionName, 
+                                        // 💡 옵션 이름이 'hot' 또는 'ice'가 아닐 수 있으므로, 'hot'/'ice'를 직접 찾아서 전달
+                                        option: currentCategory.options.find(o => o.name === selectedOptionName)?.name.toLowerCase().includes('hot') ? 'hot' : 'ice',
                                     },
                                 });
                             }}
