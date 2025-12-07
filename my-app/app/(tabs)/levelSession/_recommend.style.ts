@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
   container: {
@@ -16,6 +16,7 @@ export const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
     marginBottom: 16,
+    paddingTop: Platform.OS === "android" ? 40 : 60,
   },
   greetingText: {
     fontSize: 18,

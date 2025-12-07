@@ -1,23 +1,23 @@
 // app/(flow)/select-cafe.tsx
-import { useState, useEffect } from 'react';
-import { View, Text, Pressable, Image } from 'react-native';
-import { router, useLocalSearchParams, Stack } from 'expo-router';
-import styles from './start-mcDonalds.style';
-import PrepareModal from '@/components/mcDonalds/PrepareModal';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import PrepareModal from "@/components/mcDonalds/PrepareModal";
+import Ionicons from "@expo/vector-icons/Ionicons";
+import { router, Stack, useLocalSearchParams } from "expo-router";
+import { useEffect, useState } from "react";
+import { Image, Pressable, Text, View } from "react-native";
+import styles from "./start-mcDonalds.style";
 
 const BANNER_IMAGES = [
-  require('@assets/images/mcDonalds/banner/banner_genz.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_gmShake.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_icedTea.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_mcCrispy.png'),
-  require('@assets/images/mcDonalds/banner/banner_mcLunch.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_mcMorning.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_mcWing.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_milkAndBerry.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_treats.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_mcDrive.jpg'),
-  require('@assets/images/mcDonalds/banner/banner_gmShake.jpg')
+  require("@assets/images/mcDonalds/banner/banner_genz.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_gmShake.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_icedTea.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_mcCrispy.png"),
+  require("@assets/images/mcDonalds/banner/banner_mcLunch.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_mcMorning.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_mcWing.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_milkAndBerry.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_treats.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_mcDrive.jpg"),
+  require("@assets/images/mcDonalds/banner/banner_gmShake.jpg"),
 ];
 
 export default function McDonaldsStart() {
@@ -32,25 +32,25 @@ export default function McDonaldsStart() {
       setCurrentImageIndex((prevIndex) => {
         return (prevIndex + 1) % BANNER_IMAGES.length;
       });
-    }, 3000);  // todo 10초로 변경
+    }, 3000); // todo 10초로 변경
     return () => clearInterval(interval);
   }, []);
 
   return (
     <>
       <Stack.Screen options={{ headerShown: false }} />
-      
-      // 1. container (flex: 1)
-      <View style={styles.container}>
 
-        <Image 
+      {/* 1. container (flex: 1) */}
+      <View style={styles.container}>
+        <Image
           source={BANNER_IMAGES[currentImageIndex]}
           style={styles.bannerImage}
         />
 
         <View style={styles.noticeBar}>
           <Text style={styles.noticeText}>
-            * 카카오 선물하기, 모바일 상품권 사용 가능 (무료 쿠폰 사용은 카운터에서 문의해주세요)
+            * 카카오 선물하기, 모바일 상품권 사용 가능 (무료 쿠폰 사용은
+            카운터에서 문의해주세요)
           </Text>
           <Text style={styles.noticeText}>
             * 현금 결제는 카운터에서만 가능 Please pay at Front Counter for Cash
@@ -64,15 +64,14 @@ export default function McDonaldsStart() {
           <View style={styles.leftPane}>
             <Pressable
               style={styles.orderButton}
-              onPress={() => router.push('/(flow)/mcDonalds/select-menu')}
+              onPress={() => router.push("/(flow)/mcDonalds/select-menu")}
             >
               <Text style={styles.orderButtonText}>주문하기</Text>
             </Pressable>
-
           </View>
-          
+
           <View style={styles.rightPane}>
-            <Pressable 
+            <Pressable
               style={styles.qrButton}
               onPress={() => setModalVisible(true)}
             >
@@ -83,8 +82,8 @@ export default function McDonaldsStart() {
           </View>
 
           <PrepareModal
-            visible = {modalVisible}
-            onClose={() => setModalVisible(false)}  // 닫기 버튼 누르면 꺼짐
+            visible={modalVisible}
+            onClose={() => setModalVisible(false)} // 닫기 버튼 누르면 꺼짐
             message="실제 키오스크에서는 맥도날드 앱을 열어 QR코드를 인식시켜 포인트를 적립할 수 있어요."
           />
         </View>
