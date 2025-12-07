@@ -1,7 +1,11 @@
-import { StyleSheet } from "react-native";
+import { Platform, StyleSheet } from "react-native";
 
 export const styles = StyleSheet.create({
-  root: { flex: 1, paddingTop: 24, backgroundColor: "#F3F2F4" },
+  root: {
+    flex: 1,
+    paddingTop: Platform.OS === "android" ? 40 : 60,
+    backgroundColor: "#F3F2F4",
+  },
   title: {
     fontSize: 22,
     fontWeight: "700",

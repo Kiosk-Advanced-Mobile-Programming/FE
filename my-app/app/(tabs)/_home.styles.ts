@@ -129,8 +129,8 @@ export const styles = StyleSheet.create({
   },
   // 비디오 플레이어 영역 (16:9 비율 유지)
   videoModalPlayerContainer: {
-    width: MODAL_WIDTH,
-    height: VIDEO_HEIGHT, // 16:9 비율 높이 강제 지정
+    //width: MODAL_WIDTH,
+    height: 210, // 16:9 비율 높이 강제 지정
     backgroundColor: "#000",
   },
   videoPlayerModal: {
