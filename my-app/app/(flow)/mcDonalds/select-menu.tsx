@@ -3,6 +3,7 @@ import React, { useState } from 'react';
 import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
 import { Stack, router } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useStudy } from '../context/study-context';
 import styles from './select-menu.style';
 import { Colors } from '@/components/mcDonalds/colors';
 import { useCart } from './cart-context';
@@ -13,6 +14,7 @@ import SelectMenuHome from '@/components/mcDonalds/SelectMenuHome';
 import MenuItem from '@/components/mcDonalds/MenuItem';
 
 export default function SelectMenuScreen() {
+  const { startSession, recordTouch } = useStudy();
   const [activeCategoryId, setActiveCategoryId] = useState('home');
   const { items, getTotalPrice } = useCart();
 
@@ -23,7 +25,6 @@ export default function SelectMenuScreen() {
   // 버거류인지 판단하는 간단한 함수 (카테고리 ID 확인)
   const checkIsSetMenu = (category: string) => {
     return category === 'burger' || category === 'mclunch' || category === 'recommend'; 
-    // todo 'recommend' 안에서도 버거인 것만 거르는 로직 추가 가능
   };
 
   return (
