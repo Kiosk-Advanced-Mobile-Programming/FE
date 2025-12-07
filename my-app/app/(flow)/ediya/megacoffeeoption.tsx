@@ -10,7 +10,7 @@ import {
 } from './megacoffee';
 import optionStyles from './megacoffeeoption.styles'; // 옵션 스타일 임포트
 // 💡 [추가] 글로벌 상태 업데이트 함수 임포트
-import { setMissionSuccess } from './globalState';
+import { getMissionId, setMissionResult } from './globalState';
 
 // --- [타입 및 데이터 정의] ---
 interface MenuParams {
@@ -139,36 +139,21 @@ const handleOrder = () => {
     // 💡 미션 성공 여부 확인
     let isMissionSuccess = false;
 
-    // level.tsx의 버튼 2 미션: '아메리카노(HOT), 샷(L) 선택 후 주문 담기'
-    //난이도 하 조건
+    const missionId = getMissionId();
 
-    //
-    const requiredShotKey2 = 'hot';
-    const requiredShotKey3 = 'ice';
-
-    //샷 / 농도
-    const requiredShotKey0 = 'add1shot';
-    const requiredShotKey1 = 'light';
-
-    //시럽추가
-    const requiredShotKey4 = 'vanilla'
-
-    //난이도 상 조건
-    const MISSION_ID = 'mission-easy';
-
-    if ((menuName === '아메리카노' && selectedOptions.shot === requiredShotKey1 && selectedOptions.tumbler == requiredShotKey2) ||
-        (menuName === '버블 크림 밀크티' && selectedOptions.shot === requiredShotKey0&& selectedOptions.tumbler == requiredShotKey3) ||
-        (menuName === '디카페인 에스프레소' && selectedOptions.shot == requiredShotKey1 && selectedOptions.tumbler == requiredShotKey2 && selectedOptions.syrup === requiredShotKey4)
-        )
-    {
-        // 미션 요구사항(샷(L) 선택)을 충족했을 경우
+    if (missionId === 'mission-2' && menuName.includes('아메리카노') && selectedOptions.tumbler === 'hot' && selectedOptions.shot === 'light') {
+        isMissionSuccess = true;
+    } else if (missionId === 'mission-3' && menuName.includes('버블 크림 밀크티') && selectedOptions.tumbler === 'ice' && selectedOptions.shot === 'add1shot') {
+        isMissionSuccess = true;
+    } else if (missionId === 'mission-4' && menuName.includes('디카페인 에스프레소') && selectedOptions.tumbler === 'hot' && selectedOptions.shot === 'light' && selectedOptions.syrup === 'vanilla') {
+        isMissionSuccess = true;
+    } else if (!missionId) {
         isMissionSuccess = true;
     }
 
-    // 🎯 [핵심 추가] 미션 성공 여부를 글로벌 상태에 저장
-    setMissionSuccess(MISSION_ID, isMissionSuccess);
-    console.log(`[미션 결과] 난이도 하 (샷:L 선택): ${isMissionSuccess}`);
-    Alert.alert("주문 담기 완료", `미션 성공 여부: ${isMissionSuccess ? '성공 (true)' : '실패 (false)'}로 저장되었습니다.`);
+    if (isMissionSuccess) {
+        setMissionResult(isMissionSuccess);
+    }
 
     // ... (기존 장바구니 추가 로직 유지) ...
     // 2. 장바구니에 추가할 아이템 객체 생성 (CartItem 타입 사용)

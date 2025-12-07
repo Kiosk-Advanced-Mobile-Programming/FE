@@ -2,8 +2,7 @@ import React from 'react';
 import { View, Text, Pressable, Alert } from 'react-native';
 import { router } from 'expo-router'; 
 import styles from './level.styles'; 
-// 💡 Global State 함수 임포트
-import { setCurrentMission, MissionConfig } from './globalState';
+import { startSession } from './globalState';
 
 // 버튼 데이터 정의
 const BUTTON_DATA = [
@@ -12,62 +11,48 @@ const BUTTON_DATA = [
         label: '살펴보기', 
         route: '/(flow)/ediya/startPage', 
         requirement: '자유롭게 메뉴판을 탐색합니다.',
-        missionConfig: null 
+        sessionName: '이디야살펴보기',
+        successTouches: 0,
     }, 
     { 
         id: 2, 
         label: '난이도: 하 (미션)', 
         route: '/(flow)/ediya/startPage', 
-        // 💡 하 난이도 설정
-        missionConfig: { 
-            level: 'easy', 
-            targetMenu: '아메리카노', 
-            targetOption: 'hot', 
-            targetShot: 'light', 
-            targetSyrup: undefined,
-            targetAdd : undefined,
-        } as MissionConfig,
-        requirement: '요구사항: 아메리카노(HOT), 사이즈(L) 선택 후 주문 담기' 
+        requirement: '요구사항: 아메리카노(HOT), 사이즈(L) 선택 후 주문 담기',
+        sessionName: '이디야아메리카노주문',
+        successTouches: 4,
     },
     { 
         id: 3, 
         label: '난이도 : 중 (미션)',
         route : '/(flow)/ediya/startPage',
-        // 💡 중 난이도 설정 (시럽, 샷 추가)
-        missionConfig: { 
-            level: 'medium',
-            targetMenu: '버블 크림 밀크티', 
-            targetOption: 'ice', 
-            targetShot: 'add1shot', // 샷추가(EX) 키값
-            targetSyrup: 'vanilla', // 바닐라 시럽 키값
-            targetAdd : undefined,
-        } as MissionConfig,
-        requirement: '요구사항: 버블 크림 밀크티(ICE), 사이즈(EX) 선택 후 주문 담기' 
+        requirement: '요구사항: 버블 크림 밀크티(ICE), 사이즈(EX) 선택 후 주문 담기',
+        sessionName: '이디야버블티주문',
+        successTouches: 4,
     },
     { 
         id: 4, 
         label: '버튼 4 (난이도: 상)',
         route : '/(flow)/ediya/startPage',
         requirement: '요구사항 : 디카페인 에스프레소(HOT), 사이즈(L), 시럽추가 후 주문 담기',
-        
-        
-        missionConfig: null
+        sessionName: '이디야디카페인옵션추가',
+        successTouches: 4,
     },
 ];
 
 export default function TestPage() {
     
     const handlePress = (button: typeof BUTTON_DATA[0]) => {
-        // 1. 미션이 설정된 버튼이면 Global State에 저장
-        if (button.missionConfig) {
-            setCurrentMission(button.missionConfig);
-        } else {
-            console.log('미션 모드 아님 (자유 모드)');
-        }
+        // 1. 세션 시작 (터치 카운트 초기화 및 데이터 저장)
+        startSession({
+            sessionName: button.sessionName,
+            successTouches: button.successTouches,
+            missionId: `mission-${button.id}`,
+        });
 
-        // 2. 페이지 이동 (파라미터 없이 이동하여 깔끔함)
+        // 2. 페이지 이동
         if (button.route) {
-            router.push(button.route as any);
+            router.push({ pathname: button.route, params: { ...button, missionId: `mission-${button.id}` } } as any);
         } else {
             Alert.alert('알림', '준비 중입니다.');
         }

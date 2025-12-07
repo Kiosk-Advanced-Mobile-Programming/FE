@@ -34,9 +34,8 @@ export default function SelectBrand() {
               router.push({
                 //pathname: '/(flow)/megacoffee/startPage',
                 //pathname: '/(flow)/ediya/startPage',
-                //pathname: '/(flow)/ediya/level',
-                pathname: '/(flow)/megacoffee/level',
-                params: { category, brand: b, mode },
+                pathname: '/(flow)/ediya/level',
+                //pathname: '/(flow)/megacoffee/level',
               })
             }
           >

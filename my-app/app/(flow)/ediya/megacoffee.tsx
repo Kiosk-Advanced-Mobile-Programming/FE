@@ -1,5 +1,5 @@
 import { View, Text, Pressable, ScrollView, Alert, Image } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React, { useState, useMemo, useEffect, useCallback } from 'react';
 import styles from './megacoffee.styles'; // 스타일 파일 경로 확인
 
@@ -192,6 +192,8 @@ const BOTTOM_ROW_CATEGORIES = MENU_DATA.slice(4, 8);
 // ====================================================================
 export default function Megacoffee() {
     // 💡 selectedCategoryName만 필요합니다.
+    const params = useLocalSearchParams();
+
     const [selectedCategoryName, setSelectedCategoryName] = useState<string>(MENU_DATA[0].name);
 
     // 장바구니 아이템 배열 상태 (유지)
@@ -228,7 +230,7 @@ export default function Megacoffee() {
     const navigateToCartDetailPage = () => {
         if (cartItemCount > 0) {
             // firstpopup으로 이동
-            router.push('/(flow)/ediya/firstpopup'); 
+            router.push({ pathname: '/(flow)/ediya/firstpopup', params: params }); 
         }
     };
 
@@ -300,7 +302,9 @@ export default function Megacoffee() {
                             onPress={() => {
                                 router.push({
                                     pathname: '/(flow)/ediya/megacoffeeoption', 
-                                    params: { 
+                                    params: {
+                                        ...params,
+                                        id: String(item.id),
                                         name: item.name, 
                                         price: item.price.toString(), 
                                         // 💡 카테고리만 전달하고 옵션은 생략합니다.
