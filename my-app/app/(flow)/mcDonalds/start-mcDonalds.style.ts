@@ -51,7 +51,7 @@ export default StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 1,
-    borderColor: Colors.GreyLine,
+    borderColor: Colors.BorderDark,
     marginBottom: 80,
     boxShadow: [
       {
@@ -65,7 +65,7 @@ export default StyleSheet.create({
   orderButtonText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.TextBlack,
+    color: Colors.TextMain,
   },
 
     // 3-2. 포인트 적립 (QR)
@@ -80,7 +80,7 @@ export default StyleSheet.create({
     height: 150,
     backgroundColor: Colors.Primary,
     borderWidth: 1,
-    borderColor: Colors.GreyLine,
+    borderColor: Colors.BorderDark,
     justifyContent: 'center',
     alignItems: 'center',
     paddingTop: 0,
@@ -90,7 +90,7 @@ export default StyleSheet.create({
   qrText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: Colors.TextBlack,
+    color: Colors.TextMain,
     // todo: QR 이미지 배치
   },
 

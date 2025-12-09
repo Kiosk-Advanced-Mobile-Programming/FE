@@ -13,12 +13,9 @@ export type Menu = {
   name: string;
   price: number;
   image: any; // require('...') 경로
-  setImages?: {
-    normal?: any;
-    large?: any;
-  };
+  setImage?: any;
   isNew?: boolean; // 신제품 여부 (선택사항)
-  kcal?: number; // 칼로리 (선택사항)
+  validTime?: 'morning' | 'regular';
 };
 
 // 2. 카테고리 데이터
@@ -27,38 +24,58 @@ export const CATEGORIES: Category[] = [
   { id: 'recommend', name: '추천메뉴', icon: '⭐' },
   { id: 'burger', name: '버거', icon: '🍔' },
   { id: 'mclunch', name: '맥런치', icon: '🌞' },
-  { id: 'snack', name: '해피스낵', icon: '🍟' },
-  { id: 'side', name: '사이드', icon: '🧀' },
-  { id: 'drink', name: '음료', icon: '🥤' },
+  { id: 'happy_snack', name: '해피스낵', icon: '🍟' },
+  { id: 'sides', name: '사이드', icon: '🧀' },
+  { id: 'mccafe', name: '커피', icon: '☕' },
   { id: 'dessert', name: '디저트', icon: '🍦' },
+  { id: 'drinks', name: '음료', icon: '🥤' },
+  //{ id: 'happymeal', name: '해피밀', icon: '🧸' },
 ];
 
 // 3. 세트 종류 데이터 (화면 표시용)
 export const SET_TYPES = [
   { id: 'single', name: '단품 선택', priceAdd: 0, label: '단품' },
-  { id: 'normal', name: '세트 선택', priceAdd: 1500, label: '세트' },
-  { id: 'large', name: '라지 세트', price: 2200, label: '라지세트' },
+  { id: 'normal', name: '세트 선택', priceAdd: 1900, label: '세트' },
+  { id: 'large', name: '라지 세트', priceAdd: 2700, label: '라지세트' },
 ];
 
-// 4. 사이드 데이터 (기존 유지)
+// 4. 사이드 데이터 
 export const SIDE_OPTIONS = [
-  { id: 'fries', name: '후렌치 후라이 - 미디엄', price: 0, kcal: 324, image: require('@assets/images/mcDonalds/menu/sides/french_fries_m.png') },
-  { id: 'coleslaw', name: '코울슬로', price: 0, kcal: 150, image: require('@assets/images/mcDonalds/menu/sides/coleslaw.png') },
-  { id: 'cheese_stick', name: '치즈스틱 2조각', price: 500, kcal: 200, image: require('@assets/images/mcDonalds/menu/sides/g_moza_c_stick_2.png') },
+  { id: 'fries', name: '후렌치 후라이 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/sides/french_fries_m.png') },
+  { id: 'fries_large', name: '후렌치 후라이 - 라지', price: 700, image: require('@assets/images/mcDonalds/menu/sides/french_fries_l.png') },
+  { id: 'coleslaw', name: '코울슬로', price: 0, image: require('@assets/images/mcDonalds/menu/sides/coleslaw.png') },
+  { id: 'cheese_stick', name: '치즈스틱 2조각', price: 500, image: require('@assets/images/mcDonalds/menu/sides/g_moza_c_stick_2.png') },
 ];
 
-// 5. ✨ [추가] 음료 데이터 (임의 구성)
+// 5. 음료 데이터 (임의 구성)
 export const DRINK_OPTIONS = [
-  // { id: 'coke', name: '코카-콜라 - 미디엄', price: 0, kcal: 133, image: require('@assets/images/drinks/coke.png') },
-  // { id: 'coke_zero', name: '코카-콜라 제로 - 미디엄', price: 0, kcal: 0, image: require('@assets/images/drinks/coke_zero.png') },
-  // { id: 'sprite', name: '스프라이트 - 미디엄', price: 0, kcal: 140, image: require('@assets/images/drinks/sprite.png') },
-  // { id: 'fanta', name: '환타 - 미디엄', price: 0, kcal: 62, image: require('@assets/images/drinks/fanta.png') },
-  { id: 'americano', name: '아이스 아메리카노 - 미디엄', price: 500, kcal: 10, image: require('@assets/images/mcDonalds/menu/mccafe/americano_m.png') }, // 추가금 예시
-  { id: 'latte', name: '아이스 카페라떼 - 미디엄', price: 1000, kcal: 150, image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_m.png') },
+  { id: 'coke_m', name: '코카-콜라 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/coke_m.png') },
+  { id: 'sprite_m', name: '스프라이트 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/sprite_m.png') },
+  { id: 'coke_zero_m', name: '코카-콜라 제로 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/coke_zero_m.png') },
+  { id: 'fanta_m', name: '환타 - 미디엄', price: 0, image: require('@assets/images/mcDonalds/menu/drinks/fanta_m.png') },
+  { id: 'i_drip_coffee_m', name: '아이스 드립 커피 - 미디엄', price: 100, image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_m.png')},
+  { id: 'i_americano_m', name: '아이스 아메리카노 - 미디엄', price: 700, image: require('@assets/images/mcDonalds/menu/mccafe/i_americano_m.png')},
+  { id: 'i_cafe_latte_m', name: '아이스 카페 라떼 - 미디엄', price: 1300, image: require('@assets/images/mcDonalds/menu/mccafe/i_cafe_latte_m.png')},
+  { id: 'i_vanilla_latte_m', name: '아이스 바닐라 라떼 - 미디엄', price: 1300, image: require('@assets/images/mcDonalds/menu/mccafe/i_vanilla_latte_m.png')},
+  { id: 'drip_coffee_m', name: '드립 커피 - 미디엄', price: 100, image: require('@assets/images/mcDonalds/menu/mccafe/drip_coffee_m.png')},
+  { id: 'americano_m', name: '아메리카노 - 미디엄', price: 500, image: require('@assets/images/mcDonalds/menu/mccafe/americano_m.png') },
+  { id: 'cafe_latte_m', name: '카페라떼 - 미디엄', price: 1000, image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_m.png') },
+
+  { id: 'coke_l', name: '코카-콜라 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/coke_l.png') },
+  { id: 'sprite_l', name: '스프라이트 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/sprite_l.png') },
+  { id: 'coke_zero_l', name: '코카-콜라 제로 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/coke_zero_l.png') },
+  { id: 'fanta_l', name: '환타 - 라지', price: 500, image: require('@assets/images/mcDonalds/menu/drinks/fanta_l.png') },
+  { id: 'i_drip_coffee_l', name: '아이스 드립 커피 - 라지', price: 600, image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_l.png')},
+  { id: 'i_americano_l', name: '아이스 아메리카노 - 라지', price: 1200, image: require('@assets/images/mcDonalds/menu/mccafe/i_americano_l.png')},
+  { id: 'i_cafe_latte_l', name: '아이스 카페 라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/i_cafe_latte_l.png')},
+  { id: 'i_vanilla_latte_l', name: '아이스 바닐라 라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/i_vanilla_latte_l.png')},
+  { id: 'drip_coffee_l', name: '드립 커피 - 라지', price: 600, image: require('@assets/images/mcDonalds/menu/mccafe/drip_coffee_l.png')},
+  { id: 'americano_l', name: '아메리카노 - 라지', price: 800, image: require('@assets/images/mcDonalds/menu/mccafe/americano_l.png') },
+  { id: 'cafe_latte_l', name: '카페라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_l.png') },
+  { id: 'vanilla_latte_l', name: '바닐라 라떼 - 라지', price: 1800, image: require('@assets/images/mcDonalds/menu/mccafe/vanilla_latte_l.png')},
 ];
 
 // 6. 메뉴 데이터
-// ⚠️ 주의: 이미지 경로는 실제 프로젝트에 있는 파일 경로로 맞춰주세요!
 export const MENU_ITEMS: Menu[] = [
   // --- 추천메뉴 ---
   {
@@ -66,7 +83,8 @@ export const MENU_ITEMS: Menu[] = [
     category: 'recommend',
     name: '더블 쿼터파운더 치즈',
     price: 7400,
-    image: require('@assets/images/mcDonalds/menu/burger/d_qtr_pnd.png')
+    image: require('@assets/images/mcDonalds/menu/burger/d_qtr_pnd.png'),
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/d_qtr_pnd_set.png'),
   },
   {
     id: 2,
@@ -74,31 +92,29 @@ export const MENU_ITEMS: Menu[] = [
     name: '맥윙 2조각',
     price: 3400,
     image: require('@assets/images/mcDonalds/menu/sides/mcwing_2.png'),
-    kcal: 245
   },
   {
     id: 3,
     category: 'recommend',
     name: '치킨 모짜렐라 스낵랩',
-    price: 0,
+    price: 3000,
     image: require('@assets/images/mcDonalds/menu/happy_snack/c_m_snack_wrap.png'),
-    kcal: 365
   },
   {
     id: 4,
     category: 'recommend',
     name: '맥스파이시 상하이 버거',
-    price: 0,
+    price: 5500,
     image: require('@assets/images/mcDonalds/menu/burger/mcspicy_shghi.png'),
-    kcal: 501
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/mcspicy_shghi_set.png'),
   },
   {
     id: 5,
     category: 'recommend',
     name: '쿼터파운더 치즈',
-    price: 0,
+    price: 5500,
     image: require('@assets/images/mcDonalds/menu/burger/qtr_pnd.png'),
-    kcal: 534
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/qtr_pnd_set.png'),
   },
 
   // ==== 맥런치 ====
@@ -106,209 +122,840 @@ export const MENU_ITEMS: Menu[] = [
     id: 6,
     category: 'mclunch',
     name: '1955 버거 세트',
-    price: 0,
+    price: 7000,
     image: require('@assets/images/mcDonalds/menu/mclunch/1955bgr_set.png'),
-    kcal: 534
   },
   {
     id: 7,
     category: 'mclunch',
     name: '빅맥 세트',
-    price: 0,
+    price: 6300,
     image: require('@assets/images/mcDonalds/menu/mclunch/bigmac_set.png'),
-    kcal: 534
   },
   {
     id: 8,
     category: 'mclunch',
     name: '베이컨 토마토 디럭스 세트',
-    price: 0,
+    price: 7300,
     image: require('@assets/images/mcDonalds/menu/mclunch/btd_set.png'),
-    kcal: 534
   },
   {
     id: 9,
     category: 'mclunch',
     name: '더블 불고기 버거 세트',
-    price: 0,
+    price: 5900,
     image: require('@assets/images/mcDonalds/menu/mclunch/d_bul_bgr_set.png'),
-    kcal: 534
   },
   {
     id: 10,
     category: 'mclunch',
     name: '맥크리스피 디럭스 버거 세트',
-    price: 0,
+    price: 7500,
     image: require('@assets/images/mcDonalds/menu/mclunch/mccrispy_dlx_bgr_set.png'),
-    kcal: 534
-  },
-  {
-    id: 11,
-    category: 'mclunch',
-    name: '맥크리스피 디럭스 버거 세트',
-    price: 0,
-    image: require('@assets/images/mcDonalds/menu/mclunch/mcspicy_shghi_set.png'),
-    kcal: 534
   },
   // ====== 버거 ======
   {
     id: 12,
     category: 'burger',
     name: '빅맥',
-    price: 0,
+    price: 5500,
     image: require('@assets/images/mcDonalds/menu/burger/bigmac.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/bigmac_set.png'),
   },
   {
     id: 13,
     category: 'burger',
     name: '맥스파이시 상하이 버거',
-    price: 0,
+    price: 5500,
     image: require('@assets/images/mcDonalds/menu/burger/mcspicy_shghi.png'),
-    kcal: 0
-  },
-  {
-    id: 14,
-    category: 'burger',
-    name: '맥스파이시 상하이 버거',
-    price: 0,
-    image: require('@assets/images/mcDonalds/menu/burger/mcspicy_shghi.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/mcspicy_shghi_set.png'),
   },
   {
     id: 15,
     category: 'burger',
     name: '1955 버거',
-    price: 0,
+    price: 6400,
     image: require('@assets/images/mcDonalds/menu/burger/1955bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/1955bgr_set.png'),
   },
   {
     id: 16,
     category: 'burger',
     name: '더블 쿼터파운더 치즈',
-    price: 0,
+    price: 7400,
     image: require('@assets/images/mcDonalds/menu/burger/d_qtr_pnd.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/d_qtr_pnd_set.png'),
   },
   {
     id: 17,
     category: 'burger',
     name: '쿼터파운더 치즈',
-    price: 0,
+    price: 5500,
     image: require('@assets/images/mcDonalds/menu/burger/qtr_pnd.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/qtr_pnd_set.png'),
   },
   {
     id: 18,
     category: 'burger',
     name: '맥크리스피 디럭스 버거',
-    price: 0,
+    price: 6800,
     image: require('@assets/images/mcDonalds/menu/burger/mccrispy_dlx_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/mccrispy_dlx_bgr_set.png'),
   },
   {
     id: 19,
     category: 'burger',
     name: '맥크리스피 클래식 버거',
-    price: 0,
+    price: 5900,
     image: require('@assets/images/mcDonalds/menu/burger/mccrispy_clsc_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/mccrispy_clsc_bgr_set.png'),
   },
   {
     id: 20,
     category: 'burger',
     name: '베이컨 토마토 디럭스',
-    price: 0,
+    price: 5800,
     image: require('@assets/images/mcDonalds/menu/burger/btd.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/btd_set.png'),
   },
   {
     id: 21,
     category: 'burger',
     name: '맥치킨 모짜렐라',
-    price: 0,
+    price: 5000,
     image: require('@assets/images/mcDonalds/menu/burger/mcchicken_moza.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/mcchicken_moza_set.png'),
   },
   {
     id: 22,
     category: 'burger',
     name: '맥치킨',
-    price: 0,
+    price: 3500,
     image: require('@assets/images/mcDonalds/menu/burger/mcchicken.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/mcchicken_set.png'),
   },
   {
     id: 23,
     category: 'burger',
     name: '더블 불고기 버거',
-    price: 0,
+    price: 4500,
     image: require('@assets/images/mcDonalds/menu/burger/d_bul_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/d_bul_bgr_set.png'),
   },
   {
     id: 24,
     category: 'burger',
     name: '불고기 버거',
-    price: 0,
+    price: 3600,
     image: require('@assets/images/mcDonalds/menu/burger/bul_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/bul_bgr_set.png'),
   },
   {
     id: 25,
     category: 'burger',
     name: '슈비 버거',
-    price: 0,
+    price: 5800,
     image: require('@assets/images/mcDonalds/menu/burger/sbi_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/sbi_bgr_set.png'),
   },
   {
     id: 26,
     category: 'burger',
     name: '슈슈 버거',
-    price: 0,
+    price: 4700,
     image: require('@assets/images/mcDonalds/menu/burger/shsh_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/shsh_bgr_set.png'),
   },
   {
     id: 27,
     category: 'burger',
     name: '토마토 치즈 비프 버거',
-    price: 0,
+    price: 5800,
     image: require('@assets/images/mcDonalds/menu/burger/t_c_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/t_c_bgr_set.png'),
   },
   {
     id: 28,
     category: 'burger',
     name: '트리플 치즈버거',
-    price: 0,
+    price: 5900,
     image: require('@assets/images/mcDonalds/menu/burger/t_c_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/t_c_bgr_set.png'),
   },
   {
     id: 29,
     category: 'burger',
     name: '더블 치즈버거',
-    price: 0,
+    price: 4800,
     image: require('@assets/images/mcDonalds/menu/burger/d_c_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/d_c_bgr_set.png'),
   },
   {
     id: 30,
     category: 'burger',
     name: '치즈버거',
-    price: 0,
+    price: 2800,
     image: require('@assets/images/mcDonalds/menu/burger/c_bgr.png'),
-    kcal: 0
+    setImage: require('@assets/images/mcDonalds/menu/burger_set/c_bgr_set.png'),
   },
   {
     id: 31,
     category: 'burger',
     name: '햄버거',
-    price: 0,
+    price: 2600,
     image: require('@assets/images/mcDonalds/menu/burger/bgr.png'),
-    kcal: 0
   },
+
+  // ====== 해피스낵 ======
+  {
+    id: 32,
+    category: 'happy_snack',
+    name: '애플파이',
+    price: 1500,
+    image: require('@assets/images/mcDonalds/menu/happy_snack/apple_pie.png'),
+  },
+  {
+    id: 33,
+    category: 'happy_snack',
+    name: '바닐라 선데이 아이스크림',
+    price: 1500,
+    image: require('@assets/images/mcDonalds/menu/happy_snack/vanilla_sundae.png'),
+  },
+  {
+    id: 34,
+    category: 'happy_snack',
+    name: '아이스 드립 커피(L)',
+    price: 2000,
+    image: require('@assets/images/mcDonalds/menu/happy_snack/i_drip_coffee_l.png'),
+  },
+  {
+    id: 35,
+    category: 'happy_snack',
+    name: '치킨 모짜렐라 스낵랩',
+    price: 3000,
+    image: require('@assets/images/mcDonalds/menu/happy_snack/c_m_snack_wrap.png'),
+  },
+  { 
+    id: 36,
+    category: 'happy_snack',
+    name: '토마토 치즈 비프버거',
+    price: 3000,
+    image: require('@assets/images/mcDonalds/menu/happy_snack/t_c_b_bgr.png'),
+  },
+  {
+    id: 37,
+    category: 'happy_snack',
+    name: '애플파이 바닐라 선데이 아이스크림 콤보',
+    price: 4000,
+    image: require('@assets/images/mcDonalds/menu/happy_snack/apple_pie_vanilla_sundae_combo.png'),
+  },
+  {
+    id: 38,
+    category: 'happy_snack',
+    name: '애플파이 아이스 드립 커피 라지 콤보',
+    price: 4000,
+    image: require('@assets/images/mcDonalds/menu/happy_snack/apple_pie_i_drip_coffee_l_combo.png'),
+  },
+
+  // ====== sides ======
+  {
+    id: 40,
+    category: 'sides',
+    name: '치킨 모짜렐라 스넥랩',
+    price: 3000,
+    image: require('@assets/images/mcDonalds/menu/sides/c_m_snack_wrap.png'),
+  },
+{
+    id: 47,
+    category: 'sides',
+    name: '맥너겟 4조각',
+    price: 2600,
+    image: require('@assets/images/mcDonalds/menu/sides/mcnugget_4.png'),
+  },
+{
+    id: 48,
+    category: 'sides',
+    name: '맥너겟 6조각',
+    price: 3900,
+    image: require('@assets/images/mcDonalds/menu/sides/mcnugget_6.png'),
+  },
+  {
+    id: 44,
+    category: 'sides',
+    name: '골든 모짜렐라 치즈스틱 2조각',
+    price: 2800,
+    image: require('@assets/images/mcDonalds/menu/sides/g_moza_c_stick_2.png'),
+  },
+{
+    id: 45,
+    category: 'sides',
+    name: '골든 모짜렐라 치즈스틱 4조각',
+    price: 4500,
+    image: require('@assets/images/mcDonalds/menu/sides/g_moza_c_stick_4.png'),
+  },
+  {
+    id: 43,
+    category: 'sides',
+    name: '후렌치 후라이 Small',
+    price: 1500,
+    image: require('@assets/images/mcDonalds/menu/sides/french_fries_s.png'),
+  },
+{
+    id: 42,
+    category: 'sides',
+    name: '후렌치 후라이 Medium',
+    price: 2500,
+    image: require('@assets/images/mcDonalds/menu/sides/french_fries_m.png'),
+  },
+{
+    id: 41,
+    category: 'sides',
+    name: '후렌치 후라이 Large',
+    price: 3200,
+    image: require('@assets/images/mcDonalds/menu/sides/french_fries_l.png'),
+  },
+  {
+    id: 55,
+    category: 'sides',
+    name: '상하이 치킨 스낵랩',
+    price: 3500,
+    image: require('@assets/images/mcDonalds/menu/sides/shghi_c_snack_wrap.png'),
+  },
+  {
+    id: 49,
+    category: 'sides',
+    name: '맥스파이시 치킨 텐더',
+    price: 2700,
+    image: require('@assets/images/mcDonalds/menu/sides/mcspicy_c_tender.png'),
+  },
+{
+    id: 46,
+    category: 'sides',
+    name: '해쉬 브라운',
+    price: 1800,
+    image: require('@assets/images/mcDonalds/menu/sides/hash_brown.png'),
+  },
+  {
+    id: 39,
+    category: 'sides',
+    name: '코울슬로',
+    price: 1900,
+    image: require('@assets/images/mcDonalds/menu/sides/coleslaw.png'),
+  },
+{
+    id: 51,
+    category: 'sides',
+    name: '맥윙 2조각',
+    price: 3600,
+    image: require('@assets/images/mcDonalds/menu/sides/mcwing_2.png'),
+  },
+{
+    id: 52,
+    category: 'sides',
+    name: '맥윙 4조각',
+    price: 6800,
+    image: require('@assets/images/mcDonalds/menu/sides/mcwing_4.png'),
+  },
+{
+    id: 53,
+    category: 'sides',
+    name: '맥윙 8조각',
+    price: 12900,
+    image: require('@assets/images/mcDonalds/menu/sides/mcwing_8.png'),
+  },
+{
+    id: 54,
+    category: 'sides',
+    name: '맥윙 콤보 2조각',
+    price: 4600,
+    image: require('@assets/images/mcDonalds/menu/sides/mcwing_combo_2.png'),
+  },
+{
+    id: 50,
+    category: 'sides',
+    name: '맥윙 콤보 4조각',
+    price: 7800,
+    image: require('@assets/images/mcDonalds/menu/sides/mcwind_combo_4.png'),
+  },
+
+  // ====== mccafe ======
+  {
+    id: 57,
+    category: 'mccafe',
+    name: '아메리카노 Medium',
+    price: 2600,
+    image: require('@assets/images/mcDonalds/menu/mccafe/americano_m.png'),
+  },
+  {
+    id: 56,
+    category: 'mccafe',
+    name: '아메리카노 Large',
+    price: 3100,
+    image: require('@assets/images/mcDonalds/menu/mccafe/americano_l.png'),
+  },
+    {
+    id: 63,
+    category: 'mccafe',
+    name: '디카페인 아메리카노 Medium',
+    price: 2800,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_americano_m.png'),
+  },
+  {
+    id: 62,
+    category: 'mccafe',
+    name: '디카페인 아메리카노 Large',
+    price: 3300,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_americano_l.png'),
+  },
+  {
+    id: 74,
+    category: 'mccafe',
+    name: '아이스 아메리카노 Medium',
+    price: 2600,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_americano_m.png'),
+  },
+{ 
+    id: 75,
+    category: 'mccafe',
+    name: '아이스 아메리카노 Large',
+    price: 3100,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_americano_l.png'),
+  },
+  {
+    id: 69,
+    category: 'mccafe',
+    name: '디카페인 아이스 아메리카노 Medium',
+    price: 2800,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_i_americano_m.png'),
+  },
+      {
+    id: 68,
+    category: 'mccafe',
+    name: '디카페인 아이스 아메리카노 Large',
+    price: 3300,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_i_americano_l.png'),
+  },
+  {
+    id: 59,
+    category: 'mccafe',
+    name: '카페라떼 Medium',
+    price: 3300,
+    image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_m.png'),
+  },
+  {
+    id: 58,
+    category: 'mccafe',
+    name: '카페라떼 Large',
+    price: 3800,
+    image: require('@assets/images/mcDonalds/menu/mccafe/cafe_latte_l.png'),
+  },
+  {
+    id: 65,
+    category: 'mccafe',
+    name: '디카페인 카페라떼 Medium',
+    price: 3500,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_cafe_latte_m.png'),
+  },
+  {
+    id: 64,
+    category: 'mccafe',
+    name: '디카페인 카페라떼 Large',
+    price: 4000,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_cafe_latte_l.png'),
+  },
+  {
+    id: 77,
+    category: 'mccafe',
+    name: '아이스 카페라떼 Medium',
+    price: 3300,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_cafe_latte_m.png'),
+  },
+  {
+    id: 76,
+    category: 'mccafe',
+    name: '아이스 카페라떼 Large',
+    price: 3800,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_cafe_latte_l.png'),
+  },
+  {
+    id: 71,
+    category: 'mccafe',
+    name: '디카페인 아이스 카페라떼 Medium',
+    price: 3500,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_i_cafe_latte_m.png'),
+  },
+  {
+    id: 70,
+    category: 'mccafe',
+    name: '디카페인 아이스 카페라떼 Large',
+    price: 4000,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_i_cafe_latte_l.png'),
+  },
+  {
+    id: 83,
+    category: 'mccafe',
+    name: '바닐라 라떼 Medium',
+    price: 3800,
+    image: require('@assets/images/mcDonalds/menu/mccafe/vanilla_latte_m.png'),
+  },
+  {
+    id: 82,
+    category: 'mccafe',
+    name: '바닐라 라떼 Large',
+    price: 4300,
+    image: require('@assets/images/mcDonalds/menu/mccafe/vanilla_latte_l.png'),
+  },
+  {
+    id: 81,
+    category: 'mccafe',
+    name: '아이스 바닐라 라떼 Medium',
+    price: 3800,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_vanilla_latte_m.png'),
+  },
+  {
+    id: 80,
+    category: 'mccafe',
+    name: '아이스 바닐라 라떼 Large',
+    price: 4300,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_vanilla_latte_l.png'),
+  },
+  {
+    id: 61,
+    category: 'mccafe',
+    name: '카푸치노 Medium',
+    price: 3300,
+    image: require('@assets/images/mcDonalds/menu/mccafe/cappuccino_m.png'),
+  },
+  {
+    id: 60,
+    category: 'mccafe',
+    name: '카푸치노 Large',
+    price: 3800,
+    image: require('@assets/images/mcDonalds/menu/mccafe/cappuccino_l.png'),
+  },
+  {
+    id: 67,
+    category: 'mccafe',
+    name: '디카페인 카푸치노 Medium',
+    price: 3500,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_cappuccino_m.png'),
+  },
+  {
+    id: 66,
+    category: 'mccafe',
+    name: '디카페인 카푸치노 Large',
+    price: 4000,
+    image: require('@assets/images/mcDonalds/menu/mccafe/decaf_cappuccino_l.png'),
+  },
+  {
+    id: 73,
+    category: 'mccafe',
+    name: '드립 커피 Medium',
+    price: 2000,
+    image: require('@assets/images/mcDonalds/menu/mccafe/drip_coffee_m.png'),
+  },
+  {
+    id: 72,
+    category: 'mccafe',
+    name: '드립 커피 Large',
+    price: 2500,
+    image: require('@assets/images/mcDonalds/menu/mccafe/drip_coffee_l.png'),
+  },
+  {
+    id: 79,
+    category: 'mccafe',
+    name: '아이스 드립 커피 Medium',
+    price: 1000,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_m.png'),
+  },
+  {
+    id: 78,
+    category: 'mccafe',
+    name: '아이스 드립 커피 Large',
+    price: 1500,
+    image: require('@assets/images/mcDonalds/menu/mccafe/i_drip_coffee_l.png'),
+  },
+
+
+  // ====== dessert ======
+  {
+    id: 84,
+    category: 'dessert',
+    name: '애플 파이',
+    price: 1500,
+    image: require('@assets/images/mcDonalds/menu/dessert/apple_pie.png'),
+  },
+  {
+    id: 88,
+    category: 'dessert',
+    name: '오레오 맥플러리',
+    price: 3600,
+    image: require('@assets/images/mcDonalds/menu/dessert/oreo_mcflurry.png'),
+  },
+{
+    id: 90,
+    category: 'dessert',
+    name: '딸기 오레오 맥플러리',
+    price: 3600,
+    image: require('@assets/images/mcDonalds/menu/dessert/stwbry_mcflurry.png'),
+  },
+  {
+    id: 85,
+    category: 'dessert',
+    name: '초코 오레오 맥플러리',
+    price: 3600,
+    image: require('@assets/images/mcDonalds/menu/dessert/choco_oreo_mcflurry.png'),
+  },
+  {
+    id: 93,
+    category: 'dessert',
+    name: '베리 스트로베리 맥플러리',
+    price: 3600,
+    image: require('@assets/images/mcDonalds/menu/dessert/very_stwbry_mcflurry.png'),
+  },
+    {
+    id: 89,
+    category: 'dessert',
+    name: '스트로베리콘',
+    price: 1800,
+    image: require('@assets/images/mcDonalds/menu/dessert/stwbry_cone.png'),
+  },
+    {
+    id: 87,
+    category: 'dessert',
+    name: '아이스크림콘',
+    price: 1400,
+    image: require('@assets/images/mcDonalds/menu/dessert/ice_cream_cone.png'),
+  },
+  {
+    id: 86,
+    category: 'dessert',
+    name: '초코 선데이 아이스크림',
+    price: 2300,
+    image: require('@assets/images/mcDonalds/menu/dessert/choco_sundae.png'),
+  },
+  {
+    id: 91,
+    category: 'dessert',
+    name: '딸기 선데이 아이스크림',
+    price: 2300,
+    image: require('@assets/images/mcDonalds/menu/dessert/stwbry_sundae.png'),
+  },
+  {
+    id: 92,
+    category: 'dessert',
+    name: '바닐라 선데이 아이스크림',
+    price: 2100,
+    image: require('@assets/images/mcDonalds/menu/dessert/vanilla_sundae.png'),
+  },
+
+
+  // ====== drinks ======
+  {
+    id: 96,
+    category: 'drinks',
+    name: '코카-콜라 Medium',
+    price: 1900,
+    image: require('@assets/images/mcDonalds/menu/drinks/coke_m.png'),
+  },
+  {
+    id: 95,
+    category: 'drinks',
+    name: '코카-콜라 Large',
+    price: 2400,
+    image: require('@assets/images/mcDonalds/menu/drinks/coke_l.png'),
+  },
+  {
+    id: 98,
+    category: 'drinks',
+    name: '코카-콜라 제로 Medium',
+    price: 1900,
+    image: require('@assets/images/mcDonalds/menu/drinks/coke_zero_m.png'),
+  },
+  {
+    id: 97,
+    category: 'drinks',
+    name: '코카-콜라 제로 Large',
+    price: 2400,
+    image: require('@assets/images/mcDonalds/menu/drinks/coke_zero_l.png'),
+  },
+  {
+    id: 104,
+    category: 'drinks',
+    name: '스프라이트 Medium',
+    price: 1900,
+    image: require('@assets/images/mcDonalds/menu/drinks/sprite_m.png'),
+  },
+  {
+    id: 103,
+    category: 'drinks',
+    name: '스프라이트 Large',
+    price: 2400,
+    image: require('@assets/images/mcDonalds/menu/drinks/sprite_l.png'),
+  },
+    {
+    id: 100,
+    category: 'drinks',
+    name: '환타 Medium',
+    price: 1900,
+    image: require('@assets/images/mcDonalds/menu/drinks/fanta_m.png'),
+  },
+  {
+    id: 99,
+    category: 'drinks',
+    name: '환타 Large',
+    price: 2400,
+    image: require('@assets/images/mcDonalds/menu/drinks/fanta_l.png'),
+  },
+  {
+    id: 106,
+    category: 'drinks',
+    name: '바닐라 쉐이크 Medium',
+    price: 2800,
+    image: require('@assets/images/mcDonalds/menu/drinks/vanilla_shake_m.png'),
+  },
+    {
+    id: 105,
+    category: 'drinks',
+    name: '딸기 쉐이크 Medium',
+    price: 2800,
+    image: require('@assets/images/mcDonalds/menu/drinks/strawberry_shake_m.png'),
+  },
+  {
+    id: 94,
+    category: 'drinks',
+    name: '초코 쉐이크 Medium',
+    price: 2800,
+    image: require('@assets/images/mcDonalds/menu/drinks/chocolate_shake_m.png'),
+  },
+  // {
+  //   id: 102,
+  //   category: 'drinks',
+  //   name: '오렌지 주스',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/drinks/orange_juice.png'),
+  // },
+  {
+    id: 101,
+    category: 'drinks',
+    name: '생수',
+    price: 1300,
+    image: require('@assets/images/mcDonalds/menu/drinks/miniral_water.png'),
+  },
+
+  // ====== 해피밀 ======
+  // --------morning-----------
+  // {
+  //   id: 107,
+  //   category: 'happymeal',
+  //   name: 'bacon_egg_mcmuffin',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/bacon_egg_mcmuffin.png'),
+  //   validTime: 'morning',
+  // },
+  // {
+  //   id: 108,
+  //   category: 'happymeal',
+  //   name: 'egg_mcmuffin',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/egg_mcmuffin.png'),
+  //   validTime: 'morning',
+  // },
+  // {
+  //   id: 109,
+  //   category: 'happymeal',
+  //   name: 'fruit_bowls_pineapple',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/fruit_bowls_pineapple.png'),
+  //   validTime: 'morning',
+  // },
+  // {
+  //   id: 110,
+  //   category: 'happymeal',
+  //   name: 'hash_brown',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/hash_brown.png'),
+  //   validTime: 'morning',
+  // },
+  // {
+  //   id: 111,
+  //   category: 'happymeal',
+  //   name: 'hotcakes_2',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/hotcakes_2.png'),
+  //   validTime: 'morning',
+  // },
+  // {
+  //   id: 112,
+  //   category: 'happymeal',
+  //   name: 'mineral_water',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/mineral_water.png'),
+  //   validTime: 'morning',
+  // },
+  // {
+  //   id: 113,
+  //   category: 'happymeal',
+  //   name: 'orange_juice',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/orange_juice.png'),
+  //   validTime: 'morning',
+  // },
+  // {
+  //   id: 114,
+  //   category: 'happymeal',
+  //   name: 'sausage_egg_mcmuffin',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/4am_to_1030am/sausage_egg_mcmuffin.png'),
+  //   validTime: 'morning',
+  // },
+  // //---------regular----------
+  // {
+  //   id: 115,
+  //   category: 'happymeal',
+  //   name: 'bgr',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/1030am_to_4am/bgr.png'),
+  //   validTime: 'regular',
+  // },
+  // {
+  //   id: 116,
+  //   category: 'happymeal',
+  //   name: 'french_fries_s',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/1030am_to_4am/french_fries_s.png'),
+  //   validTime: 'regular',
+  // },
+  // {
+  //   id: 117,
+  //   category: 'happymeal',
+  //   name: 'fruit_bowls_pineapple',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/1030am_to_4am/fruit_bowls_pineapple.png'),
+  //   validTime: 'regular',
+  // },
+  // {
+  //   id: 118,
+  //   category: 'happymeal',
+  //   name: 'mcnugget_4',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/1030am_to_4am/mcnugget_4.png'),
+  //   validTime: 'regular',
+  // },
+  // {
+  //   id: 119,
+  //   category: 'happymeal',
+  //   name: 'mineral_water',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/1030am_to_4am/mineral_water.png'),
+  //   validTime: 'regular',
+  // },
+  // {
+  //   id: 120,
+  //   category: 'happymeal',
+  //   name: 'orange_juice',
+  //   price: 0,
+  //   image: require('@assets/images/mcDonalds/menu/./happymeal/1030am_to_4am/orange_juice.png'),
+  //   validTime: 'regular',
+  // },
 ];

@@ -97,3 +97,31 @@ export async function requestAiSummary(
     throw error;
   }
 }
+
+export async function getAiExplanation(query: string): Promise<string> {
+  console.log(`AI에게 질문이 도착했습니다: ${query}`);
+
+  // 실제 AI 호출 전에 네트워크 지연을 시뮬레이션합니다. (1.5초)
+  await new Promise((resolve) => setTimeout(resolve, 1500));
+
+  // --- [TODO] 여기에 실제 AI API 호출 로직을 구현하세요. ---
+  // (예시 코드: 나중에 실제 API 연결 시 주석을 풀고 사용하세요.)
+
+  try {
+    const prompt = `당신은 키오스크를 연습하는 학습자에게
+                     키오스크 사용법을 친절하게 가르쳐주는 전문가입니다. 
+                     사용자가 궁금해하는 키오스크 관련 단어 "${query}"에 대해 
+                     쉽고 자세하게 한국어로 설명해 주세요. (100자 이내)
+                     
+                     [설명할때 인사 생략]`;
+
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    const text = response.text();
+    console.log("AI 응답:", text);
+    return text;
+  } catch (error) {
+    console.error("AI API 호출 오류:", error);
+    return "AI 서비스 연결에 문제가 발생했습니다. API 키 및 설정이 올바른지 확인해주세요.";
+  }
+}

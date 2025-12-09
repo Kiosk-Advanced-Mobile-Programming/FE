@@ -28,13 +28,13 @@ const styles = StyleSheet.create({
   card: {
     width: '48%', // 2열 배치를 위해 (gap 고려해서 48% 정도)
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 3,
     marginBottom: 15,
     // 그림자 효과 (카드처럼 보이게)
     elevation: 3, // 안드로이드 그림자
     shadowColor: '#000', // iOS 그림자
     shadowOpacity: 0.1,
-    shadowRadius: 4,
+    shadowRadius: 3,
     padding: 10,
     alignItems: 'center',
   },
