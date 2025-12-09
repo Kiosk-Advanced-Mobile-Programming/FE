@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import styles from './firstpopup.styles'; // 스타일 파일 경로 확인
 
 // megacoffee.tsx에서 정의된 타입과 상태 관리 함수를 가져옵니다.
@@ -12,6 +12,9 @@ import {
 
 
 const CartDetailPage: React.FC = () => {
+    // 💡 megacoffee 페이지에서 전달된 파라미터를 받습니다.
+    const params = useLocalSearchParams();
+
     // 장바구니 상태는 CART_STORAGE에서 직접 가져옵니다.
     const cartItems: CartItem[] = CART_STORAGE;
     const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -29,7 +32,7 @@ const CartDetailPage: React.FC = () => {
         // 결제 요약 정보에 반영해야 합니다. (현재는 단순 이동)
         
         // secondpopup 경로로 이동
-        router.push('/megacoffee/secondpopup');
+        router.push({ pathname: '/megacoffee/secondpopup', params: params });
     };
 
 

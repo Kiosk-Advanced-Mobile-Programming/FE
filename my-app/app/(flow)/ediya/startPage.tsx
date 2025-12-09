@@ -1,5 +1,5 @@
 import { View, Pressable, Image, StyleSheet } from 'react-native'; 
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import React from 'react';
 import styles from './startPage.styles'; // startPage.styles.ts 파일을 불러옴
 
@@ -8,11 +8,13 @@ import styles from './startPage.styles'; // startPage.styles.ts 파일을 불러
 const MEGA_START_IMAGE = require('../../../assets/ediyaimages/ediyaStart.png');
 
 export default function StartPage() {
+    const params = useLocalSearchParams();
+
     // 클릭 시 megacoffee.tsx 화면으로 이동하는 함수
     const navigateToMainScreen = () => {
         // 'replace'를 사용하여 StartPage를 히스토리에서 제거하고 메인 화면으로 전환합니다.
         // 메가커피 메인 화면 경로: '/(flow)/megacoffee'
-        router.replace('/ediya/megacoffee'); 
+        router.replace({ pathname: '/ediya/megacoffee', params: params }); 
     };
 
     return (
