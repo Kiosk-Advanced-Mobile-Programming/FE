@@ -6,6 +6,7 @@ import {
   FlatList,
   Pressable,
   ListRenderItemInfo,
+  Image,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from './App';
@@ -27,12 +28,24 @@ export default function SelectMenu({ navigation }: Props) {
       style={styles.menuCard}
       onPress={() => navigation.navigate('OrderDetail', { itemId: item.id })}
     >
+      {/* 메뉴 이미지 */}
+      <Image source={item.image} style={styles.menuImage} />
+
+      {/* 메뉴 텍스트 정보 */}
       <View>
         <Text style={styles.menuName}>{item.name}</Text>
         <Text style={styles.menuPrice}>{item.price.toLocaleString()}원</Text>
         {item.spicy && <Text style={styles.spicy}>매운맛 🔥</Text>}
       </View>
-      <Pressable style={styles.addButton} onPress={() => addItem(item)}>
+
+      {/* 담기 버튼 (상세로 안 넘어가게 이벤트 전파 막기) */}
+      <Pressable
+        style={styles.addButton}
+        onPress={(e) => {
+          e.stopPropagation();
+          addItem(item);
+        }}
+      >
         <Text style={styles.addButtonText}>담기</Text>
       </Pressable>
     </Pressable>
@@ -40,6 +53,7 @@ export default function SelectMenu({ navigation }: Props) {
 
   return (
     <View style={styles.container}>
+      {/* 카테고리 탭 */}
       <View style={styles.categoryRow}>
         {CATEGORIES.map((c) => {
           const active = c.id === selectedCategory;
@@ -65,6 +79,7 @@ export default function SelectMenu({ navigation }: Props) {
         })}
       </View>
 
+      {/* 메뉴 그리드 */}
       <FlatList
         contentContainerStyle={styles.listContent}
         data={filtered}
@@ -73,6 +88,7 @@ export default function SelectMenu({ navigation }: Props) {
         numColumns={2}
       />
 
+      {/* 하단 장바구니 요약 영역 */}
       <View style={styles.footer}>
         <Text>
           담은 메뉴 {items.length}개 · {totalPrice.toLocaleString()}원
