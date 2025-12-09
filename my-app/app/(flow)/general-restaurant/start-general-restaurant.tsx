@@ -18,15 +18,19 @@ export default function StartGeneralRestaurant({ navigation }: Props) {
   const { start, registerTouch } = useStudySession();
 
   const handleStart = async () => {
+    // 시작 버튼 터치 1회
     registerTouch(true);
+    // 학습 세션 시작 (백엔드로 category / session 전송, startedAt 기록)
     await start(CATEGORY, SESSION);
     navigation.navigate('SelectMenu');
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>일반 음식점 키오스크</Text>
-      <Text style={styles.subtitle}>연습을 시작해보세요!</Text>
+      <Text style={styles.title}>레스토랑 키오스크 연습</Text>
+      <Text style={styles.subtitle}>
+        실제 키오스크처럼 메뉴를 고르고 주문하는 과정을 연습해 보세요.
+      </Text>
 
       <Pressable style={styles.startButton} onPress={handleStart}>
         <Text style={styles.startButtonText}>주문 시작하기</Text>

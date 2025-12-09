@@ -1,24 +1,28 @@
-// payment.tsx
+// app/(flow)/general-restaurant/payment.tsx
 import React, { useState } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from './App';
 import { useCart } from './cart-context';
+import { useStudySession } from './study-session-context';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Payment'>;
-
 type Method = 'card' | 'cash' | 'kakao';
 
 export default function Payment({ navigation }: Props) {
   const [method, setMethod] = useState<Method>('card');
   const { totalPrice } = useCart();
+  const { registerTouch } = useStudySession();
 
   const renderMethodButton = (id: Method, label: string) => {
     const active = method === id;
     return (
       <Pressable
         key={id}
-        onPress={() => setMethod(id)}
+        onPress={() => {
+          registerTouch(true);
+          setMethod(id);
+        }}
         style={[styles.methodButton, active && styles.methodButtonActive]}
       >
         <Text style={[styles.methodText, active && styles.methodTextActive]}>
@@ -29,7 +33,7 @@ export default function Payment({ navigation }: Props) {
   };
 
   const handlePay = () => {
-    // 여기서 나중에 결제 관련 로직 / 학습 기록 넣으면 됨
+    registerTouch(true);
     navigation.navigate('OrderComplete');
   };
 
@@ -62,7 +66,7 @@ export default function Payment({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffc72c', // 스타트 화면이랑 느낌 맞춤
+    backgroundColor: '#ffc72c',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,

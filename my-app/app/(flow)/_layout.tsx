@@ -1,9 +1,9 @@
 // app/(flow)/_layout.tsx
-import { Slot, usePathname } from "expo-router";
-import { View } from "react-native";
+import { router, Stack, usePathname } from "expo-router";
 import { recordTouch as recordEdiyaTouch } from "./ediya/globalState";
 import { recordTouch as recordMegacoffeeTouch } from "./megacoffee/globalState";
 // [추가] 맥도날드 터치 기록 함수 임포트
+import { Pressable, Text, View } from "react-native";
 import { recordMcDonaldsTouch } from "./mcDonalds/globalState";
 
 export default function FlowLayout() {
@@ -24,7 +24,20 @@ export default function FlowLayout() {
         return false;
       }}
     >
-      <Slot />
+      <Stack
+        screenOptions={{
+          headerTitle: "",
+          headerLeft: () => (
+            <Pressable
+              onPress={() => router.back()}
+              style={{ paddingHorizontal: 12, paddingVertical: 6 }}
+            >
+              <Text style={{ fontSize: 18 }}>뒤로가기</Text>
+            </Pressable>
+          ),
+          headerShadowVisible: false,
+        }}
+      />
     </View>
   );
 }
