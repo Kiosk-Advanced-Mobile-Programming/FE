@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     },
 
     menuContainer: {
-        width: (width - 40) / 2,
+        width: (width - 50) / 2,
         height: 200,
         marginRight: 10,
         marginBottom: 10,
@@ -106,8 +106,8 @@ const styles = StyleSheet.create({
     },
 
     menuImagePlaceholder: {
-        width: '100%',
-        height: '70%',
+        width: '80%',
+        height: '60%',
         aspectRatio: 1,
         backgroundColor: '#FFD700', 
         borderRadius: 6,
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
     },
 
     menuTextName: {
-        fontSize: 14,
+        fontSize: 12,
         fontWeight: 'bold',
         textAlign: 'center',
         marginBottom: 2,

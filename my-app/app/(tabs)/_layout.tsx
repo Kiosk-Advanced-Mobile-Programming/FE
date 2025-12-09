@@ -27,11 +27,11 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="levelSession/recommend"
         options={{
-          title: "Explore",
+          title: "맞춤 추천",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="star.fill" color={color} />
           ),
         }}
       />
@@ -40,7 +40,17 @@ export default function TabLayout() {
         options={{
           title: "학습통계",
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="paperplane.fill" color={color} />
+            <IconSymbol size={28} name="chart.bar.fill" color={color} />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="userInfo/infoLogout"
+        options={{
+          title: "내 정보",
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="person.circle.fill" color={color} />
           ),
         }}
       />

@@ -1,6 +1,6 @@
     import React, { useState } from 'react';
     import { View, Text, Pressable, ScrollView, Alert, TouchableOpacity } from 'react-native';
-    import { router } from 'expo-router';
+    import { router, useLocalSearchParams } from 'expo-router';
     import styles from './secondpopup.styles'; 
 
     // megacoffee.tsx에서 정의된 타입과 전역 상태를 재사용하여 정보 표시
@@ -127,6 +127,9 @@
     // ====================================================================
 
     const PaymentSelectionPage: React.FC = () => {
+        // 💡 firstpopup에서 전달된 파라미터를 받습니다.
+        const params = useLocalSearchParams();
+
         const { cartTotalPrice, discountPrice } = calculateCartSummary();
         const [selectedMethod, setSelectedMethod] = useState<PaymentMethodType>(null);
 
@@ -192,7 +195,7 @@
                             selectedMethod={selectedMethod}
                             onPress={() => 
                                 router.push({
-                                    pathname: './lastpage'
+                                    pathname: './lastpage', params: params
                                 })
                             } // <-- 활성화할 버튼
                         />

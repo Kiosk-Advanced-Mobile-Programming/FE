@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, Pressable, ScrollView, Alert } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import styles from './firstpopup.styles'; // 스타일 파일 경로 확인
 
 // megacoffee.tsx에서 정의된 타입과 상태 관리 함수를 가져옵니다.
@@ -11,6 +11,8 @@ import {
 
 
 const CartDetailPage: React.FC = () => {
+    const params = useLocalSearchParams();
+
     // 장바구니 상태는 CART_STORAGE에서 직접 가져옵니다.
     const cartItems: CartItem[] = CART_STORAGE;
     const cartItemCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
@@ -26,13 +28,7 @@ const CartDetailPage: React.FC = () => {
     const handlePaymentSelection = (type: 'eat_in' | 'take_out') => {
         
         // 💡 총 결제금액 (cartTotalPrice)와 선택된 타입 (type)을 params로 전달
-        router.push({
-            pathname: '/(flow)/ediya/secondpopup',
-            params: {
-                totalPrice: cartTotalPrice.toString(), // 금액을 문자열로 변환하여 전달
-                orderType: type, // eat_in 또는 take_out
-            }
-        });
+        router.push({ pathname: '/(flow)/ediya/secondpopup', params: params });
     };
 
 
