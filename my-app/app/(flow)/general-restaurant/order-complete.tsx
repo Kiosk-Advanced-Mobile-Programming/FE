@@ -14,10 +14,12 @@ export default function OrderComplete({ navigation }: Props) {
 
   useEffect(() => {
     clear();
-    // 학습 세션 성공 종료
-    finish('SUCCESS').catch(console.error);
 
-    // 화면 빠져나갈 때 세션 리셋 (필요 없으면 지워도 됨)
+    // 학습 세션 성공 종료
+    finish('SUCCESS').catch((e) =>
+      console.error('finishStudySession error', e)
+    );
+
     return () => {
       reset();
     };
@@ -55,7 +57,7 @@ export default function OrderComplete({ navigation }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffc72c', // 맥도날드/키오스크 느낌 노랑
+    backgroundColor: '#ffc72c',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 24,

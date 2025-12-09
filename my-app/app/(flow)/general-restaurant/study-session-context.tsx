@@ -19,8 +19,7 @@ interface StudySessionContextValue {
   sessionName: string | null;
   totalTouches: number;
   successTouches: number;
-
-  start: (categoryName: string, sessionName: string) => Promise<void>;
+  start: (category: string, session: string) => Promise<void>;
   registerTouch: (success: boolean) => void;
   finish: (status: StudyStatus) => Promise<void>;
   reset: () => void;
@@ -34,10 +33,10 @@ export function StudySessionProvider({ children }: { children: ReactNode }) {
   const [sessionId, setSessionId] = useState<string | null>(null);
   const [categoryName, setCategoryName] = useState<string | null>(null);
   const [sessionName, setSessionName] = useState<string | null>(null);
-  const [totalTouches, setTotalTouches] = useState<number>(0);
-  const [successTouches, setSuccessTouches] = useState<number>(0);
+  const [totalTouches, setTotalTouches] = useState(0);
+  const [successTouches, setSuccessTouches] = useState(0);
 
-  /** 학습 시작 — Firestore에 session 생성 */
+  // 학습 시작: category + sessionName 전달, sessionId 받기
   const start = useCallback(async (category: string, session: string) => {
     setCategoryName(category);
     setSessionName(session);
@@ -52,18 +51,21 @@ export function StudySessionProvider({ children }: { children: ReactNode }) {
     setSessionId(id);
   }, []);
 
-  /** 터치 카운트 */
+  // 터치 기록
   const registerTouch = useCallback((success: boolean) => {
     setTotalTouches((prev) => prev + 1);
-    if (success) setSuccessTouches((prev) => prev + 1);
+    if (success) {
+      setSuccessTouches((prev) => prev + 1);
+    }
   }, []);
 
-  /** 학습 종료 — Firestore 세션 업데이트 */
+  // 학습 종료: sessionId + totalTouches + successTouches + status 전달
   const finish = useCallback(
     async (status: StudyStatus) => {
-      if (!sessionId)
-        return console.warn('No sessionId, cannot finish session');
-
+      if (!sessionId) {
+        console.warn('finishStudySession 호출 실패: sessionId 없음');
+        return;
+      }
       await finishStudySession(sessionId, totalTouches, successTouches, status);
     },
     [sessionId, totalTouches, successTouches]
@@ -98,7 +100,8 @@ export function StudySessionProvider({ children }: { children: ReactNode }) {
 
 export function useStudySession() {
   const ctx = useContext(StudySessionContext);
-  if (!ctx)
+  if (!ctx) {
     throw new Error('useStudySession must be used within StudySessionProvider');
+  }
   return ctx;
 }

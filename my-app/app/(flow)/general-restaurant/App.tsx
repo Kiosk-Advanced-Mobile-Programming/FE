@@ -14,7 +14,7 @@ import { StudySessionProvider } from './study-session-context';
 export type RootStackParamList = {
   StartGeneralRestaurant: undefined;
   SelectMenu: undefined;
-  OrderDetail: { itemId: string | number };
+  OrderDetail: { itemId: string };
   Cart: undefined;
   Payment: undefined;
   OrderComplete: undefined;
@@ -28,22 +28,19 @@ export default function GeneralRestaurantNavigator() {
       <CartProvider>
         <Stack.Navigator
           initialRouteName="StartGeneralRestaurant"
-          screenOptions={{ headerTitleAlign: 'center' }}
+          screenOptions={{
+            headerShown: false, // ★ 내부 스택 헤더 전부 숨김
+          }}
         >
           <Stack.Screen
             name="StartGeneralRestaurant"
             component={StartGeneralRestaurant}
-            options={{ headerShown: false }}
           />
           <Stack.Screen name="SelectMenu" component={SelectMenu} />
           <Stack.Screen name="OrderDetail" component={OrderDetail} />
           <Stack.Screen name="Cart" component={Cart} />
           <Stack.Screen name="Payment" component={Payment} />
-          <Stack.Screen
-            name="OrderComplete"
-            component={OrderComplete}
-            options={{ headerShown: false }}
-          />
+          <Stack.Screen name="OrderComplete" component={OrderComplete} />
         </Stack.Navigator>
       </CartProvider>
     </StudySessionProvider>
