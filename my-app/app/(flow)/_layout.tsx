@@ -1,18 +1,27 @@
 // app/(flow)/_layout.tsx
-import { Stack } from "expo-router";
-// 1. CartProvider 임포트 (경로가 mcDonalds 폴더 안에 있다고 가정)
-import { CartProvider } from "./mcDonalds/cart-context";
+import { Slot, usePathname } from 'expo-router';
+import { View } from 'react-native';
+import { recordTouch as recordMegacoffeeTouch } from './megacoffee/globalState';
+import { recordTouch as recordEdiyaTouch } from './ediya/globalState';
 
 export default function FlowLayout() {
-  return (
-    // 2. Provider로 감싸기
-    <CartProvider>
-      <Stack
-        screenOptions={{
-          headerTitleAlign: "center",
-          headerShown: false, // 상단 flow스택 안보이게함
-        }}
-      />
-    </CartProvider>
-  );
+    const pathname = usePathname();
+
+    return (
+        // onStartShouldSetResponderCapture: 터치가 발생하면 가장 먼저 가로채서 recordTouch를 실행합니다.
+        // return false를 해야 터치 이벤트가 자식 버튼(주문담기 등)으로 정상적으로 전달됩니다.
+        <View 
+            style={{ flex: 1 }} 
+            onStartShouldSetResponderCapture={() => {
+                if (pathname.includes('/megacoffee')) {
+                    recordMegacoffeeTouch();
+                } else if (pathname.includes('/ediya')) {
+                    recordEdiyaTouch();
+                }
+                return false; 
+            }}
+        >
+            <Slot />
+        </View>
+    );
 }
