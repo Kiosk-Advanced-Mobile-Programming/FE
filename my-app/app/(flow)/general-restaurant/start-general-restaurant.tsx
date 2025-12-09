@@ -13,7 +13,7 @@ type Props = NativeStackScreenProps<
 export default function StartGeneralRestaurant({ navigation }: Props) {
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>레스토랑 키오스크 연습</Text>
+      <Text style={styles.title}>레스토랑 키오스크 연습하기</Text>
       <Text style={styles.subtitle}>
         실제 키오스크처럼 메뉴를 고르고 주문하는 과정을 연습해 보세요.
       </Text>
