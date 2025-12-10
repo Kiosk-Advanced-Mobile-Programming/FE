@@ -15,6 +15,7 @@ import {
   Text,
   View,
 } from "react-native";
+import { recordMcDonaldsSuccess } from "./globalState"; // 임포트
 import styles from "./start-mcDonalds.style";
 
 const BANNER_IMAGES = [
@@ -58,6 +59,9 @@ export default function McDonaldsStart() {
 
       // 1. 터치 카운트 초기화
       resetMcDonaldsTouch();
+
+      // [추가] 주문 시작 버튼 클릭은 유의미한 행동임
+      recordMcDonaldsSuccess();
 
       // 2. 학습 세션 시작 (DB 저장)
       const sessionId = await startStudySession({

@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { useCart } from "./cart-context";
+import { recordMcDonaldsSuccess } from "./globalState";
 
 export default function PaymentScreen() {
   const router = useRouter();
@@ -23,6 +24,7 @@ export default function PaymentScreen() {
   };
 
   const handlePayment = () => {
+    recordMcDonaldsSuccess();
     setIsProcessing(true);
     // 3초 후 주문 완료 화면으로 이동 (카드 결제 시뮬레이션)
     setTimeout(() => {

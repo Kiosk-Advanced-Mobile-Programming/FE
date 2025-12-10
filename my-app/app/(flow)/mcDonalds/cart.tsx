@@ -10,6 +10,7 @@ import {
   View,
 } from "react-native";
 import { useCart } from "./cart-context";
+import { recordMcDonaldsSuccess } from "./globalState";
 
 export default function CartScreen() {
   const router = useRouter();
@@ -75,12 +76,13 @@ export default function CartScreen() {
           </Pressable>
           <Pressable
             style={styles.orderButton}
-            onPress={() =>
+            onPress={() => {
+              recordMcDonaldsSuccess(); // [추가] 결제 진입 성공
               router.push({
                 pathname: "/(flow)/mcDonalds/payment",
                 params: { sessionId: sessionId }, // [수정] 결제 화면으로 전달
-              })
-            }
+              });
+            }}
           >
             <Text style={styles.orderText}>주문 완료</Text>
           </Pressable>

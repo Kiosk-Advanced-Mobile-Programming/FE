@@ -4,6 +4,7 @@ import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import { useCart } from "./cart-context";
+import { recordMcDonaldsSuccess } from "./globalState"; // 임포트
 import { CATEGORIES, MENU_ITEMS } from "./menu.data";
 import styles from "./select-menu.style";
 
@@ -46,7 +47,10 @@ export default function SelectMenuScreen() {
           {CATEGORIES.map((category) => (
             <Pressable
               key={category.id}
-              onPress={() => setActiveCategoryId(category.id)}
+              onPress={() => {
+                setActiveCategoryId(category.id);
+                recordMcDonaldsSuccess(); // [추가] 카테고리 변경 성공
+              }}
               style={[
                 styles.categoryItem,
                 activeCategoryId === category.id && styles.categoryItemActive,
@@ -96,7 +100,7 @@ export default function SelectMenuScreen() {
                     onPress={() => {
                       // 클릭 시, 해당 메뉴가 세트 선택이 필요한지 확인
                       const isSet = checkIsSetMenu(item.category);
-
+                      recordMcDonaldsSuccess(); // [추가] 메뉴 선택 성공
                       router.push({
                         pathname: "/(flow)/mcDonalds/order-detail",
                         // [수정] sessionId 전달 (필요하다면) - 보통 order-detail은 back()으로 돌아오므로 필수는 아닐 수 있으나,
@@ -137,12 +141,14 @@ export default function SelectMenuScreen() {
               items.length === 0 && styles.payButtonDisabled,
             ]}
             disabled={items.length === 0}
-            onPress={() =>
+            onPress={() => {
+              recordMcDonaldsSuccess(); // [추가] 장바구니 이동 성공
+
               router.push({
                 pathname: "/(flow)/mcDonalds/cart",
                 params: { sessionId: sessionId }, // [수정] 장바구니로 갈 때 sessionId 전달
-              })
-            }
+              });
+            }}
           >
             <Text style={styles.payButtonText}>주문내역 확인</Text>
           </Pressable>

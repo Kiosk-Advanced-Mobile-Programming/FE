@@ -32,7 +32,7 @@ export default function FlowLayout() {
               onPress={() => router.back()}
               style={{ paddingHorizontal: 12, paddingVertical: 6 }}
             >
-              <Text style={{ fontSize: 18 }}>뒤로가기</Text>
+              <Text style={{ fontSize: 18 }}> ⬅️ 뒤로가기</Text>
             </Pressable>
           ),
           headerShadowVisible: false,
