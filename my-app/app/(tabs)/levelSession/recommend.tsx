@@ -182,11 +182,13 @@ export default function RecommendScreen() {
         <View style={styles.header}>
           <Text style={styles.greetingText}>{userName}님 안녕하세요!</Text>
           <View style={styles.levelRow}>
-            <Text style={styles.levelText}>현재 레벨은 </Text>
-            <Text style={[styles.levelText, styles.levelHighlight]}>
-              {userLevel}
+            <Text style={styles.levelText}>
+              현재 레벨은{" "}
+              <Text style={[styles.levelText, styles.levelHighlight]}>
+                {userLevel}
+              </Text>
+              입니다
             </Text>
-            <Text style={styles.levelText}> 입니다</Text>
           </View>
           <Text style={styles.headerSubtext}>
             {userLevel}에 딱 맞는 학습을 상단에 준비했어요
