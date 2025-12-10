@@ -27,7 +27,8 @@ export default StyleSheet.create({
   },
   homeCard: {
     width: '48%', // 2열 배치
-    height: 120,
+    //height: 120,
+    minHeight: 120,
     backgroundColor: '#f9f9f9',
     borderRadius: 3,
     borderWidth: 1,
@@ -78,11 +79,15 @@ export default StyleSheet.create({
     borderColor: Colors.Border, // #e0e0e0
   },
   categoryItem: {
-    height: 80,
+    //height: 80,
+    minHeight: 80,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingVertical: 15,
+    paddingHorizontal: 5,
     borderBottomWidth: 1,
     borderBottomColor: Colors.BorderLight, // #eee
+    overflow: 'hidden',
   },
   categoryItemActive: {
     backgroundColor: Colors.White,

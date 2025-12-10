@@ -26,6 +26,7 @@ export default StyleSheet.create({
     paddingHorizontal: 10,
     alignContent: 'center',
     backgroundColor: Colors.Primary,
+    overflow: 'hidden'
   },
   noticeText: {
     fontSize: 10
@@ -91,7 +92,6 @@ export default StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: Colors.TextMain,
-    // todo: QR 이미지 배치
   },
 
     // --- 기존 스타일 (사용하지 않는 것 정리) ---
