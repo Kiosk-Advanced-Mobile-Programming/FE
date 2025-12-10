@@ -398,7 +398,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.primary,
   },
   startButtonNormal: {
-    backgroundColor: Colors.light.background,
+    backgroundColor: "#e9e9e9ff",
   },
   startButtonText: {
     fontSize: 15,

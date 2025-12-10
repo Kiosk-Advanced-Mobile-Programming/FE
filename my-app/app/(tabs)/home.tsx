@@ -90,7 +90,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <>
       {/* 상단 헤더 */}
       <View style={styles.header}>
         <Text style={styles.headerTitle}>홈</Text>
@@ -99,98 +99,99 @@ export default function HomeScreen() {
           <IconSymbol name="person.circle" size={20} color="#6B7280" />
         </Pressable>
       </View>
+      <SafeAreaView style={styles.container}>
+        <ScrollView
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+        >
+          {/* 인사말 카드 */}
+          <View style={styles.greetingCard}>
+            <Text style={styles.greetingTitle}>안녕하세요! 👋</Text>
+            <Text style={styles.greetingSubtitle}>
+              오늘도 키오스크를 배워볼까요?
+            </Text>
+          </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* 인사말 카드 */}
-        <View style={styles.greetingCard}>
-          <Text style={styles.greetingTitle}>안녕하세요! 👋</Text>
-          <Text style={styles.greetingSubtitle}>
-            오늘도 키오스크를 배워볼까요?
-          </Text>
-        </View>
-
-        {/* 기능 카드들 */}
-        <View style={styles.featuresContainer}>
-          {FEATURES.map((feature) => (
-            <Pressable
-              key={feature.id}
-              style={({ pressed }) => [
-                styles.featureCard,
-                pressed && styles.featureCardPressed,
-              ]}
-              onPress={() => handleFeaturePress(feature)}
-            >
-              {/* 아이콘 */}
-              <View
-                style={[
-                  styles.iconContainer,
-                  { backgroundColor: feature.iconBg },
+          {/* 기능 카드들 */}
+          <View style={styles.featuresContainer}>
+            {FEATURES.map((feature) => (
+              <Pressable
+                key={feature.id}
+                style={({ pressed }) => [
+                  styles.featureCard,
+                  pressed && styles.featureCardPressed,
                 ]}
+                onPress={() => handleFeaturePress(feature)}
               >
-                <IconSymbol
-                  name={feature.icon}
-                  size={28}
-                  color={feature.iconColor}
-                />
-              </View>
+                {/* 아이콘 */}
+                <View
+                  style={[
+                    styles.iconContainer,
+                    { backgroundColor: feature.iconBg },
+                  ]}
+                >
+                  <IconSymbol
+                    name={feature.icon}
+                    size={28}
+                    color={feature.iconColor}
+                  />
+                </View>
 
-              {/* 텍스트 */}
-              <View style={styles.featureContent}>
-                <Text style={styles.featureTitle}>{feature.title}</Text>
-                <Text style={styles.featureDescription}>
-                  {feature.description}
-                </Text>
-              </View>
+                {/* 텍스트 */}
+                <View style={styles.featureContent}>
+                  <Text style={styles.featureTitle}>{feature.title}</Text>
+                  <Text style={styles.featureDescription}>
+                    {feature.description}
+                  </Text>
+                </View>
 
-              {/* 화살표 */}
-              <IconSymbol name="chevron.right" size={24} color="#D1D5DB" />
-            </Pressable>
-          ))}
-        </View>
-      </ScrollView>
+                {/* 화살표 */}
+                <IconSymbol name="chevron.right" size={24} color="#D1D5DB" />
+              </Pressable>
+            ))}
+          </View>
+        </ScrollView>
 
-      {/* 비디오 모달 */}
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={isVideoModalVisible}
-        onRequestClose={() => setIsVideoModalVisible(false)}
-      >
-        <Pressable
-          style={styles.modalOverlay}
-          onPress={() => setIsVideoModalVisible(false)}
+        {/* 비디오 모달 */}
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={isVideoModalVisible}
+          onRequestClose={() => setIsVideoModalVisible(false)}
         >
           <Pressable
+            style={styles.modalOverlay}
             onPress={() => setIsVideoModalVisible(false)}
-            style={styles.floatingCloseButton}
           >
-            <IconSymbol name="xmark" size={30} color="#fff" />
+            <Pressable
+              onPress={() => setIsVideoModalVisible(false)}
+              style={styles.floatingCloseButton}
+            >
+              <IconSymbol name="xmark" size={30} color="#fff" />
+            </Pressable>
+
+            <TouchableWithoutFeedback>
+              <View style={styles.videoModalContainer}>
+                <View style={styles.modalHeader}>
+                  <Text style={styles.modalTitle}>키오스크 사용법 영상</Text>
+                </View>
+
+                <View style={styles.videoPlayerContainer}>
+                  <Video
+                    source={KioskSessionVideoSource}
+                    style={styles.videoPlayer}
+                    useNativeControls
+                    resizeMode={ResizeMode.CONTAIN}
+                    isLooping
+                    shouldPlay
+                  />
+                </View>
+              </View>
+            </TouchableWithoutFeedback>
           </Pressable>
-
-          <TouchableWithoutFeedback>
-            <View style={styles.videoModalContainer}>
-              <View style={styles.modalHeader}>
-                <Text style={styles.modalTitle}>키오스크 사용법 영상</Text>
-              </View>
-
-              <View style={styles.videoPlayerContainer}>
-                <Video
-                  source={KioskSessionVideoSource}
-                  style={styles.videoPlayer}
-                  useNativeControls
-                  resizeMode={ResizeMode.CONTAIN}
-                  isLooping
-                  shouldPlay
-                />
-              </View>
-            </View>
-          </TouchableWithoutFeedback>
-        </Pressable>
-      </Modal>
-    </SafeAreaView>
+        </Modal>
+      </SafeAreaView>
+    </>
   );
 }
 
@@ -205,6 +206,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     paddingHorizontal: 20,
     paddingVertical: 16,
+    paddingTop: 55,
     backgroundColor: Colors.light.white,
     borderBottomWidth: 1,
     borderBottomColor: Colors.light.border,
@@ -217,7 +219,7 @@ const styles = StyleSheet.create({
   myPageButton: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: Colors.light.background,
+    backgroundColor: "#fff1b5ff",
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 20,
