@@ -1,10 +1,11 @@
 // app/(flow)/select-cafe.tsx
 import PrepareModal from "@/components/mcDonalds/PrepareModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack } from "expo-router";
 import { useEffect, useState } from "react";
 // [추가] API 및 상태 관리 함수 임포트
 import { startStudySession } from "@/firebase/study";
+// eslint-disable-next-line import/no-duplicates
 import { resetMcDonaldsTouch } from "./globalState";
 // [추가] Alert 임포트
 import {
@@ -15,6 +16,7 @@ import {
   Text,
   View,
 } from "react-native";
+// eslint-disable-next-line import/no-duplicates
 import { recordMcDonaldsSuccess } from "./globalState"; // 임포트
 import styles from "./start-mcDonalds.style";
 
@@ -33,7 +35,7 @@ const BANNER_IMAGES = [
 ];
 
 export default function McDonaldsStart() {
-  const { mode } = useLocalSearchParams(); // start에서 넘긴 mode 사용 가능
+  //const { mode } = useLocalSearchParams(); // start에서 넘긴 mode 사용 가능
 
   // Modal 상태 관리
   const [modalVisible, setModalVisible] = useState(false);

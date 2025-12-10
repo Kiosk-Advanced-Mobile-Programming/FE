@@ -3,12 +3,11 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Modal, Pressable, StyleSheet, Text, View } from "react-native";
 
-import { useCart } from "./cart-context";
 import { recordMcDonaldsSuccess } from "./globalState";
 
 export default function PaymentScreen() {
   const router = useRouter();
-  const { clearCart } = useCart();
+  //const { clearCart } = useCart();
 
   // [추가] sessionId 받기
   const { sessionId } = useLocalSearchParams<{ sessionId: string }>();

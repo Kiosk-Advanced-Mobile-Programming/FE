@@ -54,7 +54,7 @@ export default function OrderCompleteScreen() {
     }, 4000);
 
     return () => clearTimeout(timer);
-  }, []); // 빈 배열: 화면 마운트 시 1회 실행
+  }, [clearCart, sessionId]); // 빈 배열: 화면 마운트 시 1회 실행
 
   return (
     <View style={styles.container}>
