@@ -13,7 +13,7 @@ const BUTTON_DATA = [
     label: "살펴보기",
     route: "/(flow)/ediya/startPage",
     requirement: "자유롭게 메뉴판을 탐색합니다.",
-    sessionName: "이디야살펴보기",
+    sessionName: "이디야 살펴보기",
     successTouches: 0,
   },
   {
@@ -21,7 +21,7 @@ const BUTTON_DATA = [
     label: "난이도: 하 (미션)",
     route: "/(flow)/ediya/startPage",
     requirement: "요구사항: 아메리카노(HOT), 사이즈(L) 선택 후 주문 담기",
-    sessionName: "이디야아메리카노주문",
+    sessionName: "이디야 아메리카노 주문",
     successTouches: 4,
   },
   {
@@ -30,7 +30,7 @@ const BUTTON_DATA = [
     route: "/(flow)/ediya/startPage",
     requirement:
       "요구사항: 버블 크림 밀크티(ICE), 사이즈(EX) 선택 후 주문 담기",
-    sessionName: "이디야버블티주문",
+    sessionName: "이디야 버블티 주문",
     successTouches: 4,
   },
   {
@@ -39,7 +39,7 @@ const BUTTON_DATA = [
     route: "/(flow)/ediya/startPage",
     requirement:
       "요구사항 : 디카페인 에스프레소(HOT), 사이즈(L), 시럽추가 후 주문 담기",
-    sessionName: "이디야디카페인옵션추가",
+    sessionName: "이디야 디카페인 옵션추가",
     successTouches: 4,
   },
 ];

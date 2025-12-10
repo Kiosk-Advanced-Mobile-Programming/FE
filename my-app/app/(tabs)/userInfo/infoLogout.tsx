@@ -54,15 +54,11 @@ export default function InfoLogoutScreen() {
         <View style={styles.row}>
           <Text style={styles.label}>비밀번호</Text>
           <View style={styles.passwordContainer}>
-            <Text style={styles.value}>
-              {showPassword ? "********" : "●●●●●●●●"}
-            </Text>
+            <Text style={styles.value}>●●●●●●●●</Text>
             <Pressable
               style={styles.eyeButton}
               onPress={() => setShowPassword(!showPassword)}
-            >
-              <Text style={styles.eyeText}>{showPassword ? "🙈" : "👁️"}</Text>
-            </Pressable>
+            ></Pressable>
           </View>
         </View>
 

@@ -1,6 +1,6 @@
 import { signupWithEmail } from "@/firebase/auth";
 import { saveUserProfile } from "@/firebase/user";
-import { router } from "expo-router";
+import { router, Stack } from "expo-router"; // [수정] Stack 추가
 import React, { useState } from "react";
 import {
   Alert,
@@ -16,14 +16,13 @@ import { styles } from "./_SignupPage.styles";
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [pw, setPw] = useState("");
-  const [nickname, setNickname] = useState(""); // [추가] 닉네임 상태
+  const [nickname, setNickname] = useState("");
   const [age, setAge] = useState("");
   const [gender, setGender] = useState<"남성" | "여성">("남성");
   const [level, setLevel] = useState<"초급" | "중급" | "고급">("초급");
   const [loading, setLoading] = useState(false);
 
   const handleSignup = async () => {
-    // [수정] 닉네임 유효성 검사 추가
     if (!email || !pw || !age || !nickname) {
       alertMsg("모든 정보를 입력해주세요.");
       return;
@@ -35,10 +34,10 @@ export default function SignupPage() {
       const user = await signupWithEmail(email, pw);
 
       if (user) {
-        // 2. Firestore에 추가 정보 저장 (닉네임 포함)
+        // 2. Firestore에 추가 정보 저장
         await saveUserProfile(user.uid, {
           email,
-          nickname, // 저장
+          nickname,
           age,
           gender,
           kioskLevel: level,
@@ -65,12 +64,24 @@ export default function SignupPage() {
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
+      {/* [추가] 헤더 설정: 제목을 '회원가입'으로, 뒤로가기 버튼 텍스트 설정 */}
+      <Stack.Screen
+        options={{
+          title: "뒤로가기", // 헤더 중앙 제목
+          headerBackTitle: "뒤로가기", // iOS 뒤로가기 버튼 텍스트
+          headerShadowVisible: false, // 헤더 하단 그림자 제거 (깔끔하게)
+          headerStyle: { backgroundColor: "#fff" }, // 헤더 배경색
+          headerTintColor: "#333", // 헤더 글자색
+        }}
+      />
+
       <Text style={styles.title}>회원가입</Text>
 
       <Text style={styles.label}>이메일</Text>
       <TextInput
         style={styles.input}
         placeholder="example@email.com"
+        placeholderTextColor="#999"
         value={email}
         onChangeText={setEmail}
         keyboardType="email-address"
@@ -81,16 +92,17 @@ export default function SignupPage() {
       <TextInput
         style={styles.input}
         placeholder="6자리 이상 입력"
+        placeholderTextColor="#999"
         value={pw}
         onChangeText={setPw}
         secureTextEntry
       />
 
-      {/* [추가] 닉네임 입력 UI */}
       <Text style={styles.label}>닉네임</Text>
       <TextInput
         style={styles.input}
         placeholder="앱에서 사용할 별명"
+        placeholderTextColor="#999"
         value={nickname}
         onChangeText={setNickname}
       />
@@ -99,6 +111,7 @@ export default function SignupPage() {
       <TextInput
         style={styles.input}
         placeholder="예: 65"
+        placeholderTextColor="#999"
         value={age}
         onChangeText={setAge}
         keyboardType="number-pad"

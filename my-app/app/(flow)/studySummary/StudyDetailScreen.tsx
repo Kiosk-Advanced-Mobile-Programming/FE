@@ -5,12 +5,13 @@ import StudySummaryView, {
   StudySessionSummary,
 } from "@/components/StudySummaryScreen/StudySummaryview";
 import { auth, db } from "@/firebase/app";
-import { Stack, useLocalSearchParams } from "expo-router";
+import { Stack, useLocalSearchParams, useRouter } from "expo-router"; // useRouter 추가
 import { doc, getDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Text, View } from "react-native";
 
 export default function StudyDetailScreen() {
+  const router = useRouter(); // 라우터 훅 사용
   const { sessionId } = useLocalSearchParams<{ sessionId: string }>();
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<StudySessionSummary | null>(null);
@@ -36,7 +37,9 @@ export default function StudyDetailScreen() {
           const successTouches = d.successTouches ?? 0;
 
           setSession({
-            categoryName: d.categoryName ?? "학습",
+            // 주제목은 카테고리, 부제목은 세션 이름으로 설정
+            categoryName: d.category ?? "학습",
+            sessionName: d.sessionName ?? "세션 정보 없음",
             dateLabel: started.toLocaleDateString("ko-KR", {
               year: "numeric",
               month: "long",
@@ -79,17 +82,29 @@ export default function StudyDetailScreen() {
 
   return (
     <>
-      {/* 상단 헤더 제목 설정 (선택) */}
       <Stack.Screen options={{ title: "학습 통계" }} />
       <StudySummaryView
         session={session}
         onRetry={() => {
-          console.log("같은 연습 다시 해보기");
-          // TODO: 해당 카테고리로 다시 연습 시작하는 로직 연결
+          // [수정] 같은 연습 다시 해보기: 카테고리별 시작 페이지로 이동
+          const category = session.categoryName;
+
+          if (category === "맥도날드") {
+            router.push("/(flow)/mcDonalds/start-mcDonalds");
+          } else if (category === "메가커피") {
+            router.push("/(flow)/megacoffee/level");
+          } else if (category === "이디야 커피" || category === "이디야") {
+            router.push("/(flow)/ediya/level");
+          } else if (category === "일반 식당") {
+            router.push("/(flow)/general-restaurant");
+          } else {
+            // 카테고리를 찾지 못한 경우 맞춤 학습 목록으로 이동
+            router.push("/(tabs)/levelSession/recommend");
+          }
         }}
         onOtherPractice={() => {
-          console.log("다른 연습 해보기");
-          // TODO: 연습 선택 화면으로 이동
+          // [수정] 다른 연습 해보기: 탭의 맞춤 학습 페이지로 이동
+          router.push("/(tabs)/levelSession/recommend");
         }}
       />
     </>

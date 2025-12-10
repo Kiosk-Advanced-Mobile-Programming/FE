@@ -37,7 +37,8 @@ function buildPrompt(session: StudySessionSummary, user?: UserInfo): string {
 다음은 노인 대상 키오스크 학습 결과입니다.
 
 ${userDescription}
-- 학습 주제: ${session.categoryName}
+- 학습 종류(카테고리): ${session.categoryName}
+- 학습 이름(어떤 학습인지): ${session.sessionName}
 - 총 학습 시간: ${Math.round(session.totalSeconds / 60)}분 (${
     session.totalSeconds
   }초)

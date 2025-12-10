@@ -3,38 +3,34 @@ import {
   DarkTheme,
   DefaultTheme,
   ThemeProvider,
-} from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+} from "@react-navigation/native";
+import { Stack } from "expo-router";
+import { StatusBar } from "expo-status-bar";
+import "react-native-reanimated";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useColorScheme } from "@/hooks/use-color-scheme";
 
 export const unstable_settings = {
-  anchor: '(tabs)',
+  // 앱의 진입점을 'index'로 명시
+  initialRouteName: "index",
 };
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
 
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+    <ThemeProvider value={colorScheme === "dark" ? DarkTheme : DefaultTheme}>
       <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-
-        {/* 🔥 여기 추가: (flow) 그룹은 루트 헤더 숨김 */}
-        <Stack.Screen name="(flow)" options={{ headerShown: false }} />
-
-        {/* 로그인 페이지 */}
+        {/* 1. 로그인 페이지를 스택의 가장 위에 정의 (혹은 index) */}
         <Stack.Screen
           name="(loginPage)/LoginPage"
           options={{ headerShown: false }}
         />
 
-        <Stack.Screen
-          name="modal"
-          options={{ presentation: 'modal', title: 'Modal' }}
-        />
+        {/* 2. 그 다음 탭과 나머지 정의 */}
+        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack.Screen name="(flow)" options={{ headerShown: false }} />
+        {/* ... */}
       </Stack>
       <StatusBar style="auto" />
     </ThemeProvider>

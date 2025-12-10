@@ -15,8 +15,8 @@ import {
 
 interface SessionListItem {
   id: string;
-  categoryName: string; // ✅ category 대신 categoryName
-  sessionName: string; // ✅ sessionName 추가
+  categoryName: string;
+  sessionName: string;
   startedAtLabel: string;
   statusLabel: string;
   status: "SUCCESS" | "FAIL" | "IN_PROGRESS";
@@ -43,6 +43,7 @@ export default function StatsListScreen() {
           }
 
           const sessionsRef = collection(db, "users", uid, "sessions");
+          // 최신순 정렬
           const q = query(sessionsRef, orderBy("endedAt", "desc"));
 
           const snap = await getDocs(q);
@@ -56,8 +57,13 @@ export default function StatsListScreen() {
             const started = d.startedAt?.toDate?.() ?? new Date();
             const rawStatus = d.status ?? "IN_PROGRESS";
 
-            let statusLabel = "진행중";
-            let status: SessionListItem["status"] = "IN_PROGRESS";
+            // [수정] 진행중(IN_PROGRESS)인 항목은 리스트에서 제외
+            if (rawStatus !== "SUCCESS" && rawStatus !== "FAIL") {
+              return;
+            }
+
+            let statusLabel = "";
+            let status: SessionListItem["status"] = "SUCCESS"; // 기본값 (실제로는 아래 if문에서 결정됨)
 
             if (rawStatus === "SUCCESS") {
               statusLabel = "성공";
@@ -67,15 +73,12 @@ export default function StatsListScreen() {
               statusLabel = "실패";
               status = "FAIL";
               fCount++;
-            } else {
-              statusLabel = "진행중";
-              status = "IN_PROGRESS";
             }
 
             items.push({
               id: doc.id,
-              categoryName: d.category ?? "학습", // ✅ category 필드 사용
-              sessionName: d.sessionName ?? "", // ✅ sessionName 필드 추가
+              categoryName: d.category ?? "학습",
+              sessionName: d.sessionName ?? "",
               startedAtLabel: started.toLocaleDateString("ko-KR", {
                 year: "numeric",
                 month: "2-digit",
@@ -109,6 +112,7 @@ export default function StatsListScreen() {
   );
 
   const handlePressItem = (item: SessionListItem) => {
+    // 혹시 모를 방어 코드
     if (item.status === "IN_PROGRESS") return;
 
     router.push({
@@ -156,7 +160,7 @@ export default function StatsListScreen() {
 
       {sessions.length === 0 ? (
         <View style={styles.emptyContainer}>
-          <Text style={styles.emptyText}>아직 학습 기록이 없습니다.</Text>
+          <Text style={styles.emptyText}>완료된 학습 기록이 없습니다.</Text>
         </View>
       ) : (
         <FlatList
@@ -166,24 +170,22 @@ export default function StatsListScreen() {
           renderItem={({ item }) => (
             <Pressable
               onPress={() => handlePressItem(item)}
-              disabled={item.status === "IN_PROGRESS"}
               style={({ pressed }) => [
                 styles.itemCard,
-                item.status === "IN_PROGRESS" && styles.itemCardDisabled,
                 pressed && styles.itemCardPressed,
               ]}
             >
               <View style={styles.itemContent}>
                 <View style={styles.itemLeft}>
-                  {/* ✅ 카테고리명 표시 */}
+                  {/* 카테고리명 표시 */}
                   <Text style={styles.itemCategory}>{item.categoryName}</Text>
 
-                  {/* ✅ 세션명이 있으면 표시 */}
-                  {item.sessionName && (
+                  {/* 세션명이 있으면 표시 */}
+                  {item.sessionName ? (
                     <Text style={styles.itemSessionName}>
                       {item.sessionName}
                     </Text>
-                  )}
+                  ) : null}
 
                   {/* 날짜 */}
                   <Text style={styles.itemDate}>{item.startedAtLabel}</Text>
@@ -285,10 +287,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.light.cardBorder,
   },
-  itemCardDisabled: {
-    opacity: 0.7,
-    backgroundColor: Colors.light.background,
-  },
   itemCardPressed: {
     opacity: 0.9,
     transform: [{ scale: 0.98 }],
@@ -302,20 +300,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemCategory: {
-    fontSize: 17, // ✅ 크기 약간 키움
-    fontWeight: "700", // ✅ 더 굵게
+    fontSize: 17,
+    fontWeight: "700",
     color: Colors.light.text,
     marginBottom: 4,
   },
-  // ✅ 세션명 스타일 추가
   itemSessionName: {
     fontSize: 14,
     fontWeight: "500",
-    color: Colors.light.primary, // 보라색으로 강조
+    color: Colors.light.primary,
     marginBottom: 6,
   },
   itemDate: {
-    fontSize: 13, // ✅ 크기 약간 줄임
+    fontSize: 13,
     color: Colors.light.textSecondary,
   },
   itemStatus: {
