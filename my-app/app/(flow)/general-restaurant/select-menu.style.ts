@@ -1,4 +1,4 @@
-// select-menu.style.ts
+// app/(flow)/general-restaurant/select-menu.style.ts
 import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
@@ -39,9 +39,28 @@ export default StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     margin: 6,
-    borderRadius: 10,
+    borderRadius: 12,
     padding: 10,
     justifyContent: 'space-between',
+    // 그림자 살짝
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 2,
+  },
+  // ★ 이미지 스타일
+  menuImage: {
+    width: '100%',
+    height: 110,
+    borderRadius: 8,
+    marginBottom: 8,
+    backgroundColor: '#eee',
+  },
+  // ★ 텍스트 영역
+  menuInfo: {
+    flex: 1,
+    marginBottom: 8,
   },
   menuName: {
     fontSize: 14,
@@ -58,10 +77,10 @@ export default StyleSheet.create({
     color: '#da291c',
   },
   addButton: {
-    marginTop: 10,
+    marginTop: 4,
     backgroundColor: '#ffc72c',
     borderRadius: 6,
-    paddingVertical: 6,
+    paddingVertical: 8,
     alignItems: 'center',
   },
   addButtonText: {

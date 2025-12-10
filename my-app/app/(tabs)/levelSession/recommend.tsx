@@ -41,14 +41,14 @@ const COURSES: Course[] = [
     title: "이디야 커피",
     description: "카페에서 음료 옵션을 선택하고 주문하는 연습을 합니다.",
     level: "중급",
-    route: "/(flow)/ediya/startPage",
+    route: "/(flow)/ediya/level",
   },
   {
     id: "megacoffee",
     title: "메가커피",
     description: "다양한 카페 메뉴와 옵션을 익히며 실력을 키웁니다.",
     level: "중급",
-    route: "/(flow)/megacoffee/startPage",
+    route: "/(flow)/megacoffee/level",
   },
   {
     id: "mcdonalds",

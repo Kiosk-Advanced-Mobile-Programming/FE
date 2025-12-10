@@ -1,18 +1,43 @@
 // app/(flow)/_layout.tsx
-import { Stack } from "expo-router";
-// 1. CartProvider 임포트 (경로가 mcDonalds 폴더 안에 있다고 가정)
-import { CartProvider } from "./mcDonalds/cart-context";
+import { router, Stack, usePathname } from "expo-router";
+import { recordTouch as recordEdiyaTouch } from "./ediya/globalState";
+import { recordTouch as recordMegacoffeeTouch } from "./megacoffee/globalState";
+// [추가] 맥도날드 터치 기록 함수 임포트
+import { Pressable, Text, View } from "react-native";
+import { recordMcDonaldsTouch } from "./mcDonalds/globalState";
 
 export default function FlowLayout() {
+  const pathname = usePathname();
+
   return (
-    // 2. Provider로 감싸기
-    <CartProvider>
+    <View
+      style={{ flex: 1 }}
+      onStartShouldSetResponderCapture={() => {
+        if (pathname.includes("/megacoffee")) {
+          recordMegacoffeeTouch();
+        } else if (pathname.includes("/ediya")) {
+          recordEdiyaTouch();
+        } else if (pathname.includes("/mcDonalds")) {
+          // 맥도날드 경로일 때 터치 기록
+          recordMcDonaldsTouch();
+        }
+        return false;
+      }}
+    >
       <Stack
         screenOptions={{
-          headerTitleAlign: "center",
-          headerShown: false, // 상단 flow스택 안보이게함
+          headerTitle: "",
+          headerLeft: () => (
+            <Pressable
+              onPress={() => router.back()}
+              style={{ paddingHorizontal: 12, paddingVertical: 6 }}
+            >
+              <Text style={{ fontSize: 18 }}> ⬅️ 뒤로가기</Text>
+            </Pressable>
+          ),
+          headerShadowVisible: false,
         }}
       />
-    </CartProvider>
+    </View>
   );
 }

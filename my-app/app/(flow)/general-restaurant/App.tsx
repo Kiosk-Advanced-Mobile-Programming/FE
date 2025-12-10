@@ -9,11 +9,12 @@ import OrderDetail from './order-detail';
 import Cart from './cart';
 import Payment from './payment';
 import OrderComplete from './order-complete';
+import { StudySessionProvider } from './study-session-context';
 
 export type RootStackParamList = {
   StartGeneralRestaurant: undefined;
   SelectMenu: undefined;
-  OrderDetail: { itemId: string | number };
+  OrderDetail: { itemId: string };
   Cart: undefined;
   Payment: undefined;
   OrderComplete: undefined;
@@ -23,44 +24,25 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function GeneralRestaurantNavigator() {
   return (
-    <CartProvider>
-      <Stack.Navigator
-        initialRouteName="StartGeneralRestaurant"
-        screenOptions={{
-          headerTitleAlign: 'center',
-        }}
-      >
-        <Stack.Screen
-          name="StartGeneralRestaurant"
-          component={StartGeneralRestaurant}
-          options={{ title: '일반 음식점 키오스크' }}
-        />
-        <Stack.Screen
-          name="SelectMenu"
-          component={SelectMenu}
-          options={{ title: '메뉴 선택' }}
-        />
-        <Stack.Screen
-          name="OrderDetail"
-          component={OrderDetail}
-          options={{ title: '메뉴 상세' }}
-        />
-        <Stack.Screen
-          name="Cart"
-          component={Cart}
-          options={{ title: '장바구니' }}
-        />
-        <Stack.Screen
-          name="Payment"
-          component={Payment}
-          options={{ title: '결제' }}
-        />
-        <Stack.Screen
-          name="OrderComplete"
-          component={OrderComplete}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    </CartProvider>
+    <StudySessionProvider>
+      <CartProvider>
+        <Stack.Navigator
+          initialRouteName="StartGeneralRestaurant"
+          screenOptions={{
+            headerShown: false, // ★ 내부 스택 헤더 전부 숨김
+          }}
+        >
+          <Stack.Screen
+            name="StartGeneralRestaurant"
+            component={StartGeneralRestaurant}
+          />
+          <Stack.Screen name="SelectMenu" component={SelectMenu} />
+          <Stack.Screen name="OrderDetail" component={OrderDetail} />
+          <Stack.Screen name="Cart" component={Cart} />
+          <Stack.Screen name="Payment" component={Payment} />
+          <Stack.Screen name="OrderComplete" component={OrderComplete} />
+        </Stack.Navigator>
+      </CartProvider>
+    </StudySessionProvider>
   );
 }
