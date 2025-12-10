@@ -1,4 +1,5 @@
 // app/(flow)/mcDonalds/select-menu.tsx
+import { LinearGradient } from "expo-linear-gradient"; // 임포트 추가
 import { Stack, router, useLocalSearchParams } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import React, { useState } from "react";
@@ -7,7 +8,6 @@ import { useCart } from "./cart-context";
 import { recordMcDonaldsSuccess } from "./globalState"; // 임포트
 import { CATEGORIES, MENU_ITEMS } from "./menu.data";
 import styles from "./select-menu.style";
-import { LinearGradient } from 'expo-linear-gradient'; // 임포트 추가
 
 // 분리한 컴포넌트 import
 import MenuItem from "@/components/mcDonalds/MenuItem";
@@ -79,14 +79,14 @@ export default function SelectMenuScreen() {
 
         {/* ✨ 하단 페이드 효과 (절대 위치로 띄움) */}
         <LinearGradient
-          colors={['rgba(245,245,245,0)', 'rgba(245,245,245,1)']} // 투명 -> 배경색(회색)
+          colors={["rgba(245,245,245,0)", "rgba(245,245,245,1)"]} // 투명 -> 배경색(회색)
           style={{
-            position: 'absolute',
+            position: "absolute",
             left: 0,
             right: 0,
             bottom: 0,
             height: 40, // 페이드 높이
-            pointerEvents: 'none', // 터치 통과시키기 (중요!)
+            pointerEvents: "none", // 터치 통과시키기 (중요!)
           }}
         />
       </View>
