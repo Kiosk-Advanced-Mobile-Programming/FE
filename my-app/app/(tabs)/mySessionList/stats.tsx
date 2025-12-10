@@ -1,3 +1,5 @@
+// my-app/app/(tabs)/mySessionList/stats.tsx
+import { Colors } from "@/constants/theme";
 import { auth, db } from "@/firebase/app";
 import { useFocusEffect, useRouter } from "expo-router";
 import { collection, getDocs, orderBy, query } from "firebase/firestore";
@@ -6,25 +8,24 @@ import {
   ActivityIndicator,
   FlatList,
   Pressable,
+  StyleSheet,
   Text,
   View,
 } from "react-native";
-import { styles } from "./_stats.style";
 
 interface SessionListItem {
   id: string;
-  category: string;
+  categoryName: string; // ✅ category 대신 categoryName
+  sessionName: string; // ✅ sessionName 추가
   startedAtLabel: string;
   statusLabel: string;
-  status: "SUCCESS" | "FAIL" | "IN_PROGRESS"; // 타입 구체화
+  status: "SUCCESS" | "FAIL" | "IN_PROGRESS";
 }
 
 export default function StatsListScreen() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState<SessionListItem[]>([]);
-
-  // [추가] 통계 요약 상태
   const [summary, setSummary] = useState({ success: 0, fail: 0 });
 
   useFocusEffect(
@@ -47,17 +48,14 @@ export default function StatsListScreen() {
           const snap = await getDocs(q);
           const items: SessionListItem[] = [];
 
-          // 카운트 변수
           let sCount = 0;
           let fCount = 0;
 
           snap.forEach((doc) => {
             const d = doc.data() as any;
             const started = d.startedAt?.toDate?.() ?? new Date();
-            // 기본값 처리: 과거 데이터가 status가 없을 수 있으므로 처리 필요 시 수정
             const rawStatus = d.status ?? "IN_PROGRESS";
 
-            // 상태 라벨 및 카운트 계산
             let statusLabel = "진행중";
             let status: SessionListItem["status"] = "IN_PROGRESS";
 
@@ -70,19 +68,19 @@ export default function StatsListScreen() {
               status = "FAIL";
               fCount++;
             } else {
-              // IN_PROGRESS
               statusLabel = "진행중";
               status = "IN_PROGRESS";
             }
 
             items.push({
               id: doc.id,
-              category: d.category ?? "학습",
+              categoryName: d.category ?? "학습", // ✅ category 필드 사용
+              sessionName: d.sessionName ?? "", // ✅ sessionName 필드 추가
               startedAtLabel: started.toLocaleDateString("ko-KR", {
                 year: "numeric",
                 month: "2-digit",
                 day: "2-digit",
-                weekday: "short", // 'long' -> 'short'로 변경하여 공간 확보 (선택사항)
+                weekday: "short",
               }),
               statusLabel: statusLabel,
               status: status,
@@ -91,7 +89,7 @@ export default function StatsListScreen() {
 
           if (isActive) {
             setSessions(items);
-            setSummary({ success: sCount, fail: fCount }); // 요약 업데이트
+            setSummary({ success: sCount, fail: fCount });
           }
         } catch (e) {
           console.log("세션 목록 불러오기 오류:", e);
@@ -111,7 +109,6 @@ export default function StatsListScreen() {
   );
 
   const handlePressItem = (item: SessionListItem) => {
-    // IN_PROGRESS 상태면 상세 이동 차단
     if (item.status === "IN_PROGRESS") return;
 
     router.push({
@@ -120,22 +117,21 @@ export default function StatsListScreen() {
     });
   };
 
-  // 상태에 따른 색상 반환 함수
   const getStatusColor = (status: string) => {
     switch (status) {
       case "SUCCESS":
-        return "#4CAF50"; // 초록
+        return Colors.light.success;
       case "FAIL":
-        return "#E53935"; // 빨강
+        return Colors.light.error;
       default:
-        return "#FF9800"; // 주황 (진행중)
+        return Colors.light.secondary;
     }
   };
 
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#6D4AFF" />
+        <ActivityIndicator size="large" color={Colors.light.primary} />
       </View>
     );
   }
@@ -144,7 +140,7 @@ export default function StatsListScreen() {
     <View style={styles.root}>
       <Text style={styles.title}>학습 현황</Text>
 
-      {/* [추가] 상단 요약 통계 */}
+      {/* 요약 통계 */}
       <View style={styles.summaryContainer}>
         <View style={styles.summaryBox}>
           <Text style={styles.summaryLabel}>성공한 학습</Text>
@@ -156,48 +152,48 @@ export default function StatsListScreen() {
         </View>
       </View>
 
-      <Text style={[styles.title, { fontSize: 18, marginTop: 10 }]}>
-        최근 기록
-      </Text>
+      <Text style={[styles.title, styles.recentTitle]}>최근 기록</Text>
 
       {sessions.length === 0 ? (
-        <View style={{ flex: 1, alignItems: "center", marginTop: 50 }}>
-          <Text style={{ fontSize: 16, color: "#888" }}>
-            아직 학습 기록이 없습니다.
-          </Text>
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>아직 학습 기록이 없습니다.</Text>
         </View>
       ) : (
         <FlatList
           data={sessions}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
+          contentContainerStyle={styles.listContent}
           renderItem={({ item }) => (
             <Pressable
               onPress={() => handlePressItem(item)}
               disabled={item.status === "IN_PROGRESS"}
-              style={[
+              style={({ pressed }) => [
                 styles.itemCard,
-                item.status === "IN_PROGRESS" && {
-                  opacity: 0.7,
-                  backgroundColor: "#F9F9F9",
-                },
+                item.status === "IN_PROGRESS" && styles.itemCardDisabled,
+                pressed && styles.itemCardPressed,
               ]}
             >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <View>
-                  <Text style={styles.itemCategory}>{item.category}</Text>
+              <View style={styles.itemContent}>
+                <View style={styles.itemLeft}>
+                  {/* ✅ 카테고리명 표시 */}
+                  <Text style={styles.itemCategory}>{item.categoryName}</Text>
+
+                  {/* ✅ 세션명이 있으면 표시 */}
+                  {item.sessionName && (
+                    <Text style={styles.itemSessionName}>
+                      {item.sessionName}
+                    </Text>
+                  )}
+
+                  {/* 날짜 */}
                   <Text style={styles.itemDate}>{item.startedAtLabel}</Text>
                 </View>
+
+                {/* 상태 */}
                 <Text
                   style={[
-                    styles.itemSuccess,
-                    { color: getStatusColor(item.status) }, // 동적 색상 적용
+                    styles.itemStatus,
+                    { color: getStatusColor(item.status) },
                   ]}
                 >
                   {item.statusLabel}
@@ -210,3 +206,131 @@ export default function StatsListScreen() {
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  root: {
+    flex: 1,
+    paddingTop: 60,
+    backgroundColor: Colors.light.background,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: "700",
+    marginBottom: 12,
+    paddingHorizontal: 16,
+    color: Colors.light.text,
+  },
+  recentTitle: {
+    fontSize: 18,
+    marginTop: 10,
+  },
+
+  // 요약 통계
+  summaryContainer: {
+    flexDirection: "row",
+    paddingHorizontal: 16,
+    marginBottom: 20,
+    gap: 12,
+  },
+  summaryBox: {
+    flex: 1,
+    backgroundColor: Colors.light.white,
+    borderRadius: 16,
+    paddingVertical: 20,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  summaryLabel: {
+    fontSize: 14,
+    color: Colors.light.textSecondary,
+    marginBottom: 8,
+    fontWeight: "600",
+  },
+  summaryCountSuccess: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: Colors.light.success,
+  },
+  summaryCountFail: {
+    fontSize: 32,
+    fontWeight: "700",
+    color: Colors.light.error,
+  },
+
+  // 리스트
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 24,
+    gap: 12,
+  },
+  itemCard: {
+    backgroundColor: Colors.light.white,
+    borderRadius: 12,
+    padding: 16,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.06,
+    shadowRadius: 8,
+    elevation: 2,
+    borderWidth: 1,
+    borderColor: Colors.light.cardBorder,
+  },
+  itemCardDisabled: {
+    opacity: 0.7,
+    backgroundColor: Colors.light.background,
+  },
+  itemCardPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.98 }],
+  },
+  itemContent: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  itemLeft: {
+    flex: 1,
+  },
+  itemCategory: {
+    fontSize: 17, // ✅ 크기 약간 키움
+    fontWeight: "700", // ✅ 더 굵게
+    color: Colors.light.text,
+    marginBottom: 4,
+  },
+  // ✅ 세션명 스타일 추가
+  itemSessionName: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: Colors.light.primary, // 보라색으로 강조
+    marginBottom: 6,
+  },
+  itemDate: {
+    fontSize: 13, // ✅ 크기 약간 줄임
+    color: Colors.light.textSecondary,
+  },
+  itemStatus: {
+    fontSize: 15,
+    fontWeight: "600",
+  },
+
+  // 빈 상태
+  emptyContainer: {
+    flex: 1,
+    alignItems: "center",
+    marginTop: 50,
+  },
+  emptyText: {
+    fontSize: 16,
+    color: Colors.light.textSecondary,
+  },
+});
