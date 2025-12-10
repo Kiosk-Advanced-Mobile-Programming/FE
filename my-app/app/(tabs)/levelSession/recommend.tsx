@@ -1,15 +1,20 @@
-// my-app/app/(tabs)/levelSession/recommend.tsx
 import { Colors } from "@/constants/theme";
 import { auth, db } from "@/firebase/app";
 import { useFocusEffect, useRouter } from "expo-router";
 import { doc, getDoc } from "firebase/firestore";
-import React, { useCallback, useMemo, useState } from "react";
-// 맨 위 import 부분에 추가
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   ActivityIndicator,
+  Animated,
   Platform,
   Pressable,
-  SafeAreaView, // 추가
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -72,6 +77,39 @@ export default function RecommendScreen() {
   const [userLevel, setUserLevel] = useState<string>("초급");
   const [userName, setUserName] = useState<string>("");
 
+  // 깜빡거리는 애니메이션 값 (0 ~ 1)
+  const blinkAnim = useRef(new Animated.Value(0)).current;
+
+  // 애니메이션 루프 설정 (깜빡깜빡 효과)
+  useEffect(() => {
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(blinkAnim, {
+          toValue: 1,
+          duration: 800, // 0.8초 동안 진해짐
+          useNativeDriver: false, // 색상 변경은 false 설정 필수
+        }),
+        Animated.timing(blinkAnim, {
+          toValue: 0,
+          duration: 800, // 0.8초 동안 연해짐
+          useNativeDriver: false,
+        }),
+      ])
+    ).start();
+  }, [blinkAnim]);
+
+  // 애니메이션 값에 따라 빨간색 테두리 색상 보간
+  const borderColor = blinkAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["#FFCDD2", "#FF0000"], // 연한 빨강 -> 진한 빨강
+  });
+
+  // 그림자 색상도 같이 빨간색으로 깜빡이게 설정
+  const shadowColor = blinkAnim.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["transparent", "#FF0000"],
+  });
+
   useFocusEffect(
     useCallback(() => {
       let isActive = true;
@@ -130,8 +168,6 @@ export default function RecommendScreen() {
   if (loading) {
     return (
       <SafeAreaView style={styles.container}>
-        {" "}
-        {/* SafeAreaView 추가 */}
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="large" color={Colors.light.primary} />
         </View>
@@ -164,60 +200,78 @@ export default function RecommendScreen() {
             const isRecommended = course.level === userLevel;
 
             return (
+              // [수정] Pressable을 바깥에 두고, 자식 함수 내부에서 Animated.View를 렌더링
               <Pressable
                 key={course.id}
-                style={({ pressed }) => [
-                  styles.courseCard,
-                  isRecommended && styles.courseCardRecommended,
-                  pressed && styles.courseCardPressed,
-                ]}
                 onPress={() => handleStartStudy(course.route)}
               >
-                {/* 헤더 */}
-                <View style={styles.courseHeader}>
-                  <View
+                {({ pressed }) => (
+                  <Animated.View
                     style={[
-                      styles.levelBadge,
-                      { backgroundColor: course.bgColor },
+                      styles.courseCard,
+                      // 추천 학습일 경우: 빨간색 깜빡이는 테두리와 그림자 적용
+                      isRecommended && {
+                        borderWidth: 3,
+                        borderColor: borderColor, // 애니메이션 색상 적용 가능
+                        shadowColor: shadowColor, // 애니메이션 그림자 적용 가능
+                        shadowOpacity: 0.4,
+                        shadowRadius: 10,
+                        elevation: 5,
+                      },
+                      // 눌렸을 때 투명도 조절
+                      pressed && styles.courseCardPressed,
                     ]}
                   >
-                    <Text
-                      style={[styles.levelBadgeText, { color: course.color }]}
-                    >
-                      {course.level}
+                    {/* 카드 내부 헤더 */}
+                    <View style={styles.courseHeader}>
+                      <View
+                        style={[
+                          styles.levelBadge,
+                          { backgroundColor: course.bgColor },
+                        ]}
+                      >
+                        <Text
+                          style={[
+                            styles.levelBadgeText,
+                            { color: course.color },
+                          ]}
+                        >
+                          {course.level}
+                        </Text>
+                      </View>
+                      {isRecommended && (
+                        <Text style={styles.recommendTag}>⭐ 추천 학습!</Text>
+                      )}
+                    </View>
+
+                    {/* 내용 */}
+                    <Text style={styles.courseTitle}>{course.title}</Text>
+                    <Text style={styles.courseDescription}>
+                      {course.description}
                     </Text>
-                  </View>
-                  {isRecommended && (
-                    <Text style={styles.recommendTag}>⭐ 추천 학습!</Text>
-                  )}
-                </View>
 
-                {/* 내용 */}
-                <Text style={styles.courseTitle}>{course.title}</Text>
-                <Text style={styles.courseDescription}>
-                  {course.description}
-                </Text>
-
-                {/* 버튼 */}
-                <View
-                  style={[
-                    styles.startButton,
-                    isRecommended
-                      ? styles.startButtonRecommended
-                      : styles.startButtonNormal,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.startButtonText,
-                      isRecommended
-                        ? styles.startButtonTextRecommended
-                        : styles.startButtonTextNormal,
-                    ]}
-                  >
-                    학습 시작하기
-                  </Text>
-                </View>
+                    {/* 버튼 */}
+                    <View
+                      style={[
+                        styles.startButton,
+                        isRecommended
+                          ? styles.startButtonRecommended
+                          : styles.startButtonNormal,
+                      ]}
+                    >
+                      <Text
+                        style={[
+                          styles.startButtonText,
+                          isRecommended
+                            ? styles.startButtonTextRecommended
+                            : styles.startButtonTextNormal,
+                        ]}
+                      >
+                        학습 시작하기
+                      </Text>
+                    </View>
+                  </Animated.View>
+                )}
               </Pressable>
             );
           })}
@@ -242,7 +296,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     padding: 24,
     marginHorizontal: 20,
-    marginTop: Platform.OS === "android" ? 20 : 10, // 수정: 플랫폼별 여백
+    marginTop: Platform.OS === "android" ? 20 : 10,
     marginBottom: 16,
     shadowColor: "#000",
     shadowOffset: { width: 0, height: 2 },
@@ -298,13 +352,6 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 2,
   },
-  courseCardRecommended: {
-    borderWidth: 3,
-    borderColor: Colors.light.primary,
-    shadowColor: Colors.light.primary,
-    shadowOpacity: 0.2,
-    shadowRadius: 16,
-  },
   courseCardPressed: {
     opacity: 0.9,
     transform: [{ scale: 0.98 }],
@@ -327,7 +374,7 @@ const styles = StyleSheet.create({
   recommendTag: {
     fontSize: 14,
     fontWeight: "600",
-    color: Colors.light.primary,
+    color: "#ff3737ff",
   },
   courseTitle: {
     fontSize: 18,
