@@ -1,6 +1,4 @@
-// components/StudySummaryView.tsx
-// 한 세션의 통계 화면을 그려주는 “UI 전용 컴포넌트”입니다.
-
+// components/StudySummaryScreen/StudySummaryview.tsx
 import React from "react";
 import { Pressable, ScrollView, Text, View } from "react-native";
 import AiSummaryButton from "./AiSummaryButton";
@@ -13,18 +11,19 @@ export type StudyStatus =
   | "ABORTED";
 
 export interface StudySessionSummary {
-  categoryName: string; // 예: "맥도날드 주문 연습"
-  dateLabel: string; // 예: "2025년 10월 31일 금요일"
-  totalSeconds: number; // 총 소요 시간(초)
-  totalTouches: number; // 전체 터치 수
-  successTouches: number; // 성공 터치 수
+  categoryName: string;
+  sessionName: string; // [추가] 부제목용 세션 이름
+  dateLabel: string;
+  totalSeconds: number;
+  totalTouches: number;
+  successTouches: number;
   status: StudyStatus;
 }
 
 interface Props {
   session: StudySessionSummary;
-  onRetry?: () => void; // 같은 연습 다시
-  onOtherPractice?: () => void; // 다른 연습
+  onRetry?: () => void;
+  onOtherPractice?: () => void;
 }
 
 const StudySummaryView: React.FC<Props> = ({
@@ -32,7 +31,6 @@ const StudySummaryView: React.FC<Props> = ({
   onRetry,
   onOtherPractice,
 }) => {
-  console.log(data);
   const failTouches = Math.max(data.totalTouches - data.successTouches, 0);
   const successRate =
     data.totalTouches > 0
@@ -40,27 +38,37 @@ const StudySummaryView: React.FC<Props> = ({
       : 0;
   const failRate = 100 - successRate;
 
-  const maxTouches = Math.max(data.totalTouches, 1);
-  const successBarRatio = data.successTouches / maxTouches;
-  const failBarRatio = failTouches / maxTouches;
-
   return (
     <View style={styles.root}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>지난 학습을 한 눈에 볼 수 있어요</Text>
 
         <View style={styles.card}>
-          {/* 상단 정보 */}
+          {/* [수정] 상단 정보 표시 영역 */}
+          {/* 1. 주제목 (카테고리) */}
           <Text style={styles.categoryText}>{data.categoryName}</Text>
+
+          {/* 2. 부제목 (세션 이름) - 스타일을 인라인으로 추가하여 강조 */}
+          <Text
+            style={{
+              fontSize: 16,
+
+              color: "#333",
+
+              marginBottom: 4,
+            }}
+          >
+            {data.sessionName}
+          </Text>
+
+          {/* 3. 날짜 */}
           <Text style={styles.dateText}>{data.dateLabel}</Text>
 
           {/* 요약 카드들 */}
           <View style={styles.summaryRow}>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>총 학습 시간</Text>
-              <Text style={styles.summaryValue}>
-                {Math.round(data.totalSeconds / 60)}분
-              </Text>
+              <Text style={styles.summaryValue}>{data.totalSeconds}초</Text>
             </View>
             <View style={styles.summaryItem}>
               <Text style={styles.summaryLabel}>터치 성공률</Text>
@@ -113,7 +121,7 @@ const StudySummaryView: React.FC<Props> = ({
           </View>
 
           {/* 시간 vs 터치 수 세로 막대 */}
-          <View className="barContainer">
+          <View style={styles.barContainer}>
             <Text style={styles.barLabel}>연습 시간과 터치 수</Text>
             <View style={styles.verticalBarsRow}>
               <View style={styles.verticalBarItem}>
@@ -122,17 +130,14 @@ const StudySummaryView: React.FC<Props> = ({
                     style={[
                       styles.verticalBarTime,
                       {
-                        height: Math.min(
-                          100,
-                          (data.totalSeconds / 600) * 100 // 10분 기준
-                        ),
+                        height: Math.min(100, (data.totalSeconds / 600) * 100),
                       },
                     ]}
                   />
                 </View>
                 <Text style={styles.verticalBarLabel}>시간</Text>
                 <Text style={styles.verticalBarValue}>
-                  {Math.round(data.totalSeconds / 60)}분
+                  {data.totalSeconds}초
                 </Text>
               </View>
 
@@ -142,7 +147,7 @@ const StudySummaryView: React.FC<Props> = ({
                     style={[
                       styles.verticalBarTouches,
                       {
-                        height: Math.min(100, (data.totalTouches / 20) * 100), // 20회 기준
+                        height: Math.min(100, (data.totalTouches / 20) * 100),
                       },
                     ]}
                   />

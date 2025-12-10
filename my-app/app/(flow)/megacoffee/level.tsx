@@ -14,7 +14,7 @@ const BUTTON_DATA = [
     label: "살펴보기",
     route: "/(flow)/megacoffee/startPage",
     requirement: "자유롭게 메뉴판을 탐색합니다.",
-    sessionName: "메가커피살펴보기",
+    sessionName: "메가커피 살펴보기",
     successTouches: 0,
   },
   {
@@ -22,7 +22,7 @@ const BUTTON_DATA = [
     label: "난이도:하(미션)",
     route: "/(flow)/megacoffee/startPage",
     requirement: "요구사항: 아메리카노(HOT) 주문 담기",
-    sessionName: "아메리카노주문",
+    sessionName: "아메리카노 주문",
     successTouches: 7, // 임의의 성공 터치 수
   },
   {
@@ -30,15 +30,15 @@ const BUTTON_DATA = [
     label: "난이도:중(미션)",
     route: "/(flow)/megacoffee/startPage",
     requirement: "고구마라떼 (HOT) 텀블러에 담아가기",
-    sessionName: "고구마라떼텀블러주문",
+    sessionName: "고구마라떼 텀블러 주문",
     successTouches: 10, // 임의의 성공 터치 수
   },
   {
     id: 4,
     label: "난이도:상(미션)",
     route: "/(flow)/megacoffee/startPage",
-    requirement: "할메가커피 (ICE) 연하게 + 초코토핑 추가하기",
-    sessionName: "할메가커피옵션추가",
+    requirement: "메가커피 (ICE) 연하게 + 초코토핑 추가하기",
+    sessionName: "메가커피 옵션추가",
     successTouches: 10, // 임의의 성공 터치 수
   },
 ];
