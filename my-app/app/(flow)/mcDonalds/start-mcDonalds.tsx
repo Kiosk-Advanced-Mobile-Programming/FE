@@ -98,14 +98,14 @@ export default function McDonaldsStart() {
         />
 
         <View style={styles.noticeBar}>
-          <Text style={styles.noticeText}>
+          <Text style={styles.noticeText} numberOfLines={1} ellipsizeMode="tail">
             * 카카오 선물하기, 모바일 상품권 사용 가능 (무료 쿠폰 사용은
             카운터에서 문의해주세요)
           </Text>
-          <Text style={styles.noticeText}>
+          <Text style={styles.noticeText} numberOfLines={1} ellipsizeMode="tail">
             * 현금 결제는 카운터에서만 가능 Please pay at Front Counter for Cash
           </Text>
-          <Text style={styles.noticeText}>
+          <Text style={styles.noticeText} numberOfLines={1} ellipsizeMode="tail">
             * 상기 이미지는 실제와 다를 수 있습니다.
           </Text>
         </View>
@@ -136,8 +136,8 @@ export default function McDonaldsStart() {
               style={styles.qrButton}
               onPress={() => setModalVisible(true)}
             >
-              <Text style={styles.qrText}>포인트를</Text>
-              <Text style={styles.qrText}>적립하세요</Text>
+              <Text style={styles.qrText} numberOfLines={1} ellipsizeMode="tail">포인트를</Text>
+              <Text style={styles.qrText} numberOfLines={1} ellipsizeMode="tail">적립하세요</Text>
               <Ionicons name="qr-code-outline" size={60} color="black" />
             </Pressable>
           </View>
