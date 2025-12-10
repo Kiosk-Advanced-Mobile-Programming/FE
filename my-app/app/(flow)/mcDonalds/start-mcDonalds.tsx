@@ -1,9 +1,23 @@
 // app/(flow)/select-cafe.tsx
 import PrepareModal from "@/components/mcDonalds/PrepareModal";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { router, Stack, useLocalSearchParams } from "expo-router";
+import { router, Stack } from "expo-router";
 import { useEffect, useState } from "react";
-import { Image, Pressable, Text, View } from "react-native";
+// [추가] API 및 상태 관리 함수 임포트
+import { startStudySession } from "@/firebase/study";
+// eslint-disable-next-line import/no-duplicates
+import { resetMcDonaldsTouch } from "./globalState";
+// [추가] Alert 임포트
+import {
+  ActivityIndicator,
+  Alert,
+  Image,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
+// eslint-disable-next-line import/no-duplicates
+import { recordMcDonaldsSuccess } from "./globalState"; // 임포트
 import styles from "./start-mcDonalds.style";
 
 const BANNER_IMAGES = [
@@ -21,12 +35,16 @@ const BANNER_IMAGES = [
 ];
 
 export default function McDonaldsStart() {
-  const { mode } = useLocalSearchParams(); // start에서 넘긴 mode 사용 가능
+  //const { mode } = useLocalSearchParams(); // start에서 넘긴 mode 사용 가능
 
   // Modal 상태 관리
   const [modalVisible, setModalVisible] = useState(false);
 
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  // [추가] 로딩 상태 관리
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentImageIndex((prevIndex) => {
@@ -35,6 +53,38 @@ export default function McDonaldsStart() {
     }, 3000); // todo 10초로 변경
     return () => clearInterval(interval);
   }, []);
+
+  // [추가] 학습 시작 핸들러 함수 정의
+  const handleStartPractice = async () => {
+    try {
+      setLoading(true);
+
+      // 1. 터치 카운트 초기화
+      resetMcDonaldsTouch();
+
+      // [추가] 주문 시작 버튼 클릭은 유의미한 행동임
+      recordMcDonaldsSuccess();
+
+      // 2. 학습 세션 시작 (DB 저장)
+      const sessionId = await startStudySession({
+        categoryName: "맥도날드",
+        sessionName: "자율학습",
+      });
+
+      console.log("맥도날드 세션 시작:", sessionId);
+
+      // 3. 다음 화면으로 sessionId 전달하며 이동
+      router.push({
+        pathname: "/(flow)/mcDonalds/select-menu",
+        params: { sessionId: sessionId },
+      });
+    } catch (error) {
+      console.error(error);
+      Alert.alert("오류", "학습을 시작할 수 없습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <>
@@ -62,11 +112,22 @@ export default function McDonaldsStart() {
 
         <View style={styles.interactionContainer}>
           <View style={styles.leftPane}>
+            {/* [수정] 주문하기 버튼에 핸들러 연결 및 로딩 처리 */}
             <Pressable
-              style={styles.orderButton}
-              onPress={() => router.push("/(flow)/mcDonalds/select-menu")}
+              style={({ pressed }) => [
+                styles.orderButton,
+                // 로딩 중이거나 눌렸을 때 스타일 처리 (선택사항)
+                // pressed && styles.pressed
+              ]}
+              onPress={handleStartPractice} // 기존 router.push 대신 핸들러 사용
+              disabled={loading} // 로딩 중 중복 클릭 방지
             >
-              <Text style={styles.orderButtonText}>주문하기</Text>
+              {loading ? (
+                // 로딩 중이면 인디케이터 표시
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.orderButtonText}>주문하기</Text>
+              )}
             </Pressable>
           </View>
 
