@@ -1,17 +1,17 @@
 // app/(flow)/general-restaurant/study-session-context.tsx
 import React, {
   createContext,
+  ReactNode,
+  useCallback,
   useContext,
   useState,
-  useCallback,
-  ReactNode,
-} from 'react';
+} from "react";
 
 import {
-  startStudySession,
   finishStudySession,
+  startStudySession,
   StudyStatus,
-} from '../../../firebase/study';
+} from "../../../firebase/study";
 
 interface StudySessionContextValue {
   sessionId: string | null;
@@ -43,6 +43,9 @@ export function StudySessionProvider({ children }: { children: ReactNode }) {
     setTotalTouches(0);
     setSuccessTouches(0);
 
+    category = "일반식당";
+    session = "키오스크 기초 연습";
+
     const id = await startStudySession({
       categoryName: category,
       sessionName: session,
@@ -63,7 +66,7 @@ export function StudySessionProvider({ children }: { children: ReactNode }) {
   const finish = useCallback(
     async (status: StudyStatus) => {
       if (!sessionId) {
-        console.warn('finishStudySession 호출 실패: sessionId 없음');
+        console.warn("finishStudySession 호출 실패: sessionId 없음");
         return;
       }
       await finishStudySession(sessionId, totalTouches, successTouches, status);
@@ -101,7 +104,7 @@ export function StudySessionProvider({ children }: { children: ReactNode }) {
 export function useStudySession() {
   const ctx = useContext(StudySessionContext);
   if (!ctx) {
-    throw new Error('useStudySession must be used within StudySessionProvider');
+    throw new Error("useStudySession must be used within StudySessionProvider");
   }
   return ctx;
 }
